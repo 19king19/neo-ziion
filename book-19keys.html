@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZIION — Book 19Keys</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="light-theme.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0F0E12;
+      color: #fff;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      overflow-x: hidden;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ── Sticky Header ── */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(15, 14, 18, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .header-left { display: flex; align-items: center; gap: 16px; }
+
+    .logo-text {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 6px;
+      color: #fff;
+      text-transform: uppercase;
+      text-decoration: none;
+    }
+
+    .search-bar {
+      flex: 0 1 420px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+      gap: 10px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .search-bar:focus-within { border-color: rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.08); }
+    .search-icon { opacity: 0.4; flex-shrink: 0; }
+
+    .search-bar input {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    .search-bar input::placeholder { color: rgba(255, 255, 255, 0.3); }
+
+    .header-right { display: flex; align-items: center; gap: 12px; }
+
+    .header-icon {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .header-icon:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4D4D4D, #322D2A);
+      cursor: pointer;
+    }
+
+    /* ── Main Layout ── */
+    .main-layout { display: flex; flex: 1; overflow: hidden; }
+
+    /* ── Left Sidebar ── */
+    .sidebar {
+      width: 220px;
+      flex-shrink: 0;
+      border-right: 1px solid rgba(255,255,255,0.06);
+      padding: 20px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      overflow-y: auto;
+    }
+
+    .sidebar-create {
+      width: 100%;
+      height: 40px;
+      background: #fff;
+      color: #0F0E12;
+      border: none;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: opacity 0.15s;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: inherit;
+    }
+
+    .sidebar-create:hover { opacity: 0.85; }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      color: rgba(255,255,255,0.4);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+    }
+
+    .nav-item:hover { background: rgba(255,255,255,0.06); color: #fff; }
+    .nav-item.active { background: rgba(255,255,255,0.08); color: #fff; }
+    .nav-item svg { width: 18px; height: 18px; opacity: 0.6; flex-shrink: 0; }
+    .nav-item.active svg { opacity: 1; }
+
+    .sidebar-divider { height: 1px; background: rgba(255,255,255,0.06); margin: 8px 0; }
+
+    /* ── Booking Content Area ── */
+    .booking-content {
+      flex: 1;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+      padding: 40px;
+    }
+
+    .booking-header { margin-bottom: 36px; }
+
+    .booking-title {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .booking-subtitle {
+      font-size: 14px;
+      color: rgba(255,255,255,0.35);
+      line-height: 1.5;
+      max-width: 560px;
+    }
+
+    /* ── View Toggle ── */
+    .view-toggle {
+      display: flex;
+      gap: 4px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 32px;
+      width: fit-content;
+    }
+
+    .view-btn {
+      padding: 10px 24px;
+      border: none;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: transparent;
+      color: rgba(255,255,255,0.4);
+      font-family: inherit;
+    }
+
+    .view-btn.active {
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+    }
+
+    .view-btn:hover:not(.active) { color: rgba(255,255,255,0.7); }
+
+    /* ── SERVICE CARDS ── */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .service-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      padding: 24px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .service-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      border: 1px solid transparent;
+      transition: border-color 0.3s;
+    }
+
+    .service-card:hover {
+      background: rgba(255,255,255,0.06);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+
+    .service-card.selected {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(255,255,255,0.2);
+    }
+
+    .service-card.selected::before {
+      border-color: rgba(213, 255, 90, 0.15);
+    }
+
+    .service-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .service-card.selected .service-icon {
+      color: rgba(255,255,255,0.8);
+    }
+
+    .service-name {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: -0.01em;
+    }
+
+    .service-desc {
+      font-size: 12px;
+      color: rgba(255,255,255,0.3);
+      line-height: 1.5;
+    }
+
+    .service-time {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 12px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: rgba(255,255,255,0.04);
+      font-size: 11px;
+      color: rgba(255,255,255,0.35);
+      font-weight: 500;
+    }
+
+    /* ── BOOKING FORM ── */
+    .booking-form-section {
+      display: none;
+      max-width: 620px;
+    }
+
+    .booking-form-section.active { display: block; }
+
+    .form-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 20px;
+      padding: 32px;
+      margin-bottom: 20px;
+    }
+
+    .form-card-title {
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 20px;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .form-row:last-child { margin-bottom: 0; }
+
+    .form-group {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 0.02em;
+    }
+
+    .form-input, .form-select, .form-textarea {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 12px 16px;
+      color: #fff;
+      font-size: 14px;
+      font-family: inherit;
+      font-weight: 400;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+      width: 100%;
+    }
+
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.06);
+    }
+
+    .form-input::placeholder, .form-textarea::placeholder {
+      color: rgba(255,255,255,0.2);
+    }
+
+    .form-select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='rgba(255,255,255,0.3)' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+      cursor: pointer;
+    }
+
+    .form-select option {
+      background: #1a1a1e;
+      color: #fff;
+    }
+
+    .form-textarea {
+      min-height: 100px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    /* Duration Picker */
+    .duration-picker {
+      display: flex;
+      gap: 10px;
+    }
+
+    .duration-btn {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      background: rgba(255,255,255,0.03);
+      color: rgba(255,255,255,0.4);
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .duration-btn:hover { border-color: rgba(255,255,255,0.15); color: rgba(255,255,255,0.7); }
+
+    .duration-btn.active {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.2);
+      color: #fff;
+    }
+
+    /* Offer Input */
+    .offer-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .offer-currency {
+      position: absolute;
+      left: 16px;
+      font-size: 18px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.3);
+      pointer-events: none;
+    }
+
+    .offer-input {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 16px 16px 16px 36px;
+      color: #fff;
+      font-size: 24px;
+      font-weight: 700;
+      font-family: inherit;
+      outline: none;
+      width: 100%;
+      transition: border-color 0.2s;
+      letter-spacing: -0.02em;
+    }
+
+    .offer-input:focus { border-color: rgba(255,255,255,0.2); }
+    .offer-input::placeholder { color: rgba(255,255,255,0.15); font-weight: 400; }
+
+    .offer-note {
+      font-size: 11px;
+      color: rgba(255,255,255,0.25);
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+
+    /* Community Offer Toggle */
+    .community-toggle {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      cursor: pointer;
+      margin-top: 16px;
+      transition: background 0.2s;
+    }
+
+    .community-toggle:hover { background: rgba(255,255,255,0.05); }
+
+    .toggle-switch {
+      width: 40px;
+      height: 22px;
+      border-radius: 11px;
+      background: rgba(255,255,255,0.1);
+      position: relative;
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.5);
+      top: 3px;
+      left: 3px;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .community-toggle.active .toggle-switch {
+      background: rgba(213, 255, 90, 0.2);
+    }
+
+    .community-toggle.active .toggle-switch::after {
+      transform: translateX(18px);
+      background: #D5FF5A;
+    }
+
+    .toggle-info {
+      flex: 1;
+    }
+
+    .toggle-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .toggle-desc {
+      font-size: 11px;
+      color: rgba(255,255,255,0.3);
+      line-height: 1.4;
+    }
+
+    /* Submit Button */
+    .submit-offer-btn {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 12px;
+      background: #fff;
+      color: #0F0E12;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.15s;
+      letter-spacing: 0.02em;
+      margin-top: 8px;
+    }
+
+    .submit-offer-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+    .submit-offer-btn:active { transform: translateY(0); }
+
+    /* ── View Sections ── */
+    .send-section { display: none; }
+    .send-section.active { display: block; }
+
+    /* ── PENDING OFFERS VIEW (19Keys Dashboard) ── */
+    .pending-section { display: none; }
+    .pending-section.active { display: block; }
+
+    .pending-stats {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      flex: 1;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      padding: 20px 24px;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: rgba(255,255,255,0.3);
+      font-weight: 500;
+    }
+
+    /* Offer Cards */
+    .offers-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .offer-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .offer-card:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(255,255,255,0.1);
+    }
+
+    .offer-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #322D2A, #4D4D4D);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      color: rgba(255,255,255,0.6);
+    }
+
+    .offer-details { flex: 1; min-width: 0; }
+
+    .offer-name {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .offer-badge {
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      background: rgba(213, 255, 90, 0.1);
+      color: #D5FF5A;
+    }
+
+    .offer-badge.community {
+      background: rgba(139, 92, 246, 0.15);
+      color: #a78bfa;
+    }
+
+    .offer-type {
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 6px;
+    }
+
+    .offer-meta {
+      display: flex;
+      gap: 16px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.25);
+    }
+
+    .offer-meta span {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .offer-price-col {
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .offer-amount {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+
+    .offer-contributors {
+      font-size: 11px;
+      color: rgba(255,255,255,0.25);
+    }
+
+    .offer-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .offer-accept-btn, .offer-decline-btn {
+      padding: 8px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.15s;
+      letter-spacing: 0.02em;
+    }
+
+    .offer-accept-btn {
+      background: #fff;
+      color: #0F0E12;
+    }
+
+    .offer-accept-btn:hover { opacity: 0.85; }
+
+    .offer-decline-btn {
+      background: transparent;
+      color: rgba(255,255,255,0.3);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .offer-decline-btn:hover {
+      border-color: rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.5);
+    }
+
+    /* ── SUCCESS MODAL ── */
+    .success-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(10px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .success-overlay.show { display: flex; }
+
+    .success-modal {
+      background: #1a1a1e;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 24px;
+      padding: 48px;
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+      animation: modalIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.95) translateY(10px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .success-check {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: rgba(213, 255, 90, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+    }
+
+    .success-modal h3 {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .success-modal p {
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    .success-close-btn {
+      padding: 12px 32px;
+      border: none;
+      border-radius: 10px;
+      background: #fff;
+      color: #0F0E12;
+      font-size: 14px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    .success-close-btn:hover { opacity: 0.85; }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .booking-content { padding: 24px 16px; }
+      .services-grid { grid-template-columns: 1fr; }
+      .pending-stats { flex-direction: column; }
+      .offer-card { flex-direction: column; align-items: flex-start; }
+      .offer-actions { flex-direction: row; width: 100%; }
+      .offer-actions button { flex: 1; }
+      .form-row { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <a class="logo-text" href="cosmos-grid.html">ZIION</a>
+    </div>
+    <div class="search-bar">
+      <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" placeholder="Search services, offers...">
+    </div>
+    <div class="header-right">
+      <div class="header-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      </div>
+      <div class="avatar"></div>
+    </div>
+  </div>
+
+  <div class="main-layout">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <button class="sidebar-create">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        Create
+      </button>
+
+      <a class="nav-item" href="cosmos-grid.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <a class="nav-item" href="library.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/></svg>
+        Library
+      </a>
+      <a class="nav-item" href="threads.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Threads
+      </a>
+      <a class="nav-item" href="directory.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Connections
+      </a>
+      <a class="nav-item" href="assets.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Assets
+      </a>
+      <a class="nav-item" href="world.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        World
+      </a>
+      <a class="nav-item" href="pulse.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Pulse
+      </a>
+
+      <div class="sidebar-divider"></div>
+
+      <a class="nav-item active" href="book-19keys.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/></svg>
+        Book 19Keys
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Calendar
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Messages
+      </a>
+
+      <div class="sidebar-divider"></div>
+
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </a>
+
+      <div id="themeToggle" class="theme-toggle" title="Switch to light mode">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </div>
+    </div>
+
+    <!-- Booking Content -->
+    <div class="booking-content">
+
+      <div class="booking-header">
+        <div class="booking-title">Book 19Keys</div>
+        <div class="booking-subtitle">Send an offer to book time with 19Keys. Consultations, panels, podcast features, music reviews, product reviews, and speaking engagements.</div>
+      </div>
+
+      <!-- View Toggle: Send Offer / Pending Offers -->
+      <div class="view-toggle">
+        <button class="view-btn active" data-view="send">Send Offer</button>
+        <button class="view-btn" data-view="pending">Pending Offers</button>
+      </div>
+
+      <!-- ═══════ SEND OFFER VIEW ═══════ -->
+      <div class="send-section active" id="sendSection">
+
+        <!-- Step 1: Choose Service -->
+        <div class="form-card-title" style="margin-bottom: 16px;">Select Service</div>
+        <div class="services-grid" id="servicesGrid">
+
+          <div class="service-card" data-service="consultation">
+            <div class="service-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <div class="service-name">Consultation</div>
+            <div class="service-desc">1-on-1 strategy session on wealth, business, or personal development</div>
+            <div class="service-time">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              30 min – 1 hr
+            </div>
+          </div>
+
+          <div class="service-card" data-service="panel">
+            <div class="service-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div class="service-name">Panel</div>
+            <div class="service-desc">Join your event panel as a featured speaker or expert panelist</div>
+            <div class="service-time">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              45 min – 1 hr
+            </div>
+          </div>
+
+          <div class="service-card" data-service="podcast">
+            <div class="service-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            </div>
+            <div class="service-name">Podcast</div>
+            <div class="service-desc">Feature 19Keys as a guest on your podcast or show</div>
+            <div class="service-time">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              30 min – 1 hr
+            </div>
+          </div>
+
+          <div class="service-card" data-service="music-review">
+            <div class="service-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+            </div>
+            <div class="service-name">Music Review</div>
+            <div class="service-desc">Get your music reviewed, honest feedback and industry perspective</div>
+            <div class="service-time">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              30 min
+            </div>
+          </div>
+
+          <div class="service-card" data-service="product-review">
+            <div class="service-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            </div>
+            <div class="service-name">Product Review</div>
+            <div class="service-desc">Submit your product or brand for review and authentic feedback</div>
+            <div class="service-time">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              30 min – 1 hr
+            </div>
+          </div>
+
+          <div class="service-card" data-service="speaking">
+            <div class="service-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+            <div class="service-name">Speaking Event</div>
+            <div class="service-desc">Book 19Keys to speak at your event, conference, or community gathering</div>
+            <div class="service-time">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              1 hr
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Booking Form (appears after selecting service) -->
+        <div class="booking-form-section" id="bookingForm">
+
+          <div class="form-card">
+            <div class="form-card-title">Booking Details</div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Your Name</label>
+                <input class="form-input" type="text" placeholder="Full name">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email</label>
+                <input class="form-input" type="email" placeholder="you@example.com">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Duration</label>
+                <div class="duration-picker">
+                  <button class="duration-btn active" data-dur="30">30 min</button>
+                  <button class="duration-btn" data-dur="45">45 min</button>
+                  <button class="duration-btn" data-dur="60">1 hour</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Preferred Date</label>
+                <input class="form-input" type="date">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Preferred Time</label>
+                <select class="form-select">
+                  <option value="">Select time</option>
+                  <option>9:00 AM</option>
+                  <option>10:00 AM</option>
+                  <option>11:00 AM</option>
+                  <option>12:00 PM</option>
+                  <option>1:00 PM</option>
+                  <option>2:00 PM</option>
+                  <option>3:00 PM</option>
+                  <option>4:00 PM</option>
+                  <option>5:00 PM</option>
+                  <option>6:00 PM</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Location / Platform</label>
+                <select class="form-select">
+                  <option value="">Select format</option>
+                  <option>Virtual — Zoom</option>
+                  <option>Virtual — Google Meet</option>
+                  <option>In Person</option>
+                  <option>Phone Call</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Details</label>
+                <textarea class="form-textarea" placeholder="What would you like to discuss? Include any relevant context..."></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Your Offer -->
+          <div class="form-card">
+            <div class="form-card-title">Your Offer</div>
+            <div class="offer-input-wrap">
+              <span class="offer-currency">$</span>
+              <input class="offer-input" type="number" placeholder="0" min="0" id="offerAmount">
+            </div>
+            <div class="offer-note">Submit your offer amount. 19Keys reviews each offer and can accept, counter, or decline. Higher offers get prioritized.</div>
+
+            <div class="community-toggle" id="communityToggle">
+              <div class="toggle-switch"></div>
+              <div class="toggle-info">
+                <div class="toggle-title">Community Offer</div>
+                <div class="toggle-desc">Publish this offer on the Pulse feed so others can join and contribute to sweeten the deal.</div>
+              </div>
+            </div>
+          </div>
+
+          <button class="submit-offer-btn" id="submitOffer">Submit Offer</button>
+        </div>
+      </div>
+
+      <!-- ═══════ PENDING OFFERS VIEW ═══════ -->
+      <div class="pending-section" id="pendingSection">
+
+        <div class="pending-stats">
+          <div class="stat-card">
+            <div class="stat-value">12</div>
+            <div class="stat-label">Pending Offers</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">$14,800</div>
+            <div class="stat-label">Total Value</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">3</div>
+            <div class="stat-label">Community Offers</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">8</div>
+            <div class="stat-label">Accepted This Month</div>
+          </div>
+        </div>
+
+        <div class="form-card-title" style="margin-bottom: 16px;">Incoming Offers</div>
+
+        <div class="offers-list">
+
+          <div class="offer-card">
+            <div class="offer-avatar">MJ</div>
+            <div class="offer-details">
+              <div class="offer-name">Marcus Johnson <span class="offer-badge community">Community</span></div>
+              <div class="offer-type">Speaking Event — Chicago Community Summit</div>
+              <div class="offer-meta">
+                <span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  1 hour
+                </span>
+                <span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                  147 contributors
+                </span>
+                <span>Mar 28, 2026</span>
+              </div>
+            </div>
+            <div class="offer-price-col">
+              <div class="offer-amount">$14,700</div>
+              <div class="offer-contributors">avg $100/person</div>
+            </div>
+            <div class="offer-actions">
+              <button class="offer-accept-btn">Accept</button>
+              <button class="offer-decline-btn">Decline</button>
+            </div>
+          </div>
+
+          <div class="offer-card">
+            <div class="offer-avatar">TW</div>
+            <div class="offer-details">
+              <div class="offer-name">Tasha Williams</div>
+              <div class="offer-type">Consultation — Wealth Strategy for Tech Startup</div>
+              <div class="offer-meta">
+                <span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  45 min
+                </span>
+                <span>Virtual — Zoom</span>
+                <span>Mar 15, 2026</span>
+              </div>
+            </div>
+            <div class="offer-price-col">
+              <div class="offer-amount">$500</div>
+            </div>
+            <div class="offer-actions">
+              <button class="offer-accept-btn">Accept</button>
+              <button class="offer-decline-btn">Decline</button>
+            </div>
+          </div>
+
+          <div class="offer-card">
+            <div class="offer-avatar">DK</div>
+            <div class="offer-details">
+              <div class="offer-name">David King <span class="offer-badge">Featured</span></div>
+              <div class="offer-type">Podcast — The Builder's Blueprint Ep. 204</div>
+              <div class="offer-meta">
+                <span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  1 hour
+                </span>
+                <span>Virtual — Zoom</span>
+                <span>Mar 20, 2026</span>
+              </div>
+            </div>
+            <div class="offer-price-col">
+              <div class="offer-amount">$1,200</div>
+            </div>
+            <div class="offer-actions">
+              <button class="offer-accept-btn">Accept</button>
+              <button class="offer-decline-btn">Decline</button>
+            </div>
+          </div>
+
+          <div class="offer-card">
+            <div class="offer-avatar">AR</div>
+            <div class="offer-details">
+              <div class="offer-name">Aaliyah Ross</div>
+              <div class="offer-type">Music Review — Debut EP "Sovereign Sound"</div>
+              <div class="offer-meta">
+                <span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  30 min
+                </span>
+                <span>Virtual — Google Meet</span>
+                <span>Mar 12, 2026</span>
+              </div>
+            </div>
+            <div class="offer-price-col">
+              <div class="offer-amount">$300</div>
+            </div>
+            <div class="offer-actions">
+              <button class="offer-accept-btn">Accept</button>
+              <button class="offer-decline-btn">Decline</button>
+            </div>
+          </div>
+
+          <div class="offer-card">
+            <div class="offer-avatar">JC</div>
+            <div class="offer-details">
+              <div class="offer-name">Jerome Carter <span class="offer-badge community">Community</span></div>
+              <div class="offer-type">Speaking Event — Atlanta Wealth Conference 2026</div>
+              <div class="offer-meta">
+                <span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  1 hour
+                </span>
+                <span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                  89 contributors
+                </span>
+                <span>Apr 5, 2026</span>
+              </div>
+            </div>
+            <div class="offer-price-col">
+              <div class="offer-amount">$8,900</div>
+            </div>
+            <div class="offer-actions">
+              <button class="offer-accept-btn">Accept</button>
+              <button class="offer-decline-btn">Decline</button>
+            </div>
+          </div>
+
+          <div class="offer-card">
+            <div class="offer-avatar">SN</div>
+            <div class="offer-details">
+              <div class="offer-name">Simone Nash</div>
+              <div class="offer-type">Product Review — Organic Skincare Line "EarthGlow"</div>
+              <div class="offer-meta">
+                <span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  30 min
+                </span>
+                <span>Virtual — Zoom</span>
+                <span>Mar 18, 2026</span>
+              </div>
+            </div>
+            <div class="offer-price-col">
+              <div class="offer-amount">$400</div>
+            </div>
+            <div class="offer-actions">
+              <button class="offer-accept-btn">Accept</button>
+              <button class="offer-decline-btn">Decline</button>
+            </div>
+          </div>
+
+          <div class="offer-card">
+            <div class="offer-avatar">KL</div>
+            <div class="offer-details">
+              <div class="offer-name">Kwame Lewis <span class="offer-badge community">Community</span></div>
+              <div class="offer-type">Panel — Houston Black Business Expo</div>
+              <div class="offer-meta">
+                <span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  45 min
+                </span>
+                <span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                  63 contributors
+                </span>
+                <span>Apr 12, 2026</span>
+              </div>
+            </div>
+            <div class="offer-price-col">
+              <div class="offer-amount">$6,300</div>
+            </div>
+            <div class="offer-actions">
+              <button class="offer-accept-btn">Accept</button>
+              <button class="offer-decline-btn">Decline</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Success Modal -->
+  <div class="success-overlay" id="successModal">
+    <div class="success-modal">
+      <div class="success-check">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#D5FF5A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h3>Offer Submitted</h3>
+      <p>Your offer has been sent to 19Keys for review. You'll receive a notification when it's accepted or countered.</p>
+      <button class="success-close-btn" id="closeModal">Done</button>
+    </div>
+  </div>
+
+  <script>
+    // ── View Toggle ──
+    const viewBtns = document.querySelectorAll('.view-btn');
+    const sendSection = document.getElementById('sendSection');
+    const pendingSection = document.getElementById('pendingSection');
+
+    viewBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        viewBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        if (btn.dataset.view === 'send') {
+          sendSection.classList.add('active');
+          pendingSection.classList.remove('active');
+        } else {
+          sendSection.classList.remove('active');
+          pendingSection.classList.add('active');
+        }
+      });
+    });
+
+    // ── Service Card Selection ──
+    const serviceCards = document.querySelectorAll('.service-card');
+    const bookingForm = document.getElementById('bookingForm');
+
+    serviceCards.forEach(card => {
+      card.addEventListener('click', () => {
+        serviceCards.forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        bookingForm.classList.add('active');
+
+        // Smooth scroll to form
+        setTimeout(() => {
+          bookingForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 150);
+      });
+    });
+
+    // ── Duration Picker ──
+    const durationBtns = document.querySelectorAll('.duration-btn');
+    durationBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        durationBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+
+    // ── Community Toggle ──
+    const communityToggle = document.getElementById('communityToggle');
+    communityToggle.addEventListener('click', () => {
+      communityToggle.classList.toggle('active');
+    });
+
+    // ── Submit Offer ──
+    const submitBtn = document.getElementById('submitOffer');
+    const successModal = document.getElementById('successModal');
+    const closeModal = document.getElementById('closeModal');
+
+    submitBtn.addEventListener('click', () => {
+      successModal.classList.add('show');
+    });
+
+    closeModal.addEventListener('click', () => {
+      successModal.classList.remove('show');
+    });
+
+    successModal.addEventListener('click', (e) => {
+      if (e.target === successModal) {
+        successModal.classList.remove('show');
+      }
+    });
+
+    // ── Accept / Decline Offer Actions ──
+    document.querySelectorAll('.offer-accept-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const card = btn.closest('.offer-card');
+        card.style.borderColor = 'rgba(213, 255, 90, 0.2)';
+        btn.textContent = 'Accepted';
+        btn.style.background = '#D5FF5A';
+        btn.style.color = '#0F0E12';
+        btn.disabled = true;
+        const declineBtn = card.querySelector('.offer-decline-btn');
+        if (declineBtn) declineBtn.style.display = 'none';
+      });
+    });
+
+    document.querySelectorAll('.offer-decline-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const card = btn.closest('.offer-card');
+        card.style.opacity = '0.4';
+        card.style.transform = 'scale(0.98)';
+        card.style.transition = 'all 0.3s';
+        setTimeout(() => {
+          card.style.display = 'none';
+        }, 300);
+      });
+    });
+  </script>
+  <script src="theme-toggle.js"></script>
+</body>
+</html>

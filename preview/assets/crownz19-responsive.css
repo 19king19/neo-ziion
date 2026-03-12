@@ -1,0 +1,270 @@
+/* ==========================================================================
+   CROWNZ19 Responsive
+   Global breakpoint overrides for all sections
+   ========================================================================== */
+
+/* ------------------------------------------------------------------
+   Large Desktop (> 1440px)
+   ------------------------------------------------------------------ */
+
+@media (min-width: 1441px) {
+  :root {
+    --max-width: 1400px;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Desktop (1024 – 1440px)  –  default styles, minimal overrides
+   ------------------------------------------------------------------ */
+
+/* ------------------------------------------------------------------
+   Tablet Landscape (769 – 1024px)
+   ------------------------------------------------------------------ */
+
+@media (max-width: 1024px) {
+  /* Product Showcase */
+  .product-showcase__item {
+    transform: scale(0.9) !important;
+  }
+
+  /* Sphere Grid */
+  .sphere-grid__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* Collection Grid */
+  .collection-grid__grid--4-col,
+  .collection-grid__grid--5-col {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ------------------------------------------------------------------
+   Tablet Portrait (481 – 768px)
+   ------------------------------------------------------------------ */
+
+@media (max-width: 768px) {
+  /* Typography scale down */
+  h1 { font-size: clamp(1.6rem, 5vw, 2.2rem); }
+  h2 { font-size: clamp(1.3rem, 4vw, 1.7rem); }
+
+  /* Header */
+  .header__nav { display: none; }
+  .header__mobile-toggle { display: flex; }
+
+  /* Product Showcase – stack vertically */
+  .product-showcase__canvas {
+    position: relative;
+    height: auto;
+    min-height: auto;
+    padding: var(--spacing-xl) 0;
+  }
+  .product-showcase__item {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 48% !important;
+    display: inline-block;
+    vertical-align: top;
+    margin-bottom: var(--spacing-lg);
+    transform: none !important;
+  }
+  .product-showcase__canvas {
+    text-align: center;
+  }
+
+  /* Sphere Grid – 2 columns */
+  .sphere-grid__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+  }
+  .sphere-grid__label {
+    font-size: 0.65rem;
+  }
+
+  /* Manifest Timeline – vertical scroll fallback */
+  .manifest-timeline__track {
+    position: relative;
+    transform: none !important;
+  }
+  .manifest-timeline__eras {
+    display: block;
+    width: 100%;
+  }
+  .manifest-timeline__era {
+    width: 100%;
+    min-height: 80vh;
+    scroll-snap-align: start;
+  }
+  .manifest-timeline__progress {
+    display: none;
+  }
+
+  /* Product Detail – single column */
+  .product-detail__inner {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-xl);
+  }
+  .product-detail__gallery {
+    position: relative;
+    top: 0;
+  }
+
+  /* Featured Collection */
+  .featured-collection__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Related Products */
+  .related-products__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Cart Drawer */
+  .cart-drawer__panel {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* Collection Grid */
+  .collection-grid__grid,
+  .collection-grid__grid--3-col,
+  .collection-grid__grid--4-col,
+  .collection-grid__grid--5-col {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Hero Banner */
+  .hero-banner__heading {
+    font-size: clamp(1.6rem, 6vw, 2.5rem);
+  }
+
+  /* Newsletter */
+  .newsletter__form {
+    flex-direction: column;
+  }
+  .newsletter__input,
+  .newsletter__btn {
+    width: 100%;
+  }
+
+  /* Footer */
+  .footer__grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-xl);
+    text-align: center;
+  }
+  .footer__bottom {
+    flex-direction: column;
+    gap: var(--spacing-md);
+    text-align: center;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Mobile (≤ 480px)
+   ------------------------------------------------------------------ */
+
+@media (max-width: 480px) {
+  /* Global spacing */
+  :root {
+    --spacing-3xl: 48px;
+    --spacing-2xl: 32px;
+  }
+
+  /* Product Showcase – single column */
+  .product-showcase__item {
+    width: 100% !important;
+    display: block;
+  }
+
+  /* Sphere Grid – still 2 cols but tighter */
+  .sphere-grid__grid {
+    gap: var(--spacing-sm);
+  }
+  .sphere-grid__item {
+    width: 100%;
+  }
+
+  /* Manifest Museum – compact */
+  .manifest-timeline__era {
+    min-height: 70vh;
+    padding: var(--spacing-xl) var(--spacing-md);
+  }
+  .manifest-timeline__era-title {
+    font-size: 2rem;
+  }
+  .manifest-timeline__era-period {
+    font-size: 0.7rem;
+  }
+
+  /* Collection Grid – single column */
+  .collection-grid__grid,
+  .collection-grid__grid--2-col,
+  .collection-grid__grid--3-col,
+  .collection-grid__grid--4-col,
+  .collection-grid__grid--5-col {
+    grid-template-columns: 1fr;
+  }
+
+  /* Product Card – adjust image ratio */
+  .product-card__image {
+    aspect-ratio: 3 / 4;
+  }
+
+  /* Cart Drawer items */
+  .cart-drawer__item-image {
+    width: 64px;
+    height: 64px;
+  }
+  .cart-drawer__item-image img {
+    width: 64px;
+    height: 64px;
+  }
+
+  /* Buttons – full width */
+  .btn {
+    width: 100%;
+    text-align: center;
+  }
+  .btn--primary {
+    padding: 14px 24px;
+  }
+
+  /* Pagination */
+  .collection-grid__pagination {
+    gap: var(--spacing-xs);
+  }
+  .collection-grid__page-link {
+    width: 36px;
+    height: 36px;
+    font-size: 0.8rem;
+  }
+
+  /* Hero Banner */
+  .hero-banner__content {
+    padding: 0 var(--spacing-md);
+  }
+}
+
+/* ------------------------------------------------------------------
+   Small Mobile (≤ 360px)
+   ------------------------------------------------------------------ */
+
+@media (max-width: 360px) {
+  .header__logo-text {
+    font-size: 1rem;
+  }
+
+  .sphere-grid__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .product-detail__thumbs {
+    gap: 4px;
+  }
+  .product-detail__thumb {
+    width: 60px;
+    height: 60px;
+  }
+}

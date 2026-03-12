@@ -1,0 +1,95 @@
+{%- comment -%}
+  Product card snippet
+  Usage: {% render 'product-card', product: product, class: 'optional-class' %}
+{%- endcomment -%}
+
+{%- liquid
+  assign is_coming_soon = false
+  if product.tags contains 'coming-soon'
+    assign is_coming_soon = true
+  endif
+  assign first_image = product.featured_image
+-%}
+
+<div class="product-card {{ class }}">
+  <a href="{{ product.url }}" class="product-card__link" aria-label="{{ product.title | escape }}">
+    <div class="product-card__media">
+      {%- if first_image -%}
+        <img
+          src="{{ first_image | image_url: width: 600 }}"
+          alt="{{ first_image.alt | default: product.title | escape }}"
+          width="300"
+          height="{{ 300 | divided_by: first_image.aspect_ratio }}"
+          loading="lazy"
+          class="product-card__img"
+        >
+      {%- else -%}
+        <div class="product-card__placeholder">
+          {{ 'product-1' | placeholder_svg_tag: 'product-card__placeholder-svg' }}
+        </div>
+      {%- endif -%}
+
+      {%- if is_coming_soon -%}
+        {%- render 'coming-soon-overlay' -%}
+      {%- endif -%}
+    </div>
+
+    <div class="product-card__info">
+      <h3 class="product-card__title">{{ product.title }}</h3>
+      {%- render 'price', product: product -%}
+    </div>
+  </a>
+</div>
+
+<style>
+  .product-card {
+    position: relative;
+  }
+
+  .product-card__link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .product-card__media {
+    position: relative;
+    overflow: hidden;
+    border-radius: 4px;
+  }
+
+  .product-card__img {
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: transform 0.6s var(--ease-out);
+  }
+
+  .product-card__link:hover .product-card__img {
+    transform: scale(1.03);
+  }
+
+  .product-card__info {
+    padding-top: var(--spacing-sm);
+  }
+
+  .product-card__title {
+    font-size: 0.8rem;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    margin: 0 0 4px;
+  }
+
+  .product-card__placeholder {
+    aspect-ratio: 1;
+    background: rgba(0, 0, 0, 0.03);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .product-card__placeholder-svg {
+    width: 60%;
+    opacity: 0.2;
+  }
+</style>

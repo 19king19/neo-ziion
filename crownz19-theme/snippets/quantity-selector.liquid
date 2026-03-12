@@ -1,0 +1,56 @@
+<div class="quantity-selector" data-quantity-selector>
+  <button
+    type="button"
+    class="quantity-selector__btn"
+    data-quantity-minus
+    aria-label="Decrease quantity"
+  >
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+      <line x1="2" y1="6" x2="10" y2="6"/>
+    </svg>
+  </button>
+  <input
+    type="number"
+    id="Quantity-{{ id }}"
+    class="quantity-selector__input"
+    name="quantity"
+    value="1"
+    min="1"
+    max="99"
+    data-quantity-input
+    aria-label="Quantity"
+  >
+  <button
+    type="button"
+    class="quantity-selector__btn"
+    data-quantity-plus
+    aria-label="Increase quantity"
+  >
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+      <line x1="2" y1="6" x2="10" y2="6"/>
+      <line x1="6" y1="2" x2="6" y2="10"/>
+    </svg>
+  </button>
+</div>
+
+<script>
+  (function() {
+    document.querySelectorAll('[data-quantity-selector]').forEach(function(selector) {
+      var input = selector.querySelector('[data-quantity-input]');
+      var minus = selector.querySelector('[data-quantity-minus]');
+      var plus = selector.querySelector('[data-quantity-plus]');
+
+      if (!input) return;
+
+      minus.addEventListener('click', function() {
+        var val = parseInt(input.value, 10) || 1;
+        if (val > 1) { input.value = val - 1; input.dispatchEvent(new Event('change')); }
+      });
+
+      plus.addEventListener('click', function() {
+        var val = parseInt(input.value, 10) || 1;
+        if (val < 99) { input.value = val + 1; input.dispatchEvent(new Event('change')); }
+      });
+    });
+  })();
+</script>

@@ -1,0 +1,312 @@
+{
+  "meta": {
+    "last_updated": "2026-03-11T06:00:00Z",
+    "updated_by": "Neo",
+    "version": "1.0",
+    "status": "operational"
+  },
+  "economy": {
+    "nation_gdp": "$4.2M",
+    "nation_gdp_change": "+12.3%",
+    "nation_gdp_positive": true,
+    "spending_power": "$87.2M",
+    "creator_value": "$1.8M",
+    "economy_grade": "A",
+    "equivalence": "Mid-Size City",
+    "ip_vault_total": 1499,
+    "ip_critical": 12
+  },
+  "neural_map": {
+    "active_synapses": 5,
+    "threads": 3,
+    "votes": 7823,
+    "connections": 147,
+    "complexity": "2.4\u00d7"
+  },
+  "agents": [
+    {
+      "id": "master-claw",
+      "name": "Neo",
+      "role": "Chief of Staff",
+      "icon": "\ud83e\udde0",
+      "icon_class": "frameworks",
+      "status": "ready",
+      "status_label": "Active",
+      "last_action": "Security audit passed \u2014 0 critical vulnerabilities",
+      "last_action_time": "2h ago",
+      "files": 5,
+      "tasks_complete": 8,
+      "uptime": "96%",
+      "desc": "Autonomous chief of staff \u2014 runs security, coordinates departments, and executes operations via Telegram."
+    },
+    {
+      "id": "dept-cognition-key",
+      "name": "CognitionKey Agent",
+      "role": "Book & Course Department",
+      "icon": "\ud83d\udcd6",
+      "icon_class": "manuscripts",
+      "status": "standby",
+      "status_label": "Standby",
+      "last_action": "Awaiting API key activation",
+      "last_action_time": "\u2014",
+      "files": 0,
+      "tasks_complete": 0,
+      "uptime": "\u2014",
+      "desc": "Manages the Cognition Key book and course pipeline \u2014 outline, chapters, modules, and monetization strategy."
+    },
+    {
+      "id": "dept-content-media",
+      "name": "Content Agent",
+      "role": "Media & Publishing",
+      "icon": "\ud83d\udce1",
+      "icon_class": "content",
+      "status": "standby",
+      "status_label": "Standby",
+      "last_action": "Awaiting X/Twitter API connection",
+      "last_action_time": "\u2014",
+      "files": 0,
+      "tasks_complete": 0,
+      "uptime": "\u2014",
+      "desc": "Handles autonomous content publishing \u2014 threads, posts, newsletters, and video scripts across all platforms."
+    },
+    {
+      "id": "dept-operations",
+      "name": "Ops Agent",
+      "role": "Operations",
+      "icon": "\u2699\ufe0f",
+      "icon_class": "business",
+      "status": "standby",
+      "status_label": "Standby",
+      "last_action": "Awaiting activation",
+      "last_action_time": "\u2014",
+      "files": 0,
+      "tasks_complete": 0,
+      "uptime": "\u2014",
+      "desc": "Manages calendar, offers, scheduling, logistics, and all operational execution for the empire."
+    },
+    {
+      "id": "dept-research-intel",
+      "name": "Research Agent",
+      "role": "Intelligence & Research",
+      "icon": "\ud83d\udd2c",
+      "icon_class": "research",
+      "status": "standby",
+      "status_label": "Standby",
+      "last_action": "Awaiting activation",
+      "last_action_time": "\u2014",
+      "files": 0,
+      "tasks_complete": 0,
+      "uptime": "\u2014",
+      "desc": "Deep research on culture, economics, Black futures, competitors, and strategic market intelligence."
+    }
+  ],
+  "pending_offers": [
+    {
+      "initials": "MJ",
+      "name": "Marcus Johnson",
+      "badge": "Community",
+      "badge_class": "community",
+      "type": "Speaking Event \u2014 Chicago Community Summit",
+      "duration": "1 hour",
+      "context": "147 contributors",
+      "date": "Mar 28, 2026",
+      "amount": "$14,700",
+      "amount_sub": "avg $100/person",
+      "priority": "urgent",
+      "status": "pending"
+    },
+    {
+      "initials": "TW",
+      "name": "Tasha Williams",
+      "badge": null,
+      "badge_class": null,
+      "type": "Consultation \u2014 Wealth Strategy for Tech Startup",
+      "duration": "45 min",
+      "context": "Virtual \u2014 Zoom",
+      "date": "Mar 15, 2026",
+      "amount": "$500",
+      "amount_sub": null,
+      "priority": "high",
+      "status": "pending"
+    },
+    {
+      "initials": "DK",
+      "name": "David King",
+      "badge": "Featured",
+      "badge_class": "",
+      "type": "Podcast \u2014 The Builder's Blueprint Ep. 204",
+      "duration": "1 hour",
+      "context": "Virtual \u2014 Zoom",
+      "date": "Mar 20, 2026",
+      "amount": "$1,200",
+      "amount_sub": null,
+      "priority": "normal",
+      "status": "pending"
+    }
+  ],
+  "offers_summary": {
+    "total_count": 12,
+    "total_value": 14800,
+    "urgent_deadline": "Mar 15, 2026"
+  },
+  "neo_log": [
+    {
+      "action": "Security audit complete \u2014 0 critical vulnerabilities",
+      "time": "2h ago",
+      "type": "security"
+    },
+    {
+      "action": "SOUL.md now loading at 96% capacity",
+      "time": "3h ago",
+      "type": "config"
+    },
+    {
+      "action": "Auto-update cron set \u2014 Monday 3AM",
+      "time": "4h ago",
+      "type": "system"
+    },
+    {
+      "action": "Credential threat removed (x-research skill deleted)",
+      "time": "5h ago",
+      "type": "security"
+    },
+    {
+      "action": "OpenClaw updated to v2026.3.8",
+      "time": "6h ago",
+      "type": "update"
+    }
+  ],
+  "pulse_summary": {
+    "active_votes": 4,
+    "total_participants": 7823,
+    "top_vote": "Will Bitcoin reach $200K by 2027?",
+    "top_vote_count": 2847
+  },
+  "social_totals": {
+    "combined_raw": 1677792,
+    "unique_estimated": 1090565,
+    "platforms": {
+      "instagram": {
+        "count": 983852,
+        "daily_growth": 2340,
+        "handle": "@19_keys"
+      },
+      "youtube": {
+        "count": 232000,
+        "daily_growth": 820,
+        "handle": "@19KEYS"
+      },
+      "x": {
+        "count": 123040,
+        "daily_growth": 430,
+        "handle": "@19keys_"
+      },
+      "threads": {
+        "count": 224200,
+        "daily_growth": 510,
+        "handle": "@19_keys"
+      },
+      "tiktok": {
+        "count": 114700,
+        "daily_growth": 180,
+        "handle": "@19keys"
+      }
+    },
+    "total_daily_growth": 4280,
+    "growth_rate_pct": 25.4
+  },
+  "revenue_potential": {
+    "sponsorship_low": 15000,
+    "sponsorship_high": 40000,
+    "sponsorship_label": "$15K\u2013$40K per post",
+    "course_projected": 394000,
+    "course_label": "Cognition Key \u00b7 2K students \u00d7 $197",
+    "speaking_pipeline": 14800,
+    "monthly_low": 55000,
+    "monthly_high": 80000,
+    "monthly_label": "$55K\u2013$80K/mo"
+  },
+  "conversion_stats": {
+    "link_ctr_pct": 3.2,
+    "profile_to_follow_pct": 8.7,
+    "booking_conversion_pct": 12.4,
+    "content_engagement_pct": 4.1,
+    "offer_acceptance_pct": 68,
+    "monthly_active_reach": 847000,
+    "last_synced": "2026-03-11T06:00:00Z"
+  },
+  "nation_value": {
+    "audience_asset": 3271695,
+    "owned_media": 5350000,
+    "ip_vault": 299800,
+    "brand_equity": 26764485,
+    "course_pipeline": 394000,
+    "total": 27158485,
+    "grade": "A+-Tier",
+    "label": "$27.2M"
+  },
+  "audience_profile": {
+    "primary_demographic": "Black American, male-skewing (~65-70%), ages 25-45",
+    "psychographic": "financially aspirational, wealth-seeking, high purchase intent",
+    "avg_yearly_income": 60000,
+    "value_per_follower": 3.0,
+    "calibration_source": "GoHighLevel CRM buyer data + YouTube RPM $9.18 (education niche benchmark)",
+    "crm_buyer_sample": 13,
+    "top_products": [
+      "IWS",
+      "Save Yourself Bundle",
+      "19Keys Ebook Bundle"
+    ],
+    "primary_acquisition": "Social Media (organic)",
+    "geo_spread": [
+      "Mississippi",
+      "Michigan",
+      "New Jersey",
+      "Georgia",
+      "New York",
+      "Virginia",
+      "Colorado",
+      "Illinois",
+      "Tennessee",
+      "Texas",
+      "Ohio"
+    ]
+  },
+  "youtube_performance": {
+    "channel_id": "UChHAk97MIj6AhbVigYAqyKw",
+    "channel_handle": "@19KEYS",
+    "total_videos": 498,
+    "total_views_alltime": 15500000,
+    "adsense_alltime": 109000,
+    "rpm": 9.18,
+    "ctr": 4.9,
+    "avg_retention": 28.5,
+    "monthly_views_current": 160000,
+    "monthly_views_optimized_target": 400000,
+    "sub_growth_monthly": 1400,
+    "top_format": "The Brief (15-25 min, 42% retention)",
+    "top_video_retention": "A message to every black man (47%)",
+    "playlists": {
+      "the_brief": "PLmAbtvnSAJXm9Rk2JLNY4mxDs_GnimyRC",
+      "high_lvl_conversations": "PLmAbtvnSAJXngS5r0FPUA-IVzJU5xWEtn"
+    }
+  },
+  "owned_channels": {
+    "email": {
+      "size": 100000,
+      "value_per_sub": 30,
+      "total_asset_value": 3000000,
+      "platform": "Email List",
+      "dependency": "zero-algorithm"
+    },
+    "superphone": {
+      "size": 47000,
+      "value_per_sub": 50,
+      "total_asset_value": 2350000,
+      "platform": "SuperPhone SMS",
+      "open_rate": "98%",
+      "dependency": "zero-algorithm"
+    },
+    "combined_owned_media_value": 5350000
+  }
+}

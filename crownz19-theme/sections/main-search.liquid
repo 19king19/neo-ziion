@@ -1,0 +1,157 @@
+{%- liquid
+  assign terms = search.terms | escape
+-%}
+
+<section class="main-search">
+  <div class="main-search__inner">
+    <h1 class="main-search__heading">{{ 'search.title' | t }}</h1>
+
+    <form action="{{ routes.search_url }}" method="get" class="main-search__form" role="search">
+      <input
+        type="search"
+        name="q"
+        value="{{ terms }}"
+        class="main-search__input"
+        placeholder="{{ 'search.placeholder' | t }}"
+        aria-label="{{ 'search.title' | t }}"
+      >
+      <button type="submit" class="main-search__btn btn btn--primary">{{ 'search.submit' | t }}</button>
+    </form>
+
+    {%- if search.performed -%}
+      {%- if search.results_count > 0 -%}
+        <p class="main-search__count">
+          {{ 'search.results_count' | t: count: search.results_count, terms: terms }}
+        </p>
+        <div class="main-search__results">
+          {%- for item in search.results -%}
+            <div class="main-search__result">
+              {%- if item.featured_image -%}
+                <a href="{{ item.url }}" class="main-search__result-image">
+                  <img src="{{ item.featured_image | image_url: width: 200 }}" alt="{{ item.title | escape }}" width="120" height="120" loading="lazy">
+                </a>
+              {%- endif -%}
+              <div class="main-search__result-info">
+                <h3 class="main-search__result-title">
+                  <a href="{{ item.url }}">{{ item.title }}</a>
+                </h3>
+                {%- if item.object_type == 'product' -%}
+                  <p class="main-search__result-price">{{ item.price | money }}</p>
+                {%- else -%}
+                  <p class="main-search__result-excerpt">{{ item.content | strip_html | truncatewords: 20 }}</p>
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+
+        {%- if search.results_count > search.results.size -%}
+          {% paginate search.results by 12 %}
+            <div class="main-search__pagination">
+              {{ paginate | default_pagination }}
+            </div>
+          {% endpaginate %}
+        {%- endif -%}
+      {%- else -%}
+        <p class="main-search__no-results">{{ 'search.no_results' | t: terms: terms }}</p>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+</section>
+
+<style>
+  .main-search {
+    padding: var(--spacing-3xl) 0;
+    background: var(--crownz-white);
+    min-height: 60vh;
+  }
+  .main-search__inner {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-lg);
+  }
+  .main-search__heading {
+    font-size: 1.8rem;
+    font-weight: 300;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin: 0 0 var(--spacing-xl);
+    color: var(--crownz-black);
+    text-align: center;
+  }
+  .main-search__form {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-2xl);
+  }
+  .main-search__input {
+    flex: 1;
+    padding: 14px 20px;
+    font-size: 1rem;
+    border: 1px solid rgba(10,10,10,0.15);
+    border-radius: 0;
+    background: transparent;
+    color: var(--crownz-black);
+    font-family: inherit;
+  }
+  .main-search__input:focus {
+    outline: none;
+    border-color: var(--crownz-black);
+  }
+  .main-search__count {
+    font-size: 0.85rem;
+    color: rgba(10,10,10,0.5);
+    margin: 0 0 var(--spacing-xl);
+  }
+  .main-search__result {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md) 0;
+    border-bottom: 1px solid rgba(10,10,10,0.06);
+  }
+  .main-search__result-image img {
+    border-radius: 4px;
+    background: var(--crownz-cream, #E8E4DC);
+    object-fit: cover;
+  }
+  .main-search__result-title a {
+    font-size: 1rem;
+    color: var(--crownz-black);
+    text-decoration: none;
+  }
+  .main-search__result-title a:hover { text-decoration: underline; }
+  .main-search__result-price {
+    font-size: 0.9rem;
+    color: rgba(10,10,10,0.7);
+    margin: 4px 0 0;
+  }
+  .main-search__result-excerpt {
+    font-size: 0.85rem;
+    color: rgba(10,10,10,0.5);
+    margin: 4px 0 0;
+    line-height: 1.5;
+  }
+  .main-search__no-results {
+    text-align: center;
+    font-size: 1.1rem;
+    color: rgba(10,10,10,0.5);
+    padding: var(--spacing-3xl) 0;
+  }
+  @media (max-width: 480px) {
+    .main-search__form { flex-direction: column; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Search Results",
+  "tag": "div",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Search Results"
+    }
+  ]
+}
+{% endschema %}

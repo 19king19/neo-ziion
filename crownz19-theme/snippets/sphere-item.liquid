@@ -1,0 +1,46 @@
+{%- comment -%}
+  Sphere item snippet for the sphere grid
+  Usage: {% render 'sphere-item', block: block %}
+{%- endcomment -%}
+
+{%- liquid
+  assign product = block.settings.product
+  assign label = block.settings.label
+  assign sphere_image = block.settings.sphere_image
+  assign link_url = product.url | default: '#'
+-%}
+
+<div class="sphere-item" data-sphere-item {{ block.shopify_attributes }}>
+  <a href="{{ link_url }}" class="sphere-item__link" aria-label="{{ label | default: product.title | default: 'Explore' }}">
+    <div class="sphere-item__orb" data-sphere-orb>
+      <div class="sphere-item__orb-inner">
+        {%- if sphere_image != blank -%}
+          <img
+            src="{{ sphere_image | image_url: width: 500 }}"
+            alt="{{ sphere_image.alt | default: label | escape }}"
+            loading="lazy"
+            class="sphere-item__img"
+          >
+        {%- elsif product != blank and product.featured_image -%}
+          <img
+            src="{{ product.featured_image | image_url: width: 500 }}"
+            alt="{{ product.featured_image.alt | default: product.title | escape }}"
+            loading="lazy"
+            class="sphere-item__img"
+          >
+        {%- else -%}
+          <div class="sphere-item__empty"></div>
+        {%- endif -%}
+
+        {%- comment -%} Glass overlay layers {%- endcomment -%}
+        <div class="sphere-item__glass"></div>
+        <div class="sphere-item__highlight"></div>
+        <div class="sphere-item__shadow"></div>
+      </div>
+    </div>
+
+    {%- if label != blank -%}
+      <span class="sphere-item__label">{{ label }}</span>
+    {%- endif -%}
+  </a>
+</div>

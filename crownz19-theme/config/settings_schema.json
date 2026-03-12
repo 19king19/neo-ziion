@@ -1,0 +1,131 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "CROWNZ19",
+    "theme_version": "1.0.0",
+    "theme_author": "CROWNZ19",
+    "theme_documentation_url": "https://crownz19.com",
+    "theme_support_url": "https://crownz19.com/support"
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Brand Colors"
+      },
+      {
+        "type": "color",
+        "id": "color_primary",
+        "label": "Primary (Cream)",
+        "default": "#E8E4DC"
+      },
+      {
+        "type": "color",
+        "id": "color_dark",
+        "label": "Dark Background",
+        "default": "#0a0a0a"
+      },
+      {
+        "type": "color",
+        "id": "color_text",
+        "label": "Text Color",
+        "default": "#1a1a1a"
+      },
+      {
+        "type": "color",
+        "id": "color_text_light",
+        "label": "Light Text",
+        "default": "#f5f3ef"
+      },
+      {
+        "type": "color",
+        "id": "color_accent",
+        "label": "Accent",
+        "default": "#8a8580"
+      }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      {
+        "type": "font_picker",
+        "id": "font_heading",
+        "label": "Heading Font",
+        "default": "inter_n4"
+      },
+      {
+        "type": "font_picker",
+        "id": "font_body",
+        "label": "Body Font",
+        "default": "inter_n4"
+      }
+    ]
+  },
+  {
+    "name": "Logo",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Logo"
+      },
+      {
+        "type": "range",
+        "id": "logo_width",
+        "min": 50,
+        "max": 300,
+        "step": 10,
+        "default": 140,
+        "label": "Logo Width (px)"
+      }
+    ]
+  },
+  {
+    "name": "Social Media",
+    "settings": [
+      {
+        "type": "text",
+        "id": "social_instagram",
+        "label": "Instagram URL"
+      },
+      {
+        "type": "text",
+        "id": "social_twitter",
+        "label": "X / Twitter URL"
+      },
+      {
+        "type": "text",
+        "id": "social_tiktok",
+        "label": "TikTok URL"
+      },
+      {
+        "type": "text",
+        "id": "social_youtube",
+        "label": "YouTube URL"
+      }
+    ]
+  },
+  {
+    "name": "Cart",
+    "settings": [
+      {
+        "type": "select",
+        "id": "cart_type",
+        "label": "Cart Type",
+        "options": [
+          { "value": "drawer", "label": "Slide-out Drawer" },
+          { "value": "page", "label": "Cart Page" }
+        ],
+        "default": "drawer"
+      },
+      {
+        "type": "text",
+        "id": "free_shipping_threshold",
+        "label": "Free Shipping Threshold ($)",
+        "default": "100"
+      }
+    ]
+  }
+]

@@ -1,0 +1,3215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZIION</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="light-theme.css">
+  <style>
+    /* ── Password Gate — Muted Construction Aesthetic ── */
+    .gate-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      background: #0a0a0a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .gate-overlay.unlocked {
+      opacity: 0;
+      transform: scale(1.02);
+      pointer-events: none;
+    }
+    .gate-vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.6) 100%);
+      pointer-events: none;
+    }
+    .gate-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+    .gate-logo {
+      font-family: 'Inter', sans-serif;
+      font-size: 28px;
+      font-weight: 200;
+      letter-spacing: 16px;
+      color: rgba(255,255,255,0.12);
+      margin-bottom: 60px;
+      text-indent: 16px;
+      text-transform: uppercase;
+    }
+    .gate-divider {
+      width: 40px;
+      height: 1px;
+      background: rgba(255,255,255,0.06);
+      margin-bottom: 32px;
+    }
+    .gate-input-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+    .gate-label {
+      font-size: 8px;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      color: rgba(255,255,255,0.08);
+    }
+    .gate-input {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      border-radius: 0;
+      padding: 12px 20px;
+      font-family: 'Inter', sans-serif;
+      font-size: 20px;
+      font-weight: 200;
+      color: rgba(255,255,255,0.3);
+      text-align: center;
+      letter-spacing: 12px;
+      width: 140px;
+      outline: none;
+      transition: border-color 0.5s ease, color 0.5s ease;
+      -webkit-text-security: disc;
+    }
+    .gate-input:focus {
+      border-bottom-color: rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.5);
+    }
+    .gate-input.shake {
+      animation: gateShake 0.4s ease;
+      border-bottom-color: rgba(255,60,60,0.2);
+    }
+    .gate-hint {
+      font-size: 8px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.04);
+      margin-top: 48px;
+      letter-spacing: 3px;
+      text-transform: lowercase;
+    }
+    @keyframes gateShake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-6px); }
+      40% { transform: translateX(6px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #0F0E12;
+      color: #fff;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      overflow-x: hidden;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ── Sticky Header ── */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(15, 14, 18, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .logo-text {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: #fff;
+    }
+
+    /* ── Search Bar ── */
+    .search-bar {
+      flex: 0 1 420px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+      gap: 10px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .search-bar:focus-within {
+      border-color: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .search-icon { opacity: 0.4; flex-shrink: 0; }
+
+    .search-bar input {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    .search-bar input::placeholder { color: rgba(255, 255, 255, 0.3); }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-icon {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .header-icon:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4D4D4D, #322D2A);
+      cursor: pointer;
+    }
+
+    /* ── Main Layout: Sidebar + Content + Right Panel ── */
+    .main-layout {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* ── Left Sidebar ── */
+    .sidebar {
+      width: 220px;
+      flex-shrink: 0;
+      border-right: 1px solid rgba(255,255,255,0.06);
+      padding: 20px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      overflow-y: auto;
+    }
+
+    .sidebar-create {
+      width: 100%;
+      height: 40px;
+      background: #fff;
+      color: #0F0E12;
+      border: none;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: opacity 0.15s;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: inherit;
+    }
+
+    .sidebar-create:hover { opacity: 0.85; }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      color: rgba(255,255,255,0.4);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+    }
+
+    .nav-item:hover { background: rgba(255,255,255,0.06); color: #fff; }
+    .nav-item.active { background: rgba(255,255,255,0.08); color: #fff; }
+
+    .nav-item svg { width: 18px; height: 18px; opacity: 0.6; flex-shrink: 0; }
+    .nav-item.active svg { opacity: 1; }
+
+    .sidebar-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.06);
+      margin: 8px 0;
+    }
+
+    /* ── Center Content ── */
+    .center-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0;
+    }
+
+    /* ── Inline Moon (next to Growth Rate) ── */
+    .stat-moon-item {
+      flex: none !important;
+      width: auto;
+      flex-direction: row !important;
+      align-items: center !important;
+      gap: 10px !important;
+      padding: 8px 16px !important;
+      border-left: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .moon-canvas {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      box-shadow: 0 0 14px rgba(213,255,90,0.12), 0 0 40px rgba(213,255,90,0.04);
+    }
+
+    .moon-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .moon-phase-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.85);
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+    }
+
+    .moon-illumination {
+      font-size: 10px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+
+    /* ── Economy Banner ── */
+    .economy-banner {
+      display: flex;
+      align-items: stretch;
+      gap: 1px;
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 0;
+    }
+
+    .econ-item {
+      flex: 1;
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      background: rgba(15, 14, 18, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      position: relative;
+    }
+
+    .econ-item.primary {
+      flex: 1.3;
+      border-right: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .econ-label {
+      font-size: 9px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.8px;
+      color: rgba(255,255,255,0.3);
+    }
+
+    .econ-value {
+      font-size: 24px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+    }
+
+    .econ-value.large {
+      font-size: 28px;
+    }
+
+    .econ-sub {
+      font-size: 10px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.2);
+      margin-top: 1px;
+    }
+
+    .econ-sub .green-accent {
+      color: #D5FF5A;
+      font-weight: 600;
+    }
+
+    .econ-equiv {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      margin-top: 4px;
+      width: fit-content;
+    }
+
+    .econ-equiv-flag {
+      font-size: 12px;
+      line-height: 1;
+    }
+
+    .econ-equiv-text {
+      font-size: 10px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0.04em;
+    }
+
+    .econ-grade {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: rgba(213, 255, 90, 0.08);
+      border: 1px solid rgba(213, 255, 90, 0.12);
+      font-size: 14px;
+      font-weight: 800;
+      color: #D5FF5A;
+      margin-top: 2px;
+    }
+
+    /* ── Live Dashboard Stats (compact row) ── */
+    .stats-bar {
+      display: flex;
+      align-items: stretch;
+      gap: 1px;
+      background: rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 0;
+    }
+
+    .stat-item {
+      flex: 1;
+      padding: 10px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      background: rgba(15, 14, 18, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .stat-label {
+      font-size: 9px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: rgba(255,255,255,0.3);
+    }
+
+    .stat-value {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .stat-value.green { color: #D5FF5A; }
+
+    /* ── Post Composer ── */
+    .composer {
+      padding: 20px 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .composer-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4D4D4D, #322D2A);
+      flex-shrink: 0;
+    }
+
+    .composer-input {
+      flex: 1;
+      height: 42px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 0 16px;
+      color: rgba(255,255,255,0.4);
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .composer-input:focus {
+      border-color: rgba(255,255,255,0.2);
+      color: #fff;
+    }
+
+    .composer-btn {
+      height: 42px;
+      padding: 0 24px;
+      background: #fff;
+      color: #0F0E12;
+      border: none;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: opacity 0.15s;
+      font-family: inherit;
+    }
+
+    .composer-btn:hover { opacity: 0.85; }
+
+    /* ── Feed Tabs ── */
+    .feed-tabs {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 0 24px;
+    }
+
+    .feed-tab {
+      padding: 14px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: rgba(255,255,255,0.3);
+      cursor: pointer;
+      border-bottom: 1px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .feed-tab:hover { color: rgba(255,255,255,0.6); }
+    .feed-tab.active { color: rgba(255,255,255,0.9); border-bottom-color: rgba(255,255,255,0.5); }
+
+    /* ── Topic Filters ── */
+    .topic-filters {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 24px;
+      overflow-x: auto;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .topic-pill {
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+      background: transparent;
+      color: rgba(255,255,255,0.35);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .topic-pill:hover { border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); }
+    .topic-pill.active { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.9); border-color: rgba(255,255,255,0.15); }
+
+    /* ── Thread Cards ── */
+    .feed-list {
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+    }
+
+    .thread-card {
+      padding: 0;
+      background: rgba(255,255,255,0.03);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+      cursor: pointer;
+      display: flex;
+      align-items: stretch;
+    }
+
+    .thread-card:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(255,255,255,0.1);
+      transform: translateY(-2px);
+    }
+
+    /* ── Vote Column ── */
+    .vote-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 20px 6px;
+      flex-shrink: 0;
+      width: 52px;
+      border-right: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .vote-btn {
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: transparent;
+      color: rgba(255,255,255,0.2);
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: color 0.2s, background 0.2s;
+      font-family: 'Inter', sans-serif;
+      line-height: 1;
+    }
+
+    .vote-btn:hover { color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.06); }
+    .vote-btn.upvoted { color: #D5FF5A; }
+    .vote-btn.downvoted { color: #ef4444; }
+
+    .vote-count {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0.02em;
+      min-width: 20px;
+      text-align: center;
+    }
+
+    .thread-content {
+      flex: 1;
+      padding: 24px 28px;
+      min-width: 0;
+    }
+
+    .thread-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .thread-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4D4D4D, #322D2A);
+      flex-shrink: 0;
+    }
+
+    .thread-meta {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .thread-author {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.85);
+      letter-spacing: 0.02em;
+    }
+
+    .thread-time {
+      font-size: 11px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.25);
+      letter-spacing: 0.03em;
+    }
+
+    .thread-tag {
+      margin-left: auto;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+    }
+
+    .tag-wealth { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.6); }
+    .tag-cognition { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.6); }
+    .tag-community { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.6); }
+    .tag-wellness { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.6); }
+    .tag-tech { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.6); }
+    .tag-culture { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.6); }
+    .tag-politics { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.6); }
+    .tag-music { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.6); }
+
+    .thread-title {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      line-height: 1.4;
+      letter-spacing: -0.01em;
+    }
+
+    .thread-body {
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.75;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 20px;
+      letter-spacing: 0.01em;
+    }
+
+    .thread-actions {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .thread-action {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      color: rgba(255,255,255,0.25);
+      cursor: pointer;
+      transition: color 0.15s;
+    }
+
+    .thread-action:hover { color: rgba(255,255,255,0.7); }
+
+    .thread-action svg { width: 16px; height: 16px; }
+
+    /* ── Right Sidebar ── */
+    .right-sidebar {
+      width: 280px;
+      flex-shrink: 0;
+      border-left: 1px solid rgba(255,255,255,0.06);
+      padding: 20px 16px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .sidebar-section-title {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 14px;
+    }
+
+    .active-user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    .active-user:hover { opacity: 0.8; }
+
+    .active-user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .online-dot {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 8px;
+      height: 8px;
+      background: #D5FF5A;
+      border-radius: 50%;
+      border: 2px solid #0F0E12;
+    }
+
+    .active-user-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.6);
+      letter-spacing: 0.02em;
+    }
+
+    .economy-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .economy-stat {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .economy-stat:last-child { border-bottom: none; }
+
+    .economy-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.45);
+      letter-spacing: 0.02em;
+    }
+
+    .economy-value {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    /* ── Neural Network Visualizer ── */
+    .network-visualizer {
+      position: relative;
+      width: 100%;
+      height: 460px;
+      background: #0F0E12;
+      overflow: hidden;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      cursor: crosshair;
+    }
+
+    .network-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .network-hud {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 20px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      pointer-events: none;
+      z-index: 2;
+      background: linear-gradient(to top, rgba(15,14,18,0.95) 0%, rgba(15,14,18,0.6) 50%, transparent 100%);
+    }
+
+    .network-hud-left {}
+
+    .network-title {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: rgba(255,255,255,0.2);
+      margin-bottom: 6px;
+    }
+
+    .network-stat-big {
+      font-size: 28px;
+      font-weight: 800;
+      color: rgba(255,255,255,0.8);
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+
+    .network-stat-sub {
+      font-size: 9px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,0.12);
+      margin-top: 4px;
+    }
+
+    .network-right-stats {
+      display: flex;
+      gap: 28px;
+    }
+
+    .network-right-stat {
+      text-align: right;
+    }
+
+    .network-right-label {
+      font-size: 8px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: rgba(255,255,255,0.15);
+      margin-bottom: 3px;
+    }
+
+    .network-right-value {
+      font-size: 15px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: -0.01em;
+    }
+
+    /* ── Scrollbar ── */
+    .center-content::-webkit-scrollbar,
+    .right-sidebar::-webkit-scrollbar,
+    .sidebar::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .center-content::-webkit-scrollbar-track,
+    .right-sidebar::-webkit-scrollbar-track,
+    .sidebar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .center-content::-webkit-scrollbar-thumb,
+    .right-sidebar::-webkit-scrollbar-thumb,
+    .sidebar::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.1);
+      border-radius: 3px;
+    }
+
+    /* ── Social Stats ── */
+    .social-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 20px 24px;
+    }
+
+    .social-card {
+      flex: 1 1 calc(33.333% - 8px);
+      min-width: 180px;
+      padding: 16px 18px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: border-color 0.3s, background 0.3s;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .social-card:hover {
+      border-color: rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+    }
+
+    .social-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .social-icon.ig { background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); }
+    .social-icon.yt { background: #FF0000; }
+    .social-icon.x { background: rgba(255,255,255,0.1); }
+    .social-icon.threads { background: #000; border: 1px solid rgba(255,255,255,0.15); }
+    .social-icon.tiktok { background: #000; border: 1px solid rgba(255,255,255,0.15); }
+
+    .social-icon svg { width: 22px; height: 22px; fill: #fff; }
+
+    .social-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .social-count {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .social-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .social-handle {
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .social-live {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #D5FF5A;
+      margin-left: auto;
+      flex-shrink: 0;
+      animation: livePulse 2s ease-in-out infinite;
+    }
+
+    @keyframes livePulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+    /* ── Social Growth Delta ── */
+    .social-growth {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      margin-top: 3px;
+    }
+    .social-growth.positive { color: #4ade80; }
+    .social-growth.negative { color: #f87171; }
+    .social-growth.neutral  { color: rgba(255,255,255,0.25); }
+
+    /* ── Nation Value Strip ── */
+    .nation-value-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0;
+      margin: 0 24px 20px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .nv-item {
+      flex: 1 1 180px;
+      padding: 18px 22px;
+      border-right: 1px solid rgba(255,255,255,0.05);
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .nv-item:last-child { border-right: none; }
+
+    .nv-item.primary {
+      background: rgba(213,255,90,0.03);
+      border-right: 1px solid rgba(213,255,90,0.1);
+    }
+
+    .nv-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,0.35);
+      text-transform: uppercase;
+    }
+
+    .nv-value {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: #fff;
+      line-height: 1.1;
+    }
+
+    .nv-value.accent { color: #D5FF5A; }
+
+    .nv-sub {
+      font-size: 11px;
+      color: rgba(255,255,255,0.3);
+      font-weight: 500;
+    }
+
+    .nv-sub .green { color: #4ade80; }
+    .nv-sub .yellow { color: #D5FF5A; }
+
+    /* ── Conversion Panel ── */
+    .conversion-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .conv-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 16px 18px;
+    }
+
+    .conv-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,0.35);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .conv-value {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #fff;
+    }
+
+    .conv-sub {
+      font-size: 11px;
+      color: rgba(255,255,255,0.3);
+      margin-top: 4px;
+    }
+
+    .conv-bar-wrap {
+      margin-top: 10px;
+      height: 4px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .conv-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+      background: linear-gradient(90deg, #D5FF5A, #4ade80);
+      transition: width 1s ease;
+    }
+
+    /* ── Stats bar IDs ── */
+    #statTotalNation {
+      font-weight: 800;
+      color: #D5FF5A;
+    }
+
+
+
+    /* ── Data Dashboard ── */
+    .dash-data {
+      padding: 0 24px 24px;
+    }
+
+    .dash-tabs {
+      display: flex;
+      gap: 4px;
+      padding: 16px 0 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      margin-bottom: 16px;
+      overflow-x: auto;
+    }
+
+    .dash-tab {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.06);
+      background: transparent;
+      color: rgba(255,255,255,0.4);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      font-family: inherit;
+    }
+
+    .dash-tab:hover {
+      color: rgba(255,255,255,0.7);
+      background: rgba(255,255,255,0.04);
+    }
+
+    .dash-tab.active {
+      color: #FFFFFF;
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.1);
+    }
+
+    .dash-panel {
+      display: none;
+    }
+
+    .dash-panel.active {
+      display: block;
+    }
+
+    .data-card {
+      padding: 16px 20px;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      margin-bottom: 8px;
+      background: rgba(255,255,255,0.02);
+      transition: all 0.2s ease;
+    }
+
+    .data-card:hover {
+      border-color: rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04);
+    }
+
+    .data-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .data-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #FFFFFF;
+      margin-bottom: 4px;
+    }
+
+    .data-row .data-title {
+      margin-bottom: 0;
+    }
+
+    .data-meta {
+      font-size: 12px;
+      color: rgba(255,255,255,0.35);
+    }
+
+    .data-vote-badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    .data-vote-badge.yes {
+      background: rgba(213,255,90,0.08);
+      color: #D5FF5A;
+    }
+
+    .data-vote-badge.no {
+      background: rgba(200,80,80,0.08);
+      color: #c85050;
+    }
+
+    .data-offer-badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    .data-offer-badge.accepted {
+      background: rgba(213,255,90,0.08);
+      color: #D5FF5A;
+    }
+
+    .data-offer-badge.pending {
+      background: rgba(200,170,50,0.08);
+      color: #c8aa32;
+    }
+
+    .data-offer-badge.declined {
+      background: rgba(200,80,80,0.08);
+      color: #c85050;
+    }
+
+    .data-asset-type {
+      font-size: 11px;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.5);
+      white-space: nowrap;
+    }
+
+    .data-empty-note {
+      text-align: center;
+      padding: 12px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.25);
+    }
+
+    .data-empty-note a {
+      color: rgba(213,255,90,0.6);
+      text-decoration: none;
+    }
+
+    .data-empty-note a:hover {
+      color: #D5FF5A;
+    }
+
+    /* ── Agent Cards ── */
+    .agents-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .agent-card {
+      padding: 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      transition: border-color 0.3s, background 0.3s;
+      cursor: pointer;
+    }
+
+    .agent-card:hover {
+      border-color: rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+    }
+
+    .agent-card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .agent-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .agent-icon.business { background: linear-gradient(135deg, #1a6b3c, #2a9d5c); }
+    .agent-icon.content { background: linear-gradient(135deg, #8b5cf6, #a78bfa); }
+    .agent-icon.cwk { background: linear-gradient(135deg, #d97706, #f59e0b); }
+    .agent-icon.frameworks { background: linear-gradient(135deg, #0891b2, #22d3ee); }
+    .agent-icon.manuscripts { background: linear-gradient(135deg, #9333ea, #c084fc); }
+    .agent-icon.ebook { background: linear-gradient(135deg, #dc2626, #f87171); }
+    .agent-icon.decks { background: linear-gradient(135deg, #2563eb, #60a5fa); }
+    .agent-icon.research { background: linear-gradient(135deg, #4f46e5, #818cf8); }
+    .agent-icon.notes { background: linear-gradient(135deg, #64748b, #94a3b8); }
+
+    .agent-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.9);
+      letter-spacing: -0.01em;
+    }
+
+    .agent-role {
+      font-size: 11px;
+      color: rgba(255,255,255,0.35);
+      font-weight: 500;
+    }
+
+    .agent-desc {
+      font-size: 12px;
+      line-height: 1.5;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 10px;
+    }
+
+    .agent-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .agent-tag {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 5px;
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .agent-status {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .agent-status.ready {
+      background: rgba(213,255,90,0.08);
+      color: #D5FF5A;
+    }
+
+    .agent-status.critical {
+      background: rgba(239,68,68,0.10);
+      color: #f87171;
+    }
+
+    .agent-status.in-progress {
+      background: rgba(251,191,36,0.10);
+      color: #fbbf24;
+    }
+
+    .agent-status.near-complete {
+      background: rgba(34,197,94,0.10);
+      color: #4ade80;
+    }
+
+    .agent-status-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #D5FF5A;
+      animation: livePulse 2s ease-in-out infinite;
+    }
+
+    .agent-status.critical .agent-status-dot { background: #f87171; }
+    .agent-status.in-progress .agent-status-dot { background: #fbbf24; }
+    .agent-status.near-complete .agent-status-dot { background: #4ade80; }
+
+    .agent-stats {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 8px;
+      padding: 8px 10px;
+      background: rgba(255,255,255,0.02);
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .agent-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+    }
+
+    .agent-stat-value {
+      font-size: 16px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.2;
+    }
+
+    .agent-stat-label {
+      font-size: 9px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .agent-progress-bar {
+      width: 100%;
+      height: 3px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 2px;
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+
+    .agent-progress-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 0.6s ease;
+    }
+
+    .agent-progress-fill.critical { background: #f87171; }
+    .agent-progress-fill.in-progress { background: #fbbf24; }
+    .agent-progress-fill.near-complete { background: #4ade80; }
+    .agent-progress-fill.ready { background: #D5FF5A; }
+
+    /* ── Responsive ── */
+    @media (max-width: 1100px) {
+      .right-sidebar { display: none; }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .header { padding: 0 16px; }
+      .search-bar { flex: 0 1 280px; }
+      .economy-banner { flex-wrap: wrap; }
+      .econ-item { min-width: 140px; }
+      .econ-item.primary { flex: 1 1 100%; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.06); }
+      .stats-bar { flex-wrap: wrap; }
+      .stat-item { min-width: 100px; }
+      .agents-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Password Gate -->
+  <div class="gate-overlay" id="gateOverlay">
+    <div class="gate-vignette"></div>
+    <div class="gate-content">
+      <div class="gate-logo">ziion</div>
+      <div class="gate-divider"></div>
+      <div class="gate-input-wrap">
+        <div class="gate-label">access code</div>
+        <input class="gate-input" id="gateInput" type="text" maxlength="4" autofocus autocomplete="off" inputmode="numeric">
+      </div>
+      <div class="gate-hint">private preview</div>
+    </div>
+  </div>
+  <script>
+    (function(){
+      const code = '19';
+      const overlay = document.getElementById('gateOverlay');
+      const input = document.getElementById('gateInput');
+      if(sessionStorage.getItem('ziion_unlocked')==='true'){
+        overlay.style.display='none';
+      }
+      input.addEventListener('input', function(){
+        if(this.value === code){
+          sessionStorage.setItem('ziion_unlocked','true');
+          overlay.classList.add('unlocked');
+          setTimeout(()=> overlay.style.display='none', 700);
+        } else if(this.value.length >= code.length){
+          this.classList.add('shake');
+          setTimeout(()=>{ this.classList.remove('shake'); this.value=''; }, 500);
+        }
+      });
+    })();
+  </script>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <div class="logo-text">ZIION</div>
+    </div>
+
+    <div class="search-bar">
+      <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M14 14L10 10M11.333 6.667a4.667 4.667 0 1 1-9.333 0 4.667 4.667 0 0 1 9.333 0z"
+              stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <input type="text" placeholder="Search threads, people, topics...">
+    </div>
+
+    <div class="header-right">
+      <div class="header-icon" title="Notifications">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+        </svg>
+      </div>
+      <div class="header-icon" title="Messages">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+      </div>
+      <div class="avatar"></div>
+    </div>
+  </div>
+
+  <!-- Main 3-Column Layout -->
+  <div class="main-layout">
+
+    <!-- Left Sidebar -->
+    <div class="sidebar">
+      <button class="sidebar-create">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        Create
+      </button>
+
+      <a class="nav-item active" href="cosmos-grid.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+        </svg>
+        Dashboard
+      </a>
+      <a class="nav-item" href="library.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/>
+        </svg>
+        Library
+      </a>
+      <a class="nav-item" href="threads.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+        Threads
+      </a>
+      <a class="nav-item" href="directory.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+        Connections
+      </a>
+      <a class="nav-item" href="assets.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        Assets
+      </a>
+      <a class="nav-item" href="world.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+        </svg>
+        World
+      </a>
+      <a class="nav-item" href="pulse.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+        </svg>
+        Pulse
+      </a>
+
+      <div class="sidebar-divider"></div>
+
+      <a class="nav-item" href="book-19keys.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/>
+        </svg>
+        Book 19Keys
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        Calendar
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+        </svg>
+        Messages
+      </a>
+
+      <div class="sidebar-divider"></div>
+
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+        Settings
+      </a>
+
+      <div id="themeToggle" class="theme-toggle" title="Switch to light mode">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </div>
+    </div>
+
+    <!-- Center Content -->
+    <div class="center-content">
+
+      <!-- Neural Network Visualizer — Living Digital Nervous System -->
+      <div class="network-visualizer">
+        <canvas class="network-canvas" id="networkCanvas"></canvas>
+        <div class="network-hud">
+          <div class="network-hud-left">
+            <div class="network-title">ZIION Neural Map</div>
+            <div class="network-stat-big" id="networkNodeCount">0</div>
+            <div class="network-stat-sub">Active Synapses</div>
+          </div>
+          <div class="network-right-stats">
+            <div class="network-right-stat">
+              <div class="network-right-label">Threads</div>
+              <div class="network-right-value" id="netThreads">0</div>
+            </div>
+            <div class="network-right-stat">
+              <div class="network-right-label">Votes</div>
+              <div class="network-right-value" id="netVotes">0</div>
+            </div>
+            <div class="network-right-stat">
+              <div class="network-right-label">Links</div>
+              <div class="network-right-value" id="netConnections">0</div>
+            </div>
+            <div class="network-right-stat">
+              <div class="network-right-label">Complexity</div>
+              <div class="network-right-value" id="netComplexity">1.0×</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Neo Status Strip -->
+      <div id="neo-status-strip" style="
+        display:flex; align-items:center; justify-content:space-between;
+        padding:10px 20px; margin-bottom:12px;
+        background:rgba(255,255,255,0.025);
+        border:1px solid rgba(255,255,255,0.06);
+        border-radius:10px;
+        font-family:'Inter',sans-serif;
+      ">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="width:6px;height:6px;background:#4ade80;border-radius:50%;box-shadow:0 0 6px #4ade80;flex-shrink:0;"></span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:2px;color:rgba(255,255,255,0.7);">NEO</span>
+          <span style="font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:1px;">CHIEF OF STAFF</span>
+        </div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.25);" id="neo-last-updated">Connecting...</div>
+        <div style="display:flex;gap:16px;">
+          <a href="book-19keys.html" style="font-size:10px;color:rgba(213,255,90,0.7);text-decoration:none;letter-spacing:1px;">12 OFFERS ↗</a>
+          <span style="font-size:10px;color:rgba(255,255,255,0.2);">IP VAULT: 1,499</span>
+        </div>
+      </div>
+
+      <!-- Economy Banner — Creator GDP -->
+      <div class="economy-banner">
+        <div class="econ-item primary">
+          <div class="econ-label">Nation GDP</div>
+          <div class="econ-value large" id="nationGdp">$4.2M</div>
+          <div class="econ-sub"><span class="green-accent">+12.3%</span> this quarter</div>
+        </div>
+        <div class="econ-item">
+          <div class="econ-label">Spending Power</div>
+          <div class="econ-value" id="spendPower">$87.2M</div>
+          <div class="econ-sub">total community income</div>
+        </div>
+        <div class="econ-item">
+          <div class="econ-label">Creator Value</div>
+          <div class="econ-value" id="creatorVal">$1.8M</div>
+          <div class="econ-sub">IP + trust + reach</div>
+        </div>
+        <div class="econ-item">
+          <div class="econ-label">Equivalence</div>
+          <div class="econ-equiv">
+            <span class="econ-equiv-flag">🏙️</span>
+            <span class="econ-equiv-text" id="econEquiv">Mid-Size City</span>
+          </div>
+          <div class="econ-sub">based on GDP output</div>
+        </div>
+        <div class="econ-item">
+          <div class="econ-label">Economy Grade</div>
+          <div class="econ-grade" id="econGrade">A</div>
+          <div class="econ-sub">IP × community × infra</div>
+        </div>
+      </div>
+
+      <!-- Community Stats (compact) -->
+      <div class="stats-bar">
+        <div class="stat-item">
+          <div class="stat-label">Owned Audience</div>
+          <div class="stat-value">1,421</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Total Reach</div>
+          <div class="stat-value">847K</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">New Citizens</div>
+          <div class="stat-value">288</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Threads</div>
+          <div class="stat-value">10</div>
+        </div>
+        <div class="stat-item stat-growth">
+          <div class="stat-label">Growth</div>
+          <div class="stat-value green" id="statGrowthRate">+25.4%</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Nation Total</div>
+          <div class="stat-value" id="statNationTotal" style="color:#D5FF5A;font-weight:800;">1.68M+</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Daily Growth</div>
+          <div class="stat-value green" id="statDailyGrowth">+4,280</div>
+        </div>
+        <div class="stat-item stat-moon-item">
+          <canvas class="moon-canvas" id="moonCanvas" width="160" height="160"></canvas>
+          <div class="moon-info">
+            <div class="moon-phase-label" id="moonPhaseName">Loading...</div>
+            <div class="moon-illumination" id="moonIllumination"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Social Stats -->
+      <div class="social-stats">
+        <a class="social-card" href="https://www.instagram.com/19_keys/" target="_blank" rel="noopener">
+          <div class="social-icon ig">
+            <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </div>
+          <div class="social-info">
+            <div class="social-count" id="igCount">983,852</div>
+            <div class="social-label">Followers</div>
+            <div class="social-handle">@19_keys</div>
+            <div class="social-growth positive" id="igGrowth">+2,340 today</div>
+          </div>
+          <div class="social-live"></div>
+        </a>
+        <a class="social-card" href="https://www.youtube.com/@19KEYS" target="_blank" rel="noopener">
+          <div class="social-icon yt">
+            <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          </div>
+          <div class="social-info">
+            <div class="social-count" id="ytCount">232K</div>
+            <div class="social-label">Subscribers</div>
+            <div class="social-handle">@19KEYS</div>
+            <div class="social-growth positive" id="ytGrowth">+820 today</div>
+          </div>
+          <div class="social-live"></div>
+        </a>
+        <a class="social-card" href="https://x.com/19keys_" target="_blank" rel="noopener">
+          <div class="social-icon x">
+            <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </div>
+          <div class="social-info">
+            <div class="social-count" id="xCount">123,040</div>
+            <div class="social-label">Followers</div>
+            <div class="social-handle">@19keys_</div>
+            <div class="social-growth positive" id="xGrowth">+430 today</div>
+          </div>
+          <div class="social-live"></div>
+        </a>
+        <a class="social-card" href="https://www.threads.com/@19_keys" target="_blank" rel="noopener">
+          <div class="social-icon threads">
+            <svg viewBox="0 0 24 24"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.59 12c.025 3.086.718 5.496 2.057 7.164 1.432 1.784 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.647-1.613 1.618-3.593 1.09-4.798-.346-.789-.96-1.42-1.757-1.846-.144 1.678-.677 2.98-1.592 3.873-1.07 1.044-2.577 1.596-4.36 1.596l-.2-.004c-1.312-.044-2.434-.474-3.242-1.243-.878-.836-1.345-1.993-1.313-3.258.06-2.377 1.927-4.098 4.44-4.098.685 0 1.352.098 1.952.265-.058-.81-.282-1.397-.685-1.794-.52-.514-1.333-.775-2.417-.775l-.015.002c-1.556.015-2.652.623-3.353 1.86l-1.783-.994C5.857 6.57 7.573 5.622 9.82 5.602h.028c1.568 0 2.82.442 3.72 1.312.69.666 1.127 1.56 1.313 2.66.658.263 1.253.608 1.773 1.04 1.607 1.333 2.453 3.308 2.323 5.426l.017-.025c-.1 1.61-.702 3.24-2.05 4.507-1.803 1.696-4.127 2.452-7.34 2.477h-.12zM10.12 13.12c-1.504 0-2.408.86-2.44 2.32-.02.756.212 1.38.656 1.802.47.449 1.16.685 1.994.71l.156.003c2.277 0 3.496-1.14 3.63-3.395-.87-.472-1.952-.76-3.073-.76l-.159.002-.764.318z"/></svg>
+          </div>
+          <div class="social-info">
+            <div class="social-count" id="threadsCount">224.2K</div>
+            <div class="social-label">Followers</div>
+            <div class="social-handle">@19_keys</div>
+            <div class="social-growth positive" id="threadsGrowth">+510 today</div>
+          </div>
+          <div class="social-live"></div>
+        </a>
+        <a class="social-card" href="https://www.tiktok.com/@19keys" target="_blank" rel="noopener">
+          <div class="social-icon tiktok">
+            <svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.75a8.18 8.18 0 004.77 1.52V6.82a4.84 4.84 0 01-1-.13z"/></svg>
+          </div>
+          <div class="social-info">
+            <div class="social-count" id="tiktokCount">114.7K</div>
+            <div class="social-label">Followers</div>
+            <div class="social-handle">@19keys</div>
+            <div class="social-growth positive" id="tiktokGrowth">+180 today</div>
+          </div>
+          <div class="social-live"></div>
+        </a>
+      </div>
+
+      <!-- Nation Value Strip — Revenue Engine -->
+      <div class="nation-value-strip">
+        <div class="nv-item">
+          <div class="nv-label">Nation Total Citizens</div>
+          <div class="nv-value" id="nvTotalCitizens">1.68M+</div>
+          <div class="nv-sub"><span class="green" id="nvDailyGrowthSub">+4,280 today</span> · across all platforms</div>
+        </div>
+        <div class="nv-item">
+          <div class="nv-label">Revenue Potential</div>
+          <div class="nv-value" id="nvRevPotential">$55K–$80K</div>
+          <div class="nv-sub"><span id="nvRevSub">per month · sponsorships + course + speaking</span></div>
+        </div>
+        <div class="nv-item">
+          <div class="nv-label">Sponsorship Rate</div>
+          <div class="nv-value" id="nvSponsorRate">$15K–$40K</div>
+          <div class="nv-sub">per post · 1M+ reach tier</div>
+        </div>
+        <div class="nv-item">
+          <div class="nv-label">Course Pipeline</div>
+          <div class="nv-value" id="nvCoursePipeline">$394K</div>
+          <div class="nv-sub">Cognition Key · 2K students × $197</div>
+        </div>
+        <div class="nv-item primary">
+          <div class="nv-label">Nation Total Value</div>
+          <div class="nv-value accent" id="nvNationValue">$8.4M</div>
+          <div class="nv-sub"><span class="yellow" id="nvValueGrade">A-Tier</span> · audience equity + IP + brand</div>
+        </div>
+      </div>
+
+      <!-- Data Dashboard -->
+      <div class="dash-data">
+        <div class="dash-tabs">
+          <button class="dash-tab active" data-panel="my-posts">My Posts</button>
+          <button class="dash-tab" data-panel="saved">Saved from World</button>
+          <button class="dash-tab" data-panel="votes">Votes in Pulse</button>
+          <button class="dash-tab" data-panel="offers">Offers</button>
+          <button class="dash-tab" data-panel="assets">Assets Owned</button>
+          <button class="dash-tab" data-panel="agents">Agents Team</button>
+          <button class="dash-tab" data-panel="conversion">Conversion</button>
+        </div>
+
+        <!-- My Posts Panel -->
+        <div class="dash-panel active" id="panel-my-posts">
+          <div class="data-card">
+            <div class="data-title">On the Future of Wealth</div>
+            <div class="data-meta">Posted 2 hours ago · 47 votes · 24 replies</div>
+          </div>
+          <div class="data-card">
+            <div class="data-title">Why Sovereign Economics Matter</div>
+            <div class="data-meta">Posted 2 days ago · 128 votes · 67 replies</div>
+          </div>
+          <div class="data-card">
+            <div class="data-title">The Infrastructure of Freedom</div>
+            <div class="data-meta">Posted 5 days ago · 215 votes · 89 replies</div>
+          </div>
+          <div class="data-empty-note">View all posts in <a href="threads.html">Threads</a></div>
+        </div>
+
+        <!-- Saved from World Panel -->
+        <div class="dash-panel" id="panel-saved">
+          <div class="data-card">
+            <div class="data-title">The Rise of Digital Nations</div>
+            <div class="data-meta">Saved 1 day ago · by u/MiriamDeAna</div>
+          </div>
+          <div class="data-card">
+            <div class="data-title">Decentralized Education Models</div>
+            <div class="data-meta">Saved 3 days ago · by u/AntoinePatton</div>
+          </div>
+          <div class="data-card">
+            <div class="data-title">Cultural Preservation Through Tech</div>
+            <div class="data-meta">Saved 1 week ago · by u/YahkevedLevi</div>
+          </div>
+          <div class="data-empty-note">Browse more in <a href="world.html">World</a></div>
+        </div>
+
+        <!-- Votes in Pulse Panel -->
+        <div class="dash-panel" id="panel-votes">
+          <div class="data-card">
+            <div class="data-row">
+              <div class="data-title">Will Bitcoin reach $200K by 2027?</div>
+              <div class="data-vote-badge yes">Voted Yes</div>
+            </div>
+            <div class="data-meta">Voted 3 hours ago · 2,847 participants</div>
+          </div>
+          <div class="data-card">
+            <div class="data-row">
+              <div class="data-title">Should ZIION add a marketplace?</div>
+              <div class="data-vote-badge yes">Voted Yes</div>
+            </div>
+            <div class="data-meta">Voted 1 day ago · 1,204 participants</div>
+          </div>
+          <div class="data-card">
+            <div class="data-row">
+              <div class="data-title">Is AI replacing creative jobs?</div>
+              <div class="data-vote-badge no">Voted No</div>
+            </div>
+            <div class="data-meta">Voted 4 days ago · 3,621 participants</div>
+          </div>
+          <div class="data-empty-note">Vote on more in <a href="pulse.html">Pulse</a></div>
+        </div>
+
+        <!-- Offers Panel -->
+        <div class="dash-panel" id="panel-offers">
+          <!-- Live public offers from public-book.html -->
+          <div id="public-offers-list"></div>
+          <div class="data-empty-note" id="offers-empty-note" style="display:none;">No incoming offers yet. Offers submitted via <strong>Build with 19Keys</strong> appear here.</div>
+          <div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.05);">
+            <a href="book-19keys.html" style="font-size:10px;color:rgba(213,255,90,0.5);text-decoration:none;letter-spacing:1px;">MANAGE IN BOOK 19KEYS ↗</a>
+          </div>
+        </div>
+
+        <!-- Assets Owned Panel -->
+        <div class="dash-panel" id="panel-assets">
+          <div class="data-card">
+            <div class="data-row">
+              <div class="data-title">Sovereign Economics Vol. 1</div>
+              <div class="data-asset-type">Digital Course</div>
+            </div>
+            <div class="data-meta">Acquired Jan 2026 · Value: $1,200</div>
+          </div>
+          <div class="data-card">
+            <div class="data-row">
+              <div class="data-title">ZIION Nation Membership</div>
+              <div class="data-asset-type">Membership</div>
+            </div>
+            <div class="data-meta">Active since Dec 2025 · Lifetime Access</div>
+          </div>
+          <div class="data-card">
+            <div class="data-row">
+              <div class="data-title">Community Builder Badge</div>
+              <div class="data-asset-type">Achievement</div>
+            </div>
+            <div class="data-meta">Earned Feb 2026 · Non-transferable</div>
+          </div>
+          <div class="data-empty-note">View all in <a href="assets.html">Assets</a></div>
+        </div>
+
+        <!-- Agents Team Panel -->
+        <div class="dash-panel" id="panel-agents">
+          <div class="agents-grid">
+
+            <div class="agent-card">
+              <div class="agent-card-header">
+                <div class="agent-icon business">&#x1F4C8;</div>
+                <div>
+                  <div class="agent-name">Business Strategy</div>
+                  <div class="agent-role">Chief Strategy Officer</div>
+                </div>
+              </div>
+              <div class="agent-stats">
+                <div class="agent-stat"><span class="agent-stat-value">20</span><span class="agent-stat-label">Files</span></div>
+                <div class="agent-stat"><span class="agent-stat-value">4</span><span class="agent-stat-label">Assessed</span></div>
+                <div class="agent-stat"><span class="agent-stat-value">24%</span><span class="agent-stat-label">Avg</span></div>
+              </div>
+              <div class="agent-progress-bar"><div class="agent-progress-fill critical" style="width:24%"></div></div>
+              <div class="agent-desc">Synthesizes business docs into executable 90-day plans with KPIs, revenue maps, and risk registers.</div>
+              <div class="agent-meta">
+                <span class="agent-tag">Business-Strategy</span>
+                <span class="agent-status critical"><span class="agent-status-dot"></span> Critical</span>
+              </div>
+            </div>
+
+            <div class="agent-card">
+              <div class="agent-card-header">
+                <div class="agent-icon content">&#x1F3AC;</div>
+                <div>
+                  <div class="agent-name">Content Engine</div>
+                  <div class="agent-role">Content Systems Architect</div>
+                </div>
+              </div>
+              <div class="agent-stats">
+                <div class="agent-stat"><span class="agent-stat-value">11</span><span class="agent-stat-label">Files</span></div>
+                <div class="agent-stat"><span class="agent-stat-value">3</span><span class="agent-stat-label">Assessed</span></div>
+                <div class="agent-stat"><span class="agent-stat-value">64%</span><span class="agent-stat-label">Avg</span></div>
+              </div>
+              <div class="agent-progress-bar"><div class="agent-progress-fill in-progress" style="width:64%"></div></div>
+              <div class="agent-desc">Generates content templates, 30-day calendars, and social media playbooks for the HLC ecosystem.</div>
+              <div class="agent-meta">
+                <span class="agent-tag">Content-Strategy</span>
+                <span class="agent-status in-progress"><span class="agent-status-dot"></span> In Progress</span>
+              </div>
+            </div>
+
+            <div class="agent-card">
+              <div class="agent-card-header">
+                <div class="agent-icon cwk">&#x1F9E0;</div>
+                <div>
+                  <div class="agent-name">CWK Architect</div>
+                  <div class="agent-role">Product &amp; Curriculum Lead</div>
+                </div>
+              </div>
+              <div class="agent-stats">
+                <div class="agent-stat"><span class="agent-stat-value">9</span><span class="agent-stat-label">Files</span></div>
+                <div class="agent-stat"><span class="agent-stat-value">3</span><span class="agent-stat-label">Assessed</span></div>
+                <div class="agent-stat"><span class="agent-stat-value">28%</span><span class="agent-stat-label">Avg</span></div>
+              </div>
+              <div class="agent-progress-bar"><div class="agent-progress-fill critical" style="width:28%"></div></div>
+              <div class="agent-desc">Builds Cognitive Wealth Key curriculum, type assessments, 3-day challenges, and sales funnels.</div>
+              <div class="agent-meta">
+                <span class="agent-tag">CWK</span>
+                <span class="agent-status critical"><span class="agent-status-dot"></span> Critical</span>
+              </div>
+            </div>
+
+            <div class="agent-card">
+              <div class="agent-card-header">
+                <div class="agent-icon frameworks">&#x1F3D7;</div>
+                <div>
+                  <div class="agent-name">Frameworks</div>
+                  <div class="agent-role">IP Completion Architect</div>
+                </div>
+              </div>
+              <div class="agent-stats">
+                <div class="agent-stat"><span class="agent-stat-value">26</span><span class="agent-stat-label">Files</span></div>
+                <div class="agent-stat"><span class="agent-stat-value">5</span><span class="agent-stat-label">Assessed</span></div>
+                <div class="agent-stat"><span class="agent-stat-value">52%</span><span class="agent-stat-label">Avg</span></div>
+              </div>
+              <div class="agent-progress-bar"><div class="agent-progress-fill in-progress" style="width:52%"></div></div>
+              <div class="agent-desc">Completes intellectual frameworks into publishable form with structure, gap-fills, and deployment plans.</div>
+              <div class="agent-meta">
+                <span class="agent-tag">Frameworks</span>
+                <span class="agent-status in-progress"><span class="agent-status-dot"></span> In Progress</span>
+              </div>
+            </div>
+
+            <div class="agent-card">
+              <div class="agent-card-header">
+                <div class="agent-icon manuscripts">&#x1F4D6;</div>
+                <div>
+                  <div class="agent-name">Manuscripts</div>
+                  <div class="agent-role">Developmental Editor</div>
+                </div>
+              </div>
+              <div class="agent-stats">
+                <div class="agent-stat"><span class="agent-stat-value">12</span><span class="agent-stat-label">Files</span></div>
+                <div class="agent-stat"><span class="agent-stat-value">4</span><span class="agent-stat-label">Assessed</span></div>
+                <div class="agent-stat"><span class="agent-stat-value">18%</span><span class="agent-stat-label">Avg</span></div>
+              </div>
+              <div class="agent-progress-bar"><div class="agent-progress-fill critical" style="width:18%"></div></div>
+              <div class="agent-desc">Structures raw book content into publishable manuscripts with editorial plans and chapter seeds.</div>
+              <div class="agent-meta">
+                <span class="agent-tag">Books-Manuscripts</span>
+                <span class="agent-status critical"><span class="agent-status-dot"></span> Critical</span>
+              </div>
+            </div>
+
+            <div class="agent-card">
+              <div class="agent-card-header">
+                <div class="agent-icon ebook">&#x1F4DA;</div>
+                <div>
+                  <div class="agent-name">E-Book Producer</div>
+                  <div class="agent-role">Book Production Lead</div>
+                </div>
+              </div>
+              <div class="agent-stats">
+                <div class="agent-stat"><span class="agent-stat-value">5</span><span class="agent-stat-label">Completed</span></div>
+                <div class="agent-stat"><span class="agent-stat-value">47</span><span class="agent-stat-label">Deliverables</span></div>
+                <div class="agent-stat"><span class="agent-stat-value">84%</span><span class="agent-stat-label">Avg</span></div>
+              </div>
+              <div class="agent-progress-bar"><div class="agent-progress-fill near-complete" style="width:84%"></div></div>
+              <div class="agent-desc">Transforms strongest IP into sell-ready e-books with front matter, 9 chapters, and back matter.</div>
+              <div class="agent-meta">
+                <span class="agent-tag">Ebooks</span>
+                <span class="agent-status near-complete"><span class="agent-status-dot"></span> Near Complete</span>
+              </div>
+            </div>
+
+            <div class="agent-card">
+              <div class="agent-card-header">
+                <div class="agent-icon decks">&#x1F4CA;</div>
+                <div>
+                  <div class="agent-name">Decks &amp; Pitch</div>
+                  <div class="agent-role">Pitch Deck Strategist</div>
+                </div>
+              </div>
+              <div class="agent-stats">
+                <div class="agent-stat"><span class="agent-stat-value">16</span><span class="agent-stat-label">Files</span></div>
+                <div class="agent-stat"><span class="agent-stat-value">5</span><span class="agent-stat-label">Assessed</span></div>
+                <div class="agent-stat"><span class="agent-stat-value">71%</span><span class="agent-stat-label">Avg</span></div>
+              </div>
+              <div class="agent-progress-bar"><div class="agent-progress-fill in-progress" style="width:71%"></div></div>
+              <div class="agent-desc">Refines investor and sponsor decks with narrative arcs, data points, and presentation scripts.</div>
+              <div class="agent-meta">
+                <span class="agent-tag">Decks</span>
+                <span class="agent-status in-progress"><span class="agent-status-dot"></span> In Progress</span>
+              </div>
+            </div>
+
+            <div class="agent-card">
+              <div class="agent-card-header">
+                <div class="agent-icon research">&#x1F50D;</div>
+                <div>
+                  <div class="agent-name">Research Synthesis</div>
+                  <div class="agent-role">Evidence Library Builder</div>
+                </div>
+              </div>
+              <div class="agent-stats">
+                <div class="agent-stat"><span class="agent-stat-value">5</span><span class="agent-stat-label">Files</span></div>
+                <div class="agent-stat"><span class="agent-stat-value">1</span><span class="agent-stat-label">Assessed</span></div>
+                <div class="agent-stat"><span class="agent-stat-value">85%</span><span class="agent-stat-label">Avg</span></div>
+              </div>
+              <div class="agent-progress-bar"><div class="agent-progress-fill near-complete" style="width:85%"></div></div>
+              <div class="agent-desc">Extracts evidence, maps findings to frameworks, and builds citation cards from research materials.</div>
+              <div class="agent-meta">
+                <span class="agent-tag">Research-Reference</span>
+                <span class="agent-status near-complete"><span class="agent-status-dot"></span> Near Complete</span>
+              </div>
+            </div>
+
+            <div class="agent-card">
+              <div class="agent-card-header">
+                <div class="agent-icon notes">&#x1F4CB;</div>
+                <div>
+                  <div class="agent-name">Notes Triage</div>
+                  <div class="agent-role">IP Triage Officer</div>
+                </div>
+              </div>
+              <div class="agent-stats">
+                <div class="agent-stat"><span class="agent-stat-value">13</span><span class="agent-stat-label">Files</span></div>
+                <div class="agent-stat"><span class="agent-stat-value">1</span><span class="agent-stat-label">Assessed</span></div>
+                <div class="agent-stat"><span class="agent-stat-value">15%</span><span class="agent-stat-label">Avg</span></div>
+              </div>
+              <div class="agent-progress-bar"><div class="agent-progress-fill critical" style="width:15%"></div></div>
+              <div class="agent-desc">Triages 1,499+ vault notes, identifies framework seeds, and routes to specialized agents.</div>
+              <div class="agent-meta">
+                <span class="agent-tag">Notes-Drafts</span>
+                <span class="agent-status critical"><span class="agent-status-dot"></span> Critical</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+        <!-- Conversion Stats Panel -->
+        <div class="dash-panel" id="panel-conversion">
+          <div class="conversion-grid">
+            <div class="conv-card">
+              <div class="conv-label">Link-in-Bio CTR</div>
+              <div class="conv-value" id="convLinkCTR">3.2%</div>
+              <div class="conv-sub" id="convLinkSub">of profile visitors click your link</div>
+              <div class="conv-bar-wrap"><div class="conv-bar-fill" id="convLinkBar" style="width:32%"></div></div>
+            </div>
+            <div class="conv-card">
+              <div class="conv-label">Profile → Follow</div>
+              <div class="conv-value" id="convProfileFollow">8.7%</div>
+              <div class="conv-sub" id="convProfileSub">visitors that convert to followers</div>
+              <div class="conv-bar-wrap"><div class="conv-bar-fill" id="convProfileBar" style="width:8.7%"></div></div>
+            </div>
+            <div class="conv-card">
+              <div class="conv-label">Booking Conversion</div>
+              <div class="conv-value" id="convBooking">12.4%</div>
+              <div class="conv-sub" id="convBookingSub">inquiries that become paid bookings</div>
+              <div class="conv-bar-wrap"><div class="conv-bar-fill" id="convBookingBar" style="width:12.4%"></div></div>
+            </div>
+            <div class="conv-card">
+              <div class="conv-label">Content Engagement</div>
+              <div class="conv-value" id="convEngagement">4.1%</div>
+              <div class="conv-sub" id="convEngagementSub">avg across all platforms</div>
+              <div class="conv-bar-wrap"><div class="conv-bar-fill" id="convEngagementBar" style="width:41%"></div></div>
+            </div>
+            <div class="conv-card">
+              <div class="conv-label">Offer Acceptance</div>
+              <div class="conv-value" id="convOfferAccept">68%</div>
+              <div class="conv-sub" id="convOfferSub">of incoming offers you've accepted</div>
+              <div class="conv-bar-wrap"><div class="conv-bar-fill" id="convOfferBar" style="width:68%"></div></div>
+            </div>
+            <div class="conv-card">
+              <div class="conv-label">Monthly Active Reach</div>
+              <div class="conv-value" id="convMonthlyReach">847K</div>
+              <div class="conv-sub" id="convReachSub">unique eyes on your content</div>
+              <div class="conv-bar-wrap"><div class="conv-bar-fill" id="convReachBar" style="width:50%"></div></div>
+            </div>
+          </div>
+          <div class="data-empty-note">Neo updates conversion data daily · <span style="color:rgba(255,255,255,0.4)">Last synced: <span id="convLastSync">—</span></span></div>
+        </div>
+
+    <!-- Neo Activity Log — populated by neo-bridge.js -->
+    <div style="padding: 0 20px 16px 20px;">
+      <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 14px 18px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 10px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="width:5px;height:5px;background:#4ade80;border-radius:50%;box-shadow:0 0 5px #4ade80;"></span>
+            <span style="font-size:10px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.5);">NEO ACTIVITY LOG</span>
+          </div>
+          <span style="font-size:9px;color:rgba(255,255,255,0.2);letter-spacing:1px;">LIVE · AUTO-REFRESH 30s</span>
+        </div>
+        <div id="neo-activity-log" style="display:flex; flex-direction:column; gap:6px;">
+          <div style="font-size:11px;color:rgba(255,255,255,0.2);font-style:italic;">Connecting to Neo...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Sidebar -->
+    <div class="right-sidebar">
+
+      <!-- Active Users -->
+      <div>
+        <div class="sidebar-section-title">Who's Active (48h)</div>
+        <div class="active-user">
+          <div class="active-user-avatar" style="background: linear-gradient(135deg, #4D4D4D, #322D2A)">
+            <div class="online-dot"></div>
+          </div>
+          <div class="active-user-name">19Keys</div>
+        </div>
+        <div class="active-user">
+          <div class="active-user-avatar" style="background: linear-gradient(135deg, #4D4D4D, #322D2A)">
+            <div class="online-dot"></div>
+          </div>
+          <div class="active-user-name">SuperNatural</div>
+        </div>
+        <div class="active-user">
+          <div class="active-user-avatar" style="background: linear-gradient(135deg, #4D4D4D, #322D2A)">
+            <div class="online-dot"></div>
+          </div>
+          <div class="active-user-name">Miriam DeAna</div>
+        </div>
+        <div class="active-user">
+          <div class="active-user-avatar" style="background: linear-gradient(135deg, #4D4D4D, #322D2A)">
+            <div class="online-dot"></div>
+          </div>
+          <div class="active-user-name">Antoine Patton</div>
+        </div>
+        <div class="active-user">
+          <div class="active-user-avatar" style="background: linear-gradient(135deg, #4D4D4D, #322D2A)">
+            <div class="online-dot"></div>
+          </div>
+          <div class="active-user-name">Katherin Joyette</div>
+        </div>
+        <div class="active-user">
+          <div class="active-user-avatar" style="background: linear-gradient(135deg, #4D4D4D, #322D2A)">
+            <div class="online-dot"></div>
+          </div>
+          <div class="active-user-name">Yahkeved Levi</div>
+        </div>
+        <div class="active-user">
+          <div class="active-user-avatar" style="background: linear-gradient(135deg, #4D4D4D, #322D2A)">
+            <div class="online-dot"></div>
+          </div>
+          <div class="active-user-name">Eamber Wood</div>
+        </div>
+        <div class="active-user">
+          <div class="active-user-avatar" style="background: linear-gradient(135deg, #4D4D4D, #322D2A)">
+            <div class="online-dot"></div>
+          </div>
+          <div class="active-user-name">Cameron Elling</div>
+        </div>
+        <div class="active-user">
+          <div class="active-user-avatar" style="background: linear-gradient(135deg, #4D4D4D, #322D2A)">
+            <div class="online-dot"></div>
+          </div>
+          <div class="active-user-name">Marlon Miller</div>
+        </div>
+      </div>
+
+      <!-- Economy Signals -->
+      <div>
+        <div class="sidebar-section-title">Economy Signals</div>
+        <div class="economy-card">
+          <div class="economy-stat">
+            <div class="economy-label">Open Requests</div>
+            <div class="economy-value">55</div>
+          </div>
+          <div class="economy-stat">
+            <div class="economy-label">Active Offers</div>
+            <div class="economy-value">32</div>
+          </div>
+          <div class="economy-stat">
+            <div class="economy-label">Completed Today</div>
+            <div class="economy-value">12</div>
+          </div>
+          <div class="economy-stat">
+            <div class="economy-label">Total Volume</div>
+            <div class="economy-value">$14.2K</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // ── Moon Phase Calculator ──
+    (function() {
+      function getMoonPhase(date) {
+        let yr = date.getFullYear();
+        let mo = date.getMonth() + 1;
+        const day = date.getDate();
+
+        if (mo < 3) {
+          yr--;
+          mo += 12;
+        }
+        ++mo;
+        let c = 365.25 * yr;
+        let e = 30.6 * mo;
+        let jd = c + e + day - 694039.09;
+        jd /= 29.5305882;
+        let b = parseInt(jd);
+        jd -= b;
+        const age = jd * 29.5305882;
+        const illumination = 0.5 * (1 - Math.cos(2 * Math.PI * jd));
+
+        let phaseName = '';
+        if (age < 1.84566) phaseName = 'New Moon';
+        else if (age < 5.53699) phaseName = 'Waxing Crescent';
+        else if (age < 9.22831) phaseName = 'First Quarter';
+        else if (age < 12.91963) phaseName = 'Waxing Gibbous';
+        else if (age < 16.61096) phaseName = 'Full Moon';
+        else if (age < 20.30228) phaseName = 'Waning Gibbous';
+        else if (age < 23.99361) phaseName = 'Last Quarter';
+        else if (age < 27.68493) phaseName = 'Waning Crescent';
+        else phaseName = 'New Moon';
+
+        return { phase: jd, age, illumination, phaseName };
+      }
+
+      function drawMoon(canvas, phase) {
+        const ctx = canvas.getContext('2d');
+        const w = canvas.width, h = canvas.height;
+        const r = w / 2 - 2;
+        const cx = w / 2, cy = h / 2;
+
+        // Clear
+        ctx.clearRect(0, 0, w, h);
+
+        // Moon base (dark side)
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.fillStyle = '#1a1a2e';
+        ctx.fill();
+
+        // Add subtle craters to dark side
+        ctx.fillStyle = 'rgba(255,255,255,0.03)';
+        [[0.3,0.35,8],[0.6,0.25,5],[0.45,0.6,10],[0.7,0.55,6],[0.25,0.7,4]].forEach(([px,py,sr]) => {
+          ctx.beginPath();
+          ctx.arc(cx + (px-0.5)*r*2, cy + (py-0.5)*r*2, sr, 0, Math.PI*2);
+          ctx.fill();
+        });
+
+        // Lit side
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.clip();
+
+        const p = phase; // 0 to 1
+        ctx.beginPath();
+        if (p <= 0.5) {
+          // Waxing: lit from right
+          const sweep = (0.5 - p) * 4 - 1; // 1 to -1
+          ctx.arc(cx, cy, r, -Math.PI/2, Math.PI/2, false);
+          ctx.bezierCurveTo(cx + r * sweep, cy + r * 0.75, cx + r * sweep, cy - r * 0.75, cx, cy - r);
+        } else {
+          // Waning: lit from left
+          const sweep = (p - 0.5) * 4 - 1; // -1 to 1
+          ctx.arc(cx, cy, r, Math.PI/2, -Math.PI/2, false);
+          ctx.bezierCurveTo(cx - r * sweep, cy - r * 0.75, cx - r * sweep, cy + r * 0.75, cx, cy + r);
+        }
+        ctx.closePath();
+
+        const grad = ctx.createRadialGradient(cx - r*0.2, cy - r*0.2, 0, cx, cy, r);
+        grad.addColorStop(0, '#f5f0e8');
+        grad.addColorStop(0.5, '#e8e0d0');
+        grad.addColorStop(1, '#c8bfaa');
+        ctx.fillStyle = grad;
+        ctx.fill();
+
+        // Craters on lit side
+        ctx.fillStyle = 'rgba(0,0,0,0.06)';
+        [[0.55,0.4,7],[0.4,0.55,9],[0.6,0.65,5],[0.35,0.3,6],[0.5,0.75,4]].forEach(([px,py,sr]) => {
+          ctx.beginPath();
+          ctx.arc(cx + (px-0.5)*r*2, cy + (py-0.5)*r*2, sr, 0, Math.PI*2);
+          ctx.fill();
+        });
+
+        ctx.restore();
+
+        // Glow
+        const glowGrad = ctx.createRadialGradient(cx, cy, r * 0.9, cx, cy, r * 1.3);
+        glowGrad.addColorStop(0, 'rgba(213,255,90,0.05)');
+        glowGrad.addColorStop(1, 'rgba(213,255,90,0)');
+        ctx.beginPath();
+        ctx.arc(cx, cy, r * 1.3, 0, Math.PI * 2);
+        ctx.fillStyle = glowGrad;
+        ctx.fill();
+      }
+
+      // Calculate and render
+      const now = new Date();
+      const moon = getMoonPhase(now);
+
+      const canvas = document.getElementById('moonCanvas');
+      drawMoon(canvas, moon.phase);
+
+      document.getElementById('moonPhaseName').textContent = moon.phaseName;
+      document.getElementById('moonIllumination').textContent = Math.round(moon.illumination * 100) + '% illuminated';
+
+      // Cosmic events removed — moon phase inline only
+    })();
+
+    // ── Dashboard tab switching ──
+    document.querySelectorAll('.dash-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.dash-panel').forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        const panel = document.getElementById('panel-' + tab.dataset.panel);
+        if (panel) panel.classList.add('active');
+      });
+    });
+
+    // ── Sidebar nav switching ──
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', (e) => {
+        const href = item.getAttribute('href');
+        if (!href || href === '#') {
+          e.preventDefault();
+        }
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        item.classList.add('active');
+      });
+    });
+
+  </script>
+
+  <!-- ── ZIION Neural Network Visualizer Engine ── -->
+  <script>
+  (function() {
+    const canvas = document.getElementById('networkCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    // ── High-DPI + Resize ──
+    let W, H, dpr;
+    function resize() {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      dpr = window.devicePixelRatio || 1;
+      W = rect.width;
+      H = rect.height;
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      canvas.style.width = W + 'px';
+      canvas.style.height = H + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    resize();
+    window.addEventListener('resize', () => { resize(); });
+
+    // ── Mouse ──
+    let mouse = { x: W / 2, y: H / 2, active: false };
+    canvas.addEventListener('mousemove', e => {
+      const r = canvas.getBoundingClientRect();
+      mouse.x = e.clientX - r.left;
+      mouse.y = e.clientY - r.top;
+      mouse.active = true;
+    });
+    canvas.addEventListener('mouseleave', () => { mouse.active = false; });
+
+    // ── Color Palette — Monochrome / Muted Construction ──
+    const PALETTE = [
+      [255, 255, 255],  // Pure white
+      [220, 220, 225],  // Soft silver
+      [190, 190, 195],  // Light grey
+      [160, 160, 168],  // Medium grey
+      [130, 130, 138],  // Mid grey
+      [100, 100, 108],  // Dark grey
+      [180, 180, 185],  // Muted silver
+      [210, 210, 215],  // Pale
+      [240, 240, 242],  // Near-white
+      [150, 150, 158],  // Neutral
+      [255, 255, 255],  // White (hubs)
+    ];
+
+    // Category colors — all monochrome
+    const CAT_COLORS = {
+      thread:      [200, 200, 205],
+      vote:        [170, 170, 178],
+      user:        [255, 255, 255],
+      interaction: [150, 150, 158],
+      wealth:      [220, 220, 225],
+      culture:     [180, 180, 188],
+      wellness:    [190, 190, 195],
+      tech:        [210, 210, 215],
+    };
+    const CATS = Object.keys(CAT_COLORS);
+
+    // ── Data Structures ──
+    const nodes = [];
+    const connections = [];
+    const particles = [];
+    let totalSynapses = 0;
+    let complexity = 1.0;
+
+    // ── Node ──
+    function createNode(x, y, type, size) {
+      return {
+        x: x, y: y,
+        vx: (Math.random() - 0.5) * 0.08,
+        vy: (Math.random() - 0.5) * 0.08,
+        type: type || CATS[Math.floor(Math.random() * CATS.length)],
+        size: size || (0.4 + Math.random() * 1.8),
+        pulse: Math.random() * 6.28,
+        pulseSpeed: 0.015 + Math.random() * 0.025,
+        alpha: 0,
+        targetAlpha: 0.5 + Math.random() * 0.5,
+        conns: 0,
+        age: 0,
+      };
+    }
+
+    // ── Connection ──
+    function createConnection(a, b) {
+      const c1 = CAT_COLORS[a.type], c2 = CAT_COLORS[b.type];
+      return {
+        a: a, b: b,
+        alpha: 0,
+        targetAlpha: 0.04 + Math.random() * 0.16,
+        color: [
+          Math.round((c1[0] + c2[0]) / 2),
+          Math.round((c1[1] + c2[1]) / 2),
+          Math.round((c1[2] + c2[2]) / 2)
+        ],
+        age: 0,
+      };
+    }
+
+    // ── Particle (flows along connections) ──
+    function spawnParticle(conn) {
+      particles.push({
+        conn: conn,
+        t: 0,
+        speed: 0.002 + Math.random() * 0.006,
+        size: 0.4 + Math.random() * 1.0,
+        alpha: 0.4 + Math.random() * 0.6,
+      });
+    }
+
+    // ── Build Initial Network — Gaussian organic clustering ──
+    function buildNetwork() {
+      const cx = W / 2, cy = H / 2;
+      const padX = 30, padY = 25, padBot = 70;
+
+      // Gaussian random (Box-Muller)
+      function gauss() {
+        let u = 0, v = 0;
+        while (u === 0) u = Math.random();
+        while (v === 0) v = Math.random();
+        return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+      }
+
+      // Clamp to canvas
+      function clampX(x) { return Math.max(padX, Math.min(W - padX, x)); }
+      function clampY(y) { return Math.max(padY, Math.min(H - padBot, y)); }
+
+      // 1. Place all nodes using Gaussian distribution (dense center, sparse edges)
+      // Major hubs — 10 bright anchor points
+      const hubCount = 10;
+      for (let i = 0; i < hubCount; i++) {
+        const x = clampX(cx + gauss() * W * 0.18);
+        const y = clampY(cy + gauss() * H * 0.16);
+        const h = createNode(x, y, CATS[i % CATS.length], 2.5 + Math.random() * 2);
+        h.targetAlpha = 0.85 + Math.random() * 0.15;
+        nodes.push(h);
+      }
+
+      // Secondary nodes — 120 medium nodes clustered around hubs
+      for (let i = 0; i < 120; i++) {
+        const parent = nodes[Math.floor(Math.random() * Math.min(nodes.length, hubCount))];
+        const angle = Math.random() * 6.28;
+        const dist = 20 + Math.abs(gauss()) * 100;
+        const x = clampX(parent.x + Math.cos(angle) * dist);
+        const y = clampY(parent.y + Math.sin(angle) * dist);
+        const n = createNode(x, y,
+          Math.random() < 0.5 ? parent.type : CATS[Math.floor(Math.random() * CATS.length)],
+          0.6 + Math.random() * 1.2);
+        nodes.push(n);
+      }
+
+      // Tertiary nodes — 200 small nodes branching from secondaries
+      const secEnd = nodes.length;
+      for (let i = 0; i < 200; i++) {
+        const parent = nodes[Math.floor(Math.random() * secEnd)];
+        const angle = Math.random() * 6.28;
+        const dist = 10 + Math.abs(gauss()) * 70;
+        const x = clampX(parent.x + Math.cos(angle) * dist);
+        const y = clampY(parent.y + Math.sin(angle) * dist);
+        const n = createNode(x, y, parent.type, 0.25 + Math.random() * 0.7);
+        n.targetAlpha = 0.2 + Math.random() * 0.4;
+        nodes.push(n);
+      }
+
+      // Micro dust — 100 tiny ambient nodes scattered wider
+      for (let i = 0; i < 100; i++) {
+        const x = clampX(cx + gauss() * W * 0.35);
+        const y = clampY(cy + gauss() * H * 0.3);
+        const n = createNode(x, y, CATS[Math.floor(Math.random() * CATS.length)], 0.15 + Math.random() * 0.35);
+        n.targetAlpha = 0.1 + Math.random() * 0.2;
+        nodes.push(n);
+      }
+
+      // 2. Build connections based on proximity (organic web)
+      // Connect each node to its K nearest neighbors
+      for (let i = 0; i < nodes.length; i++) {
+        const n = nodes[i];
+        const isHub = i < hubCount;
+        const k = isHub ? 6 : (n.size > 1 ? 3 : 2);
+
+        // Find nearest nodes
+        const dists = [];
+        for (let j = 0; j < nodes.length; j++) {
+          if (j === i) continue;
+          const dx = nodes[j].x - n.x, dy = nodes[j].y - n.y;
+          dists.push({ idx: j, d: Math.sqrt(dx*dx + dy*dy) });
+        }
+        dists.sort((a, b) => a.d - b.d);
+
+        for (let c = 0; c < Math.min(k, dists.length); c++) {
+          if (dists[c].d < 200) {
+            // Avoid duplicate connections
+            const target = nodes[dists[c].idx];
+            const exists = connections.some(conn =>
+              (conn.a === n && conn.b === target) || (conn.a === target && conn.b === n)
+            );
+            if (!exists) {
+              const conn = createConnection(n, target);
+              if (!isHub && n.size < 1) conn.targetAlpha *= 0.6;
+              connections.push(conn);
+              n.conns++; target.conns++;
+            }
+          }
+        }
+      }
+
+      // 3. Add long-range connections for web density
+      for (let i = 0; i < 120; i++) {
+        const a = nodes[Math.floor(Math.random() * nodes.length)];
+        const b = nodes[Math.floor(Math.random() * nodes.length)];
+        if (a !== b) {
+          const dx = a.x - b.x, dy = a.y - b.y;
+          const dist = Math.sqrt(dx*dx + dy*dy);
+          if (dist < 250 && dist > 40) {
+            const exists = connections.some(c =>
+              (c.a === a && c.b === b) || (c.a === b && c.b === a)
+            );
+            if (!exists) {
+              const c = createConnection(a, b);
+              c.targetAlpha = 0.015 + Math.random() * 0.04;
+              connections.push(c);
+              a.conns++; b.conns++;
+            }
+          }
+        }
+      }
+
+      totalSynapses = connections.length;
+
+      // 4. Seed particles
+      for (let i = 0; i < 150; i++) {
+        spawnParticle(connections[Math.floor(Math.random() * connections.length)]);
+      }
+    }
+
+    // ── Growth Engine ──
+    let growthTimer = 0;
+    function grow() {
+      if (nodes.length > 900) return;
+
+      // Pick random parent
+      const parent = nodes[Math.floor(Math.random() * nodes.length)];
+      const angle = Math.random() * Math.PI * 2;
+      const dist = 15 + Math.random() * 60;
+
+      const child = createNode(
+        parent.x + Math.cos(angle) * dist,
+        parent.y + Math.sin(angle) * dist,
+        Math.random() < 0.4 ? parent.type : CATS[Math.floor(Math.random() * CATS.length)],
+        0.3 + Math.random() * 1.2
+      );
+      nodes.push(child);
+      connections.push(createConnection(parent, child));
+      parent.conns++; child.conns++;
+      totalSynapses++;
+
+      // Cross-connection chance
+      if (Math.random() < 0.35) {
+        for (let i = 0; i < 3; i++) {
+          const candidate = nodes[Math.floor(Math.random() * nodes.length)];
+          if (candidate !== child && candidate !== parent) {
+            const dx = candidate.x - child.x, dy = candidate.y - child.y;
+            if (Math.sqrt(dx*dx + dy*dy) < 120) {
+              connections.push(createConnection(child, candidate));
+              child.conns++; candidate.conns++;
+              totalSynapses++;
+              break;
+            }
+          }
+        }
+      }
+
+      // Spawn particle on new connection
+      spawnParticle(connections[connections.length - 1]);
+
+      complexity = 1 + (nodes.length - 200) / 300;
+    }
+
+    // ── Render: Connections ──
+    function drawConnections() {
+      for (let i = 0; i < connections.length; i++) {
+        const c = connections[i];
+        c.age++;
+        if (c.alpha < c.targetAlpha) c.alpha += 0.003;
+
+        // Mouse proximity highlight
+        let boost = 1;
+        if (mouse.active) {
+          const ax = c.a.x, ay = c.a.y, bx = c.b.x, by = c.b.y;
+          const dx = bx - ax, dy = by - ay;
+          const len2 = dx*dx + dy*dy;
+          if (len2 > 0) {
+            let t = ((mouse.x - ax) * dx + (mouse.y - ay) * dy) / len2;
+            t = Math.max(0, Math.min(1, t));
+            const px = ax + t * dx, py = ay + t * dy;
+            const md = Math.sqrt((mouse.x-px)*(mouse.x-px) + (mouse.y-py)*(mouse.y-py));
+            if (md < 100) boost = 1 + (100 - md) / 100 * 4;
+          }
+        }
+
+        const col = c.color;
+        const a = c.alpha * boost;
+        ctx.beginPath();
+        ctx.moveTo(c.a.x, c.a.y);
+        ctx.lineTo(c.b.x, c.b.y);
+        ctx.strokeStyle = `rgba(${col[0]},${col[1]},${col[2]},${Math.min(a, 0.6)})`;
+        ctx.lineWidth = boost > 1.5 ? 1 : 0.4;
+        ctx.stroke();
+      }
+    }
+
+    // ── Render: Nodes ──
+    function drawNodes() {
+      for (let i = 0; i < nodes.length; i++) {
+        const n = nodes[i];
+        n.age++;
+        n.pulse += n.pulseSpeed;
+        if (n.alpha < n.targetAlpha) n.alpha += 0.008;
+
+        const pulseFactor = 1 + Math.sin(n.pulse) * 0.3;
+        const sz = n.size * pulseFactor;
+
+        // Gentle drift
+        n.x += n.vx;
+        n.y += n.vy;
+        n.vx *= 0.992;
+        n.vy *= 0.992;
+
+        // Strong boundary containment
+        const padX = 15, padY = 15, padBot = 60;
+        if (n.x < padX) { n.vx += 0.05; n.x = padX; }
+        if (n.x > W - padX) { n.vx -= 0.05; n.x = W - padX; }
+        if (n.y < padY) { n.vy += 0.05; n.y = padY; }
+        if (n.y > H - padBot) { n.vy -= 0.05; n.y = H - padBot; }
+
+        // Very subtle center gravity (only at extremes)
+        const edgeDist = 80;
+        if (n.x < edgeDist || n.x > W - edgeDist || n.y < edgeDist || n.y > H - edgeDist) {
+          n.vx += (W / 2 - n.x) * 0.00005;
+          n.vy += (H / 2 - n.y) * 0.00005;
+        }
+
+        // Mouse repulsion (gentle)
+        if (mouse.active) {
+          const dx = n.x - mouse.x, dy = n.y - mouse.y;
+          const dist = Math.sqrt(dx*dx + dy*dy);
+          if (dist < 100 && dist > 0) {
+            const force = (100 - dist) / 100 * 0.015;
+            n.vx += (dx / dist) * force;
+            n.vy += (dy / dist) * force;
+          }
+        }
+
+        const c = CAT_COLORS[n.type];
+
+        // Outer glow for larger nodes
+        if (sz > 1.5) {
+          const glowR = sz * (n.type === 'user' ? 12 : 8);
+          const glow = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, glowR);
+          glow.addColorStop(0, `rgba(${c[0]},${c[1]},${c[2]},${n.alpha * 0.25})`);
+          glow.addColorStop(0.4, `rgba(${c[0]},${c[1]},${c[2]},${n.alpha * 0.06})`);
+          glow.addColorStop(1, `rgba(${c[0]},${c[1]},${c[2]},0)`);
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, glowR, 0, 6.28);
+          ctx.fillStyle = glow;
+          ctx.fill();
+        }
+
+        // Core dot
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, sz, 0, 6.28);
+        ctx.fillStyle = `rgba(${c[0]},${c[1]},${c[2]},${n.alpha})`;
+        ctx.fill();
+      }
+    }
+
+    // ── Render: Particles ──
+    function drawParticles() {
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.t += p.speed;
+        if (p.t >= 1) {
+          particles.splice(i, 1);
+          continue;
+        }
+        const a = p.conn.a, b = p.conn.b;
+        const px = a.x + (b.x - a.x) * p.t;
+        const py = a.y + (b.y - a.y) * p.t;
+        const c = p.conn.color;
+        const fade = p.t < 0.1 ? p.t / 0.1 : (p.t > 0.9 ? (1 - p.t) / 0.1 : 1);
+
+        ctx.beginPath();
+        ctx.arc(px, py, p.size, 0, 6.28);
+        ctx.fillStyle = `rgba(${c[0]},${c[1]},${c[2]},${p.alpha * fade * 0.8})`;
+        ctx.fill();
+      }
+
+      // Continuously spawn particles
+      if (Math.random() < 0.3 && connections.length > 0) {
+        spawnParticle(connections[Math.floor(Math.random() * connections.length)]);
+      }
+    }
+
+    // ── Cursor Glow ──
+    function drawCursorGlow() {
+      if (!mouse.active) return;
+      const g = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 140);
+      g.addColorStop(0, 'rgba(255,255,255,0.06)');
+      g.addColorStop(0.4, 'rgba(255,255,255,0.015)');
+      g.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.beginPath();
+      ctx.arc(mouse.x, mouse.y, 140, 0, 6.28);
+      ctx.fillStyle = g;
+      ctx.fill();
+    }
+
+    // ── HUD Update ──
+    function updateHUD() {
+      document.getElementById('networkNodeCount').textContent = totalSynapses.toLocaleString();
+      document.getElementById('netThreads').textContent = nodes.filter(n => n.type === 'thread').length;
+      document.getElementById('netVotes').textContent = nodes.filter(n => n.type === 'vote').length;
+      document.getElementById('netConnections').textContent = connections.length;
+      document.getElementById('netComplexity').textContent = complexity.toFixed(1) + '×';
+    }
+
+    // ── Main Loop ──
+    let frame = 0;
+    function animate() {
+      frame++;
+      ctx.clearRect(0, 0, W, H);
+
+      drawCursorGlow();
+      drawConnections();
+      drawParticles();
+      drawNodes();
+
+      // Growth: every ~1.5 seconds, add a node
+      growthTimer++;
+      if (growthTimer >= 90) {
+        growthTimer = 0;
+        grow();
+      }
+
+      // HUD: every 0.5s
+      if (frame % 30 === 0) updateHUD();
+
+      requestAnimationFrame(animate);
+    }
+
+    // ── Kickoff ──
+    buildNetwork();
+    animate();
+  })();
+  </script>
+  <script src="theme-toggle.js"></script>
+
+  <!-- Audience GDP Calculation Engine -->
+  <script>
+  (function() {
+    // ── Constants ──
+    const AVG_YEARLY_INCOME = 60000; // Black American wealth-seeking cohort (calibrated from CRM + RPM $9.18)
+    const OVERLAP_FACTOR = 0.35;     // estimated 35% audience overlap across platforms
+    const CREATOR_MULTIPLIER = 0.013; // creator value = ~1.3% of total spending power (IP + trust + reach)
+    // Owned Channel Assets (zero-algorithm dependency)
+    const EMAIL_LIST_SIZE = 100000;        // confirmed email subscribers
+    const EMAIL_VALUE_PER_SUB = 30;        // industry rate: $30/email sub
+    const SUPERPHONE_SIZE = 47000;         // SuperPhone SMS subscribers (98% open rate)
+    const SUPERPHONE_VALUE_PER_SUB = 50;   // premium SMS channel rate: $50/sub
+
+    // ── Parse follower count from text ──
+    function parseCount(text) {
+      if (!text) return 0;
+      text = text.replace(/,/g, '').trim();
+      const lower = text.toLowerCase();
+      if (lower.endsWith('k')) return parseFloat(lower) * 1000;
+      if (lower.endsWith('m')) return parseFloat(lower) * 1000000;
+      if (lower.endsWith('b')) return parseFloat(lower) * 1000000000;
+      return parseFloat(text) || 0;
+    }
+
+    // ── Format number to readable string ──
+    function formatMoney(num) {
+      if (num >= 1e12) return '$' + (num / 1e12).toFixed(1) + 'T';
+      if (num >= 1e9) return '$' + (num / 1e9).toFixed(1) + 'B';
+      if (num >= 1e6) return '$' + (num / 1e6).toFixed(1) + 'M';
+      if (num >= 1e3) return '$' + (num / 1e3).toFixed(1) + 'K';
+      return '$' + num.toFixed(0);
+    }
+
+    function formatNum(num) {
+      if (num >= 1e6) return (num / 1e6).toFixed(1) + 'M';
+      if (num >= 1e3) return (num / 1e3).toFixed(0) + 'K';
+      return num.toFixed(0);
+    }
+
+    // ── Economy equivalence tiers ──
+    function getEquivalence(gdp) {
+      if (gdp >= 1e12) return { emoji: '🌍', label: 'Major Nation' };
+      if (gdp >= 100e9) return { emoji: '🏛️', label: 'Small Nation' };
+      if (gdp >= 10e9) return { emoji: '🏙️', label: 'Major Metro' };
+      if (gdp >= 1e9) return { emoji: '🏙️', label: 'Large City' };
+      if (gdp >= 100e6) return { emoji: '🏙️', label: 'Mid-Size City' };
+      if (gdp >= 10e6) return { emoji: '🏘️', label: 'Small City' };
+      if (gdp >= 1e6) return { emoji: '🏘️', label: 'Large Town' };
+      return { emoji: '🏡', label: 'Small Town' };
+    }
+
+    // ── Economy grade ──
+    function getGrade(uniqueAudience, gdp) {
+      // Based on audience size + gdp thresholds
+      const score = (uniqueAudience / 100000) * 0.4 + (gdp / 10000000) * 0.6;
+      if (score >= 80) return 'S';
+      if (score >= 50) return 'A+';
+      if (score >= 30) return 'A';
+      if (score >= 15) return 'B+';
+      if (score >= 8) return 'B';
+      if (score >= 4) return 'C+';
+      if (score >= 2) return 'C';
+      return 'D';
+    }
+
+    // ── Main calculation ──
+    function calculateAudienceGDP() {
+      // Read counts from DOM
+      const ig = parseCount(document.getElementById('igCount')?.textContent);
+      const yt = parseCount(document.getElementById('ytCount')?.textContent);
+      const x = parseCount(document.getElementById('xCount')?.textContent);
+      const threads = parseCount(document.getElementById('threadsCount')?.textContent);
+      const tiktok = parseCount(document.getElementById('tiktokCount')?.textContent);
+
+      const totalRaw = ig + yt + x + threads + tiktok;
+
+      // Unique audience (adjusted for cross-platform overlap)
+      const uniqueAudience = Math.round(totalRaw * (1 - OVERLAP_FACTOR));
+
+      // Spending Power = unique audience × avg yearly income
+      const spendingPower = uniqueAudience * AVG_YEARLY_INCOME;
+
+      // Nation GDP = spending power × activity factor (not all spend equally)
+      // Using ~5% engagement-weighted GDP contribution
+      const nationGDP = spendingPower * 0.05;
+
+      // Creator Value = IP + trust + reach premium
+      const creatorValue = spendingPower * CREATOR_MULTIPLIER;
+
+      // Equivalence
+      const equiv = getEquivalence(nationGDP);
+
+      // Grade
+      const grade = getGrade(uniqueAudience, nationGDP);
+
+      // ── Update DOM ──
+      const gdpEl = document.getElementById('nationGdp');
+      const spendEl = document.getElementById('spendPower');
+      const creatorEl = document.getElementById('creatorVal');
+      const equivEl = document.getElementById('econEquiv');
+      const gradeEl = document.getElementById('econGrade');
+      const equivFlag = equivEl?.parentElement?.querySelector('.econ-equiv-flag');
+
+      if (gdpEl) gdpEl.textContent = formatMoney(nationGDP);
+      if (spendEl) spendEl.textContent = formatMoney(spendingPower);
+      if (creatorEl) creatorEl.textContent = formatMoney(creatorValue);
+      if (equivEl) equivEl.textContent = equiv.label;
+      if (equivFlag) equivFlag.textContent = equiv.emoji;
+      if (gradeEl) gradeEl.textContent = grade;
+
+      // Update Total Reach in stats bar
+      const statValues = document.querySelectorAll('.stat-value');
+      statValues.forEach(function(el) {
+        const label = el.parentElement?.querySelector('.stat-label');
+        if (label && label.textContent.trim() === 'Total Reach') {
+          el.textContent = formatNum(totalRaw);
+        }
+      });
+
+      // Update economy banner sub-labels with context
+      const gdpSub = gdpEl?.parentElement?.querySelector('.econ-sub');
+      if (gdpSub) gdpSub.innerHTML = '<span class="green-accent">live</span> · based on audience × income';
+
+      const spendSub = spendEl?.parentElement?.querySelector('.econ-sub');
+      if (spendSub) spendSub.textContent = formatNum(uniqueAudience) + ' unique citizens × $60K avg';
+
+      const creatorSub = creatorEl?.parentElement?.querySelector('.econ-sub');
+      if (creatorSub) creatorSub.textContent = 'IP + trust + reach value';
+    }
+
+    // Run on load
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', calculateAudienceGDP);
+    } else {
+      calculateAudienceGDP();
+    }
+
+    // Recalculate every 60 seconds (for when real-time data is connected)
+    setInterval(calculateAudienceGDP, 60000);
+
+    // ── Nation Total Value + Revenue Engine ──
+    function updateNationValueStrip() {
+      const ig = parseCount(document.getElementById('igCount')?.textContent);
+      const yt = parseCount(document.getElementById('ytCount')?.textContent);
+      const x = parseCount(document.getElementById('xCount')?.textContent);
+      const threads = parseCount(document.getElementById('threadsCount')?.textContent);
+      const tiktok = parseCount(document.getElementById('tiktokCount')?.textContent);
+      const totalRaw = ig + yt + x + threads + tiktok;
+
+      // Format total
+      function fmtTotal(n) {
+        if (n >= 1e6) return (n / 1e6).toFixed(2).replace(/\.?0+$/, '') + 'M+';
+        if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K+';
+        return n.toLocaleString();
+      }
+
+      // Nation Total Value calculation
+      // Audience asset: unique followers × $3 per engaged follower (A-tier creator premium)
+      const uniqueAud = Math.round(totalRaw * 0.65);
+      const audienceValue = uniqueAud * 3;
+      // IP vault: 1499 assets × $200 avg
+      const ownedMediaValue = (EMAIL_LIST_SIZE * EMAIL_VALUE_PER_SUB) + (SUPERPHONE_SIZE * SUPERPHONE_VALUE_PER_SUB);
+      const ipValue = 1499 * 200;
+      // Brand equity multiplier: 3x for thought leader + media brand
+      const brandEquity = (audienceValue + ownedMediaValue + ipValue) * 3;
+      // Course pipeline (Cognition Key)
+      const courseValue = 2000 * 197;
+
+      const nationTotalValue = brandEquity + courseValue;
+
+      function fmtMoney(n) {
+        if (n >= 1e6) return '$' + (n / 1e6).toFixed(1) + 'M';
+        if (n >= 1e3) return '$' + (n / 1e3).toFixed(0) + 'K';
+        return '$' + n.toFixed(0);
+      }
+
+      // Value grade
+      function getValueGrade(v) {
+        if (v >= 50e6) return 'S-Tier';
+        if (v >= 20e6) return 'A+-Tier';
+        if (v >= 8e6) return 'A-Tier';
+        if (v >= 3e6) return 'B+-Tier';
+        return 'B-Tier';
+      }
+
+      // Update Nation Value Strip
+      const nvTotal = document.getElementById('nvTotalCitizens');
+      const nvNationVal = document.getElementById('nvNationValue');
+      const nvGrade = document.getElementById('nvValueGrade');
+      const statNationTotal = document.getElementById('statNationTotal');
+
+      if (nvTotal) nvTotal.textContent = fmtTotal(totalRaw);
+      if (statNationTotal) statNationTotal.textContent = fmtTotal(totalRaw);
+      if (nvNationVal) nvNationVal.textContent = fmtMoney(nationTotalValue);
+      if (nvGrade) nvGrade.textContent = getValueGrade(nationTotalValue);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', updateNationValueStrip);
+    } else {
+      updateNationValueStrip();
+    }
+    setInterval(updateNationValueStrip, 60000);
+  })();
+  </script>
+  <script src="neo-bridge.js"></script>
+
+  <!-- ── Public Offers Feed (reads from localStorage) ── -->
+  <script>
+  (function renderPublicOffers() {
+    const STATUS_COLORS = {
+      pending:  { bg: 'rgba(251,191,36,0.12)', color: '#fbbf24', label: 'Pending' },
+      accepted: { bg: 'rgba(74,222,128,0.12)', color: '#4ade80', label: 'Accepted' },
+      declined: { bg: 'rgba(248,113,113,0.12)', color: '#f87171', label: 'Declined' }
+    };
+
+    function fmt(isoStr) {
+      try {
+        return new Date(isoStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      } catch(e) { return isoStr; }
+    }
+
+    function renderOffers() {
+      const list  = document.getElementById('public-offers-list');
+      const empty = document.getElementById('offers-empty-note');
+      if (!list) return;
+
+      let offers = [];
+      try { offers = JSON.parse(localStorage.getItem('ziion_public_offers') || '[]'); } catch(e) {}
+
+      if (!offers.length) {
+        list.innerHTML = '';
+        if (empty) empty.style.display = 'block';
+        return;
+      }
+      if (empty) empty.style.display = 'none';
+
+      list.innerHTML = offers.map(function(o) {
+        const s   = STATUS_COLORS[o.status] || STATUS_COLORS.pending;
+        const desc = o.desc ? o.desc.substring(0, 90) + (o.desc.length > 90 ? '…' : '') : '';
+        return `<div class="data-card" style="position:relative;">
+          <div class="data-row">
+            <div class="data-title">${o.service || 'Offer'}</div>
+            <div class="data-offer-badge" style="background:${s.bg};color:${s.color};border:1px solid ${s.color}33;padding:3px 10px;border-radius:3px;font-size:9px;letter-spacing:1px;font-weight:600;text-transform:uppercase;">${s.label}</div>
+          </div>
+          <div class="data-meta" style="margin-bottom:4px;">From ${o.name || '—'} · ${o.offer || '—'} · ${fmt(o.timestamp)}</div>
+          ${o.email ? `<div class="data-meta" style="opacity:0.5;">${o.email}${o.org ? ' · ' + o.org : ''}</div>` : ''}
+          ${desc ? `<div class="data-meta" style="margin-top:6px;opacity:0.65;font-style:italic;">"${desc}"</div>` : ''}
+          <div style="display:flex;gap:8px;margin-top:10px;">
+            <button onclick="setOfferStatus(${o.id},'accepted')" style="font-size:9px;letter-spacing:1px;padding:4px 12px;background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.3);color:#4ade80;cursor:pointer;">ACCEPT</button>
+            <button onclick="setOfferStatus(${o.id},'declined')" style="font-size:9px;letter-spacing:1px;padding:4px 12px;background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.3);color:#f87171;cursor:pointer;">DECLINE</button>
+            <a href="mailto:${o.email}?subject=Re: ${encodeURIComponent(o.service || 'Your Offer')} — Build with 19Keys" style="font-size:9px;letter-spacing:1px;padding:4px 12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.5);text-decoration:none;">REPLY</a>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    window.setOfferStatus = function(id, status) {
+      try {
+        const offers = JSON.parse(localStorage.getItem('ziion_public_offers') || '[]');
+        const updated = offers.map(function(o) {
+          return o.id === id ? Object.assign({}, o, { status: status }) : o;
+        });
+        localStorage.setItem('ziion_public_offers', JSON.stringify(updated));
+        renderOffers();
+      } catch(e) {}
+    };
+
+    // Initial render + re-render whenever the Offers tab is clicked
+    document.addEventListener('DOMContentLoaded', function() {
+      renderOffers();
+      document.querySelectorAll('[data-panel="offers"]').forEach(function(btn) {
+        btn.addEventListener('click', renderOffers);
+      });
+    });
+  })();
+  </script>
+</body>
+</html>

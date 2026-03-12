@@ -1,0 +1,129 @@
+{%- liquid
+  assign collection = collection | default: section.settings.collection
+  assign limit = section.settings.limit | default: 12
+  assign columns = section.settings.columns | default: 4
+-%}
+
+{{ 'crownz19-collection.css' | asset_url | stylesheet_tag }}
+
+<section class="collection-grid">
+  <div class="collection-grid__inner">
+    {%- if collection.title != blank -%}
+      <div class="collection-grid__header">
+        <h1 class="collection-grid__title">{{ collection.title }}</h1>
+        {%- if collection.description != blank -%}
+          <div class="collection-grid__description">{{ collection.description }}</div>
+        {%- endif -%}
+        <p class="collection-grid__count">{{ collection.products_count }} {{ 'collections.products' | t }}</p>
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.enable_sort -%}
+      <div class="collection-grid__toolbar">
+        <div class="collection-grid__sort">
+          <label for="SortBy" class="collection-grid__sort-label">Sort by</label>
+          <select id="SortBy" class="collection-grid__sort-select" data-sort-select>
+            <option value="manual">Featured</option>
+            <option value="best-selling">Best Selling</option>
+            <option value="title-ascending">A–Z</option>
+            <option value="title-descending">Z–A</option>
+            <option value="price-ascending">Price: Low to High</option>
+            <option value="price-descending">Price: High to Low</option>
+            <option value="created-ascending">Oldest</option>
+            <option value="created-descending">Newest</option>
+          </select>
+        </div>
+      </div>
+    {%- endif -%}
+
+    <div class="collection-grid__grid collection-grid__grid--{{ columns }}-col">
+      {%- paginate collection.products by limit -%}
+        {%- for product in collection.products -%}
+          <div class="collection-grid__item reveal">
+            {%- render 'product-card', product: product -%}
+          </div>
+        {%- endfor -%}
+
+        {%- if paginate.pages > 1 -%}
+          <div class="collection-grid__pagination">
+            {%- if paginate.previous -%}
+              <a href="{{ paginate.previous.url }}" class="collection-grid__page-link">&larr; Previous</a>
+            {%- endif -%}
+
+            {%- for part in paginate.parts -%}
+              {%- if part.is_link -%}
+                <a href="{{ part.url }}" class="collection-grid__page-link">{{ part.title }}</a>
+              {%- else -%}
+                <span class="collection-grid__page-link is-current">{{ part.title }}</span>
+              {%- endif -%}
+            {%- endfor -%}
+
+            {%- if paginate.next -%}
+              <a href="{{ paginate.next.url }}" class="collection-grid__page-link">Next &rarr;</a>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      {%- endpaginate -%}
+    </div>
+  </div>
+</section>
+
+<script>
+  (function() {
+    var sortSelect = document.querySelector('[data-sort-select]');
+    if (sortSelect) {
+      /* Set current sort from URL */
+      var params = new URLSearchParams(window.location.search);
+      var current = params.get('sort_by');
+      if (current) sortSelect.value = current;
+
+      sortSelect.addEventListener('change', function() {
+        params.set('sort_by', this.value);
+        window.location.search = params.toString();
+      });
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Collection Grid",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "label": "Columns",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "limit",
+      "min": 4,
+      "max": 48,
+      "step": 4,
+      "label": "Products per page",
+      "default": 12
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sort",
+      "label": "Enable sorting",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Grid"
+    }
+  ]
+}
+{% endschema %}

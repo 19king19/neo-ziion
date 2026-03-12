@@ -1,0 +1,199 @@
+<footer class="site-footer" role="contentinfo">
+  <div class="site-footer__inner">
+    {%- comment -%} Top area: columns {%- endcomment -%}
+    <div class="site-footer__grid">
+      {%- comment -%} Brand column {%- endcomment -%}
+      <div class="site-footer__col site-footer__col--brand">
+        <a href="{{ routes.root_url }}" class="site-footer__logo" aria-label="{{ shop.name }}">
+          {%- if section.settings.logo != blank -%}
+            <img
+              src="{{ section.settings.logo | image_url: width: 200 }}"
+              alt="{{ section.settings.logo.alt | default: shop.name | escape }}"
+              width="120"
+              height="{{ 120 | divided_by: section.settings.logo.aspect_ratio }}"
+              loading="lazy"
+            >
+          {%- else -%}
+            <span class="site-footer__logo-text">{{ shop.name }}</span>
+          {%- endif -%}
+        </a>
+        {%- if section.settings.tagline != blank -%}
+          <p class="site-footer__tagline">{{ section.settings.tagline }}</p>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} Navigation columns from blocks {%- endcomment -%}
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'menu' -%}
+            <div class="site-footer__col" {{ block.shopify_attributes }}>
+              <h4 class="site-footer__heading">{{ block.settings.heading }}</h4>
+              <ul class="site-footer__links" role="list">
+                {%- for link in block.settings.menu.links -%}
+                  <li>
+                    <a href="{{ link.url }}" class="site-footer__link">{{ link.title }}</a>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            </div>
+
+          {%- when 'newsletter' -%}
+            <div class="site-footer__col site-footer__col--newsletter" {{ block.shopify_attributes }}>
+              <h4 class="site-footer__heading">{{ block.settings.heading | default: 'Stay Connected' }}</h4>
+              {%- if block.settings.text != blank -%}
+                <p class="site-footer__text">{{ block.settings.text }}</p>
+              {%- endif -%}
+              {%- form 'customer', class: 'site-footer__newsletter-form' -%}
+                <input type="hidden" name="contact[tags]" value="newsletter">
+                <div class="site-footer__newsletter-field">
+                  <input
+                    type="email"
+                    name="contact[email]"
+                    placeholder="{{ 'newsletter.placeholder' | t }}"
+                    required
+                    autocomplete="email"
+                    class="site-footer__newsletter-input"
+                    aria-label="{{ 'newsletter.placeholder' | t }}"
+                  >
+                  <button type="submit" class="site-footer__newsletter-btn" aria-label="{{ 'newsletter.submit' | t }}">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="5" y1="12" x2="19" y2="12"/>
+                      <polyline points="12 5 19 12 12 19"/>
+                    </svg>
+                  </button>
+                </div>
+              {%- endform -%}
+            </div>
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+
+    {%- comment -%} Social links {%- endcomment -%}
+    {%- if section.settings.show_social -%}
+      <div class="site-footer__social">
+        {%- if settings.social_instagram != blank -%}
+          <a href="{{ settings.social_instagram }}" class="site-footer__social-link" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>
+          </a>
+        {%- endif -%}
+        {%- if settings.social_twitter != blank -%}
+          <a href="{{ settings.social_twitter }}" class="site-footer__social-link" target="_blank" rel="noopener" aria-label="X / Twitter">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+        {%- endif -%}
+        {%- if settings.social_tiktok != blank -%}
+          <a href="{{ settings.social_tiktok }}" class="site-footer__social-link" target="_blank" rel="noopener" aria-label="TikTok">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 00-.79-.05A6.34 6.34 0 003.15 15.2a6.34 6.34 0 0010.86 4.48V13a8.17 8.17 0 005.58 2.18V11.7a4.83 4.83 0 01-3.77-1.24V6.69h3.77z"/></svg>
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Bottom bar {%- endcomment -%}
+    <div class="site-footer__bottom">
+      <p class="site-footer__copyright">
+        &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. All rights reserved.
+      </p>
+      <div class="site-footer__payment">
+        {%- if section.settings.show_payment_icons -%}
+          {%- for type in shop.enabled_payment_types -%}
+            {{ type | payment_type_svg_tag: class: 'site-footer__payment-icon' }}
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "tag": "div",
+  "class": "footer-section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Footer logo"
+    },
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Tagline",
+      "default": "Wear the crown. Own the legacy."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social",
+      "label": "Show social links",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "Show payment icons",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "menu",
+      "name": "Menu column",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Shop"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu",
+          "default": "footer"
+        }
+      ]
+    },
+    {
+      "type": "newsletter",
+      "name": "Newsletter",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Stay Connected"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Description",
+          "default": "Join the lineage. Be first to know."
+        }
+      ]
+    }
+  ],
+  "default": {
+    "blocks": [
+      {
+        "type": "menu",
+        "settings": {
+          "heading": "Shop",
+          "menu": "footer"
+        }
+      },
+      {
+        "type": "menu",
+        "settings": {
+          "heading": "Info",
+          "menu": "footer"
+        }
+      },
+      {
+        "type": "newsletter"
+      }
+    ]
+  }
+}
+{% endschema %}

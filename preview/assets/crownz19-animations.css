@@ -1,0 +1,256 @@
+/* ==========================================================================
+   CROWNZ19 Animations
+   Keyframes + scroll-triggered reveal utilities
+   ========================================================================== */
+
+/* ------------------------------------------------------------------
+   Keyframes
+   ------------------------------------------------------------------ */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(200, 169, 110, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(200, 169, 110, 0.5);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ------------------------------------------------------------------
+   Scroll-triggered reveal system
+   Elements with .reveal start hidden, become visible when
+   IntersectionObserver adds .is-visible
+   ------------------------------------------------------------------ */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Directional variants */
+.reveal--left {
+  transform: translateX(-30px);
+}
+.reveal--left.is-visible {
+  transform: translateX(0);
+}
+
+.reveal--right {
+  transform: translateX(30px);
+}
+.reveal--right.is-visible {
+  transform: translateX(0);
+}
+
+.reveal--scale {
+  transform: scale(0.92);
+}
+.reveal--scale.is-visible {
+  transform: scale(1);
+}
+
+/* Stagger delays for grid children */
+.reveal--stagger > .reveal:nth-child(1)  { transition-delay: 0ms; }
+.reveal--stagger > .reveal:nth-child(2)  { transition-delay: 80ms; }
+.reveal--stagger > .reveal:nth-child(3)  { transition-delay: 160ms; }
+.reveal--stagger > .reveal:nth-child(4)  { transition-delay: 240ms; }
+.reveal--stagger > .reveal:nth-child(5)  { transition-delay: 320ms; }
+.reveal--stagger > .reveal:nth-child(6)  { transition-delay: 400ms; }
+.reveal--stagger > .reveal:nth-child(7)  { transition-delay: 480ms; }
+.reveal--stagger > .reveal:nth-child(8)  { transition-delay: 560ms; }
+.reveal--stagger > .reveal:nth-child(9)  { transition-delay: 640ms; }
+.reveal--stagger > .reveal:nth-child(10) { transition-delay: 720ms; }
+.reveal--stagger > .reveal:nth-child(11) { transition-delay: 800ms; }
+.reveal--stagger > .reveal:nth-child(12) { transition-delay: 880ms; }
+
+/* ------------------------------------------------------------------
+   Page transition
+   ------------------------------------------------------------------ */
+
+.page-transition {
+  animation: fadeIn 0.4s ease-out;
+}
+
+/* ------------------------------------------------------------------
+   Utility animation classes
+   ------------------------------------------------------------------ */
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out both;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.5s ease-out both;
+}
+
+.animate-glow {
+  animation: glowPulse 3s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.08) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+
+/* Loading spinner */
+.animate-spin {
+  animation: spin 0.8s linear infinite;
+}
+
+/* ------------------------------------------------------------------
+   Hover transitions (global)
+   ------------------------------------------------------------------ */
+
+.hover-lift {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+}
+
+.hover-scale {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hover-scale:hover {
+  transform: scale(1.03);
+}
+
+/* ------------------------------------------------------------------
+   Reduced motion
+   ------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}

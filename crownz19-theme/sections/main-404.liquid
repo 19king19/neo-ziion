@@ -1,0 +1,56 @@
+<section class="page-404">
+  <div class="page-404__inner">
+    <h1 class="page-404__heading">404</h1>
+    <p class="page-404__message">{{ 'general.404.title' | t }}</p>
+    <p class="page-404__sub">{{ 'general.404.subtitle' | t }}</p>
+    <a href="/" class="page-404__link btn btn--primary">{{ 'general.404.link' | t }}</a>
+  </div>
+</section>
+
+<style>
+  .page-404 {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--crownz-white);
+    text-align: center;
+  }
+  .page-404__inner {
+    padding: var(--spacing-3xl) var(--spacing-lg);
+  }
+  .page-404__heading {
+    font-size: clamp(4rem, 12vw, 8rem);
+    font-weight: 200;
+    letter-spacing: 0.05em;
+    color: rgba(10,10,10,0.1);
+    margin: 0 0 var(--spacing-md);
+    line-height: 1;
+  }
+  .page-404__message {
+    font-size: 1.4rem;
+    font-weight: 300;
+    letter-spacing: 0.04em;
+    color: var(--crownz-black);
+    margin: 0 0 var(--spacing-sm);
+  }
+  .page-404__sub {
+    font-size: 0.95rem;
+    color: rgba(10,10,10,0.5);
+    margin: 0 0 var(--spacing-2xl);
+    line-height: 1.6;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "404 Page",
+  "tag": "div",
+  "settings": [],
+  "presets": [
+    {
+      "name": "404 Page"
+    }
+  ]
+}
+{% endschema %}

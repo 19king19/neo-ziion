@@ -1,0 +1,257 @@
+{%- liquid
+  assign bg_color = section.settings.background_color | default: '#E8E4DC'
+  assign section_height = section.settings.section_height | default: 900
+-%}
+
+<section
+  class="product-showcase"
+  data-product-showcase
+  style="background-color: {{ bg_color }}; min-height: {{ section_height }}px;"
+  aria-label="{{ section.settings.heading | default: 'Our Collection' }}"
+>
+  {%- if section.settings.heading != blank -%}
+    <div class="product-showcase__header">
+      <h2 class="product-showcase__heading">{{ section.settings.heading }}</h2>
+      {%- if section.settings.subheading != blank -%}
+        <p class="product-showcase__subheading">{{ section.settings.subheading }}</p>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  <div class="product-showcase__canvas" data-showcase-canvas>
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'product' -%}
+        {%- assign product = block.settings.product -%}
+        {%- assign pos_x = block.settings.position_x -%}
+        {%- assign pos_y = block.settings.position_y -%}
+        {%- assign scale = block.settings.scale | divided_by: 100.0 -%}
+        {%- assign rotation = block.settings.rotation -%}
+        {%- assign is_coming_soon = false -%}
+        {%- if product.tags contains 'coming-soon' -%}
+          {%- assign is_coming_soon = true -%}
+        {%- endif -%}
+
+        <div
+          class="product-showcase__item"
+          data-showcase-item
+          data-parallax-speed="{{ block.settings.parallax_speed }}"
+          style="
+            left: {{ pos_x }}%;
+            top: {{ pos_y }}%;
+            transform: translate(-50%, -50%) rotate({{ rotation }}deg) scale({{ scale }});
+            z-index: {{ block.settings.z_index }};
+          "
+          {{ block.shopify_attributes }}
+        >
+          <a href="{{ product.url | default: '#' }}" class="product-showcase__link" {% if is_coming_soon %}aria-disabled="true"{% endif %}>
+            <div class="product-showcase__image-wrap">
+              {%- if product != blank and product.featured_image -%}
+                <img
+                  src="{{ product.featured_image | image_url: width: 800 }}"
+                  alt="{{ product.featured_image.alt | default: product.title | escape }}"
+                  width="{{ block.settings.image_width }}"
+                  loading="lazy"
+                  class="product-showcase__img"
+                >
+              {%- else -%}
+                <div class="product-showcase__placeholder" style="width: {{ block.settings.image_width }}px; height: {{ block.settings.image_width }}px;">
+                  {{ 'product-1' | placeholder_svg_tag }}
+                </div>
+              {%- endif -%}
+
+              {%- if is_coming_soon -%}
+                {%- render 'coming-soon-overlay' -%}
+              {%- endif -%}
+            </div>
+
+            {%- if block.settings.show_title -%}
+              <div class="product-showcase__product-info">
+                <span class="product-showcase__product-title">{{ product.title | default: 'Product' }}</span>
+                {%- if block.settings.show_price and product != blank -%}
+                  <span class="product-showcase__product-price">{{ product.price | money }}</span>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+          </a>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+
+  {%- if section.settings.show_cta -%}
+    <div class="product-showcase__cta">
+      <a href="{{ section.settings.cta_link | default: routes.all_products_collection_url }}" class="btn btn--outline">
+        {{ section.settings.cta_text | default: 'Shop All' }}
+      </a>
+    </div>
+  {%- endif -%}
+</section>
+
+{{ 'crownz19-product-showcase.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'crownz19-product-showcase.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Product Showcase",
+  "tag": "div",
+  "class": "product-showcase-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#E8E4DC"
+    },
+    {
+      "type": "range",
+      "id": "section_height",
+      "min": 600,
+      "max": 1600,
+      "step": 50,
+      "unit": "px",
+      "label": "Section height",
+      "default": 900
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cta",
+      "label": "Show call to action",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA text",
+      "default": "Shop All"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "CTA link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "range",
+          "id": "position_x",
+          "min": 5,
+          "max": 95,
+          "step": 1,
+          "unit": "%",
+          "label": "Horizontal position",
+          "default": 50
+        },
+        {
+          "type": "range",
+          "id": "position_y",
+          "min": 5,
+          "max": 95,
+          "step": 1,
+          "unit": "%",
+          "label": "Vertical position",
+          "default": 50
+        },
+        {
+          "type": "range",
+          "id": "scale",
+          "min": 40,
+          "max": 160,
+          "step": 5,
+          "unit": "%",
+          "label": "Scale",
+          "default": 100
+        },
+        {
+          "type": "range",
+          "id": "rotation",
+          "min": -30,
+          "max": 30,
+          "step": 1,
+          "unit": "deg",
+          "label": "Rotation",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "image_width",
+          "min": 120,
+          "max": 500,
+          "step": 10,
+          "unit": "px",
+          "label": "Image width",
+          "default": 260
+        },
+        {
+          "type": "range",
+          "id": "z_index",
+          "min": 1,
+          "max": 20,
+          "step": 1,
+          "label": "Layer order",
+          "default": 1
+        },
+        {
+          "type": "range",
+          "id": "parallax_speed",
+          "min": 0,
+          "max": 5,
+          "step": 1,
+          "label": "Parallax intensity",
+          "default": 2,
+          "info": "0 = no parallax, 5 = most movement"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_title",
+          "label": "Show product title",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "show_price",
+          "label": "Show price",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Showcase",
+      "settings": {
+        "background_color": "#E8E4DC",
+        "section_height": 900
+      },
+      "blocks": [
+        { "type": "product", "settings": { "position_x": 20, "position_y": 25, "scale": 90, "rotation": -5, "image_width": 240 } },
+        { "type": "product", "settings": { "position_x": 50, "position_y": 15, "scale": 110, "rotation": 3, "image_width": 300 } },
+        { "type": "product", "settings": { "position_x": 75, "position_y": 30, "scale": 85, "rotation": -8, "image_width": 220 } },
+        { "type": "product", "settings": { "position_x": 30, "position_y": 60, "scale": 100, "rotation": 5, "image_width": 260 } },
+        { "type": "product", "settings": { "position_x": 65, "position_y": 55, "scale": 95, "rotation": -3, "image_width": 250 } },
+        { "type": "product", "settings": { "position_x": 85, "position_y": 70, "scale": 80, "rotation": 7, "image_width": 200 } },
+        { "type": "product", "settings": { "position_x": 15, "position_y": 80, "scale": 105, "rotation": -2, "image_width": 280 } }
+      ]
+    }
+  ],
+  "max_blocks": 20
+}
+{% endschema %}

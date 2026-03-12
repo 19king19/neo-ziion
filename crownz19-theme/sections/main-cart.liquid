@@ -1,0 +1,197 @@
+{%- comment -%}
+  Full cart page (fallback when cart drawer is disabled)
+{%- endcomment -%}
+
+<section class="main-cart">
+  <div class="main-cart__inner">
+    <h1 class="main-cart__heading">{{ 'cart.title' | t }}</h1>
+
+    {%- if cart.item_count > 0 -%}
+      <form action="/cart" method="post" class="main-cart__form">
+        <table class="main-cart__table">
+          <thead>
+            <tr>
+              <th>{{ 'cart.product' | t }}</th>
+              <th>{{ 'cart.price' | t }}</th>
+              <th>{{ 'cart.quantity' | t }}</th>
+              <th>{{ 'cart.total' | t }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%- for item in cart.items -%}
+              <tr class="main-cart__item">
+                <td class="main-cart__item-product">
+                  <a href="{{ item.url }}" class="main-cart__item-image">
+                    {%- if item.image -%}
+                      <img src="{{ item.image | image_url: width: 120 }}" alt="{{ item.title | escape }}" width="80" height="80" loading="lazy">
+                    {%- endif -%}
+                  </a>
+                  <div>
+                    <a href="{{ item.url }}" class="main-cart__item-title">{{ item.product.title }}</a>
+                    {%- if item.variant.title != 'Default Title' -%}
+                      <p class="main-cart__item-variant">{{ item.variant.title }}</p>
+                    {%- endif -%}
+                  </div>
+                </td>
+                <td class="main-cart__item-price">
+                  {%- render 'price', price: item.original_price, compare_at_price: item.variant.compare_at_price -%}
+                </td>
+                <td class="main-cart__item-qty">
+                  {%- render 'quantity-selector', id: item.key, value: item.quantity, name: 'updates[]' -%}
+                </td>
+                <td class="main-cart__item-total">
+                  {{ item.final_line_price | money }}
+                </td>
+              </tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+
+        <div class="main-cart__footer">
+          <div class="main-cart__totals">
+            <span class="main-cart__totals-label">{{ 'cart.subtotal' | t }}</span>
+            <span class="main-cart__totals-price">{{ cart.total_price | money }}</span>
+          </div>
+          <p class="main-cart__shipping-note">{{ 'cart.shipping_note' | t }}</p>
+          <div class="main-cart__actions">
+            <button type="submit" name="update" class="btn btn--secondary">{{ 'cart.update' | t }}</button>
+            <button type="submit" name="checkout" class="btn btn--primary">{{ 'cart.checkout' | t }}</button>
+          </div>
+        </div>
+      </form>
+    {%- else -%}
+      <div class="main-cart__empty">
+        <p>{{ 'cart.empty' | t }}</p>
+        <a href="/collections/all" class="btn btn--primary">{{ 'cart.continue_shopping' | t }}</a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+<style>
+  .main-cart {
+    padding: var(--spacing-3xl) 0;
+    background: var(--crownz-white);
+    min-height: 60vh;
+  }
+  .main-cart__inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--spacing-lg);
+  }
+  .main-cart__heading {
+    font-size: 1.8rem;
+    font-weight: 300;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin: 0 0 var(--spacing-2xl);
+    color: var(--crownz-black);
+  }
+  .main-cart__table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .main-cart__table thead th {
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(10,10,10,0.5);
+    text-align: left;
+    padding: 0 0 var(--spacing-md);
+    border-bottom: 1px solid rgba(10,10,10,0.1);
+    font-weight: 400;
+  }
+  .main-cart__item td {
+    padding: var(--spacing-lg) 0;
+    border-bottom: 1px solid rgba(10,10,10,0.06);
+    vertical-align: middle;
+  }
+  .main-cart__item-product {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+  }
+  .main-cart__item-image img {
+    border-radius: 4px;
+    background: var(--crownz-cream, #E8E4DC);
+  }
+  .main-cart__item-title {
+    font-size: 0.95rem;
+    color: var(--crownz-black);
+    text-decoration: none;
+  }
+  .main-cart__item-title:hover { text-decoration: underline; }
+  .main-cart__item-variant {
+    font-size: 0.8rem;
+    color: rgba(10,10,10,0.5);
+    margin: 4px 0 0;
+  }
+  .main-cart__item-price,
+  .main-cart__item-total {
+    font-size: 0.95rem;
+    color: var(--crownz-black);
+  }
+  .main-cart__footer {
+    margin-top: var(--spacing-2xl);
+    text-align: right;
+  }
+  .main-cart__totals {
+    font-size: 1.1rem;
+    margin-bottom: var(--spacing-sm);
+  }
+  .main-cart__totals-label {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.8rem;
+    color: rgba(10,10,10,0.6);
+    margin-right: var(--spacing-md);
+  }
+  .main-cart__shipping-note {
+    font-size: 0.8rem;
+    color: rgba(10,10,10,0.5);
+    margin: 0 0 var(--spacing-lg);
+  }
+  .main-cart__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--spacing-md);
+  }
+  .main-cart__empty {
+    text-align: center;
+    padding: var(--spacing-3xl) 0;
+  }
+  .main-cart__empty p {
+    font-size: 1.1rem;
+    color: rgba(10,10,10,0.5);
+    margin: 0 0 var(--spacing-xl);
+  }
+  @media (max-width: 768px) {
+    .main-cart__table thead { display: none; }
+    .main-cart__item { display: block; }
+    .main-cart__item td {
+      display: block;
+      padding: var(--spacing-sm) 0;
+      border: none;
+    }
+    .main-cart__item td:first-child {
+      padding-top: var(--spacing-lg);
+      border-top: 1px solid rgba(10,10,10,0.06);
+    }
+    .main-cart__actions {
+      flex-direction: column;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Cart Page",
+  "tag": "div",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Cart Page"
+    }
+  ]
+}
+{% endschema %}

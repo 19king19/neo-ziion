@@ -1,0 +1,211 @@
+{%- liquid
+  assign total_eras = section.blocks.size
+-%}
+
+<section class="manifest-timeline" data-manifest-timeline aria-label="{{ section.settings.heading | default: 'The Manifest' }}">
+  {%- comment -%} Fixed intro overlay {%- endcomment -%}
+  {%- if section.settings.show_intro -%}
+    <div class="manifest-timeline__intro" data-manifest-intro>
+      <div class="manifest-timeline__intro-content">
+        <h2 class="manifest-timeline__intro-heading">{{ section.settings.heading | default: 'The Manifest' }}</h2>
+        {%- if section.settings.subheading != blank -%}
+          <p class="manifest-timeline__intro-sub">{{ section.settings.subheading }}</p>
+        {%- endif -%}
+        <div class="manifest-timeline__scroll-hint">
+          <span>Scroll to explore</span>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M7 13l5 5 5-5M7 6l5 5 5-5"/></svg>
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} Progress bar {%- endcomment -%}
+  <div class="manifest-timeline__progress" data-manifest-progress>
+    <div class="manifest-timeline__progress-bar" data-manifest-progress-bar></div>
+    <div class="manifest-timeline__progress-dots">
+      {%- for block in section.blocks -%}
+        <button
+          class="manifest-timeline__dot"
+          data-manifest-dot="{{ forloop.index }}"
+          aria-label="Go to {{ block.settings.era_title }}"
+        >
+          <span class="manifest-timeline__dot-label">{{ block.settings.era_title | truncate: 15 }}</span>
+        </button>
+      {%- endfor -%}
+    </div>
+  </div>
+
+  {%- comment -%} Horizontal scroll track {%- endcomment -%}
+  <div class="manifest-timeline__track" data-manifest-track>
+    <div class="manifest-timeline__scroll" data-manifest-scroll style="width: {{ total_eras | times: 100 }}vw;">
+      {%- for block in section.blocks -%}
+        {%- render 'timeline-era', block: block, index: forloop.index -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{{ 'crownz19-manifest.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'crownz19-manifest.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Manifest Timeline",
+  "tag": "div",
+  "class": "manifest-timeline-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "The Manifest"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "A journey through the sacred lineage of the crown — from celestial origins to modern legacy."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_intro",
+      "label": "Show intro screen",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "era",
+      "name": "Era",
+      "settings": [
+        {
+          "type": "text",
+          "id": "era_title",
+          "label": "Era title",
+          "default": "Era Title"
+        },
+        {
+          "type": "text",
+          "id": "era_period",
+          "label": "Time period",
+          "default": "c. 3000 BCE"
+        },
+        {
+          "type": "richtext",
+          "id": "era_description",
+          "label": "Description"
+        },
+        {
+          "type": "image_picker",
+          "id": "era_image",
+          "label": "Era artifact image",
+          "info": "Crown or cultural artifact for this era"
+        },
+        {
+          "type": "image_picker",
+          "id": "background_image",
+          "label": "Background image"
+        },
+        {
+          "type": "color",
+          "id": "accent_color",
+          "label": "Accent color",
+          "default": "#c8a96e"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Manifest Timeline",
+      "settings": {
+        "heading": "The Manifest",
+        "subheading": "A journey through the sacred lineage of the crown — from celestial origins to modern legacy."
+      },
+      "blocks": [
+        {
+          "type": "era",
+          "settings": {
+            "era_title": "Celestial Origins",
+            "era_period": "Before Time",
+            "accent_color": "#d4af37"
+          }
+        },
+        {
+          "type": "era",
+          "settings": {
+            "era_title": "Ancient Kemet",
+            "era_period": "c. 3000 BCE",
+            "accent_color": "#c8a96e"
+          }
+        },
+        {
+          "type": "era",
+          "settings": {
+            "era_title": "Indigenous Americas",
+            "era_period": "c. 1200 BCE – 1500 CE",
+            "accent_color": "#8b6914"
+          }
+        },
+        {
+          "type": "era",
+          "settings": {
+            "era_title": "Moorish Empire",
+            "era_period": "711 – 1492 CE",
+            "accent_color": "#a0522d"
+          }
+        },
+        {
+          "type": "era",
+          "settings": {
+            "era_title": "Islamic Golden Age",
+            "era_period": "8th – 14th Century",
+            "accent_color": "#1a7a4c"
+          }
+        },
+        {
+          "type": "era",
+          "settings": {
+            "era_title": "West African Kingdoms",
+            "era_period": "c. 1000 – 1900 CE",
+            "accent_color": "#d4a017"
+          }
+        },
+        {
+          "type": "era",
+          "settings": {
+            "era_title": "East African Traditions",
+            "era_period": "c. 100 – 1974 CE",
+            "accent_color": "#8b4513"
+          }
+        },
+        {
+          "type": "era",
+          "settings": {
+            "era_title": "Caribbean & Diaspora",
+            "era_period": "16th Century – Present",
+            "accent_color": "#4a90d9"
+          }
+        },
+        {
+          "type": "era",
+          "settings": {
+            "era_title": "Modern Renaissance",
+            "era_period": "1970s – Present",
+            "accent_color": "#9b59b6"
+          }
+        },
+        {
+          "type": "era",
+          "settings": {
+            "era_title": "CROWNZ19",
+            "era_period": "Now",
+            "accent_color": "#f5f3ef"
+          }
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12
+}
+{% endschema %}

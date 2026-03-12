@@ -1,0 +1,159 @@
+{%- liquid
+  assign product = section.settings.product | default: product
+  assign current_variant = product.selected_or_first_available_variant
+  assign featured_image = current_variant.featured_image | default: product.featured_image
+-%}
+
+<section class="product-detail" data-product-detail data-product-id="{{ product.id }}">
+  <div class="product-detail__inner">
+
+    {%- comment -%} Gallery {%- endcomment -%}
+    <div class="product-detail__gallery" data-product-gallery>
+      <div class="product-detail__main-image">
+        <img
+          id="ProductMainImage"
+          src="{{ featured_image | image_url: width: 900 }}"
+          alt="{{ featured_image.alt | escape }}"
+          width="900"
+          height="{{ 900 | divided_by: featured_image.aspect_ratio }}"
+          loading="eager"
+          data-product-main-image
+        >
+      </div>
+
+      {%- if product.images.size > 1 -%}
+        <div class="product-detail__thumbs" data-product-thumbs>
+          {%- for image in product.images -%}
+            <button
+              class="product-detail__thumb {% if image == featured_image %}is-active{% endif %}"
+              data-thumb-index="{{ forloop.index0 }}"
+              data-thumb-src="{{ image | image_url: width: 900 }}"
+              aria-label="View image {{ forloop.index }}"
+            >
+              <img
+                src="{{ image | image_url: width: 120 }}"
+                alt="{{ image.alt | escape }}"
+                width="80"
+                height="80"
+                loading="lazy"
+              >
+            </button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} Info {%- endcomment -%}
+    <div class="product-detail__info">
+      {%- if product.vendor != blank -%}
+        <p class="product-detail__vendor">{{ product.vendor }}</p>
+      {%- endif -%}
+
+      <h1 class="product-detail__title">{{ product.title }}</h1>
+
+      <div class="product-detail__price" data-product-price>
+        {%- render 'price', product: product -%}
+      </div>
+
+      {%- comment -%} Variant selector {%- endcomment -%}
+      {%- unless product.has_only_default_variant -%}
+        <div class="product-detail__variants">
+          {%- for option in product.options_with_values -%}
+            <div class="product-detail__option">
+              <label class="product-detail__option-label" for="Option-{{ section.id }}-{{ forloop.index0 }}">
+                {{ option.name }}
+              </label>
+              <select
+                id="Option-{{ section.id }}-{{ forloop.index0 }}"
+                class="product-detail__option-select"
+                data-option-index="{{ forloop.index0 }}"
+              >
+                {%- for value in option.values -%}
+                  <option
+                    value="{{ value | escape }}"
+                    {% if option.selected_value == value %}selected{% endif %}
+                  >
+                    {{ value }}
+                  </option>
+                {%- endfor -%}
+              </select>
+            </div>
+          {%- endfor -%}
+        </div>
+      {%- endunless -%}
+
+      {%- comment -%} Hidden variant select for JS {%- endcomment -%}
+      <select name="id" class="visually-hidden" data-variant-select>
+        {%- for variant in product.variants -%}
+          <option
+            value="{{ variant.id }}"
+            {% if variant == current_variant %}selected{% endif %}
+            {% unless variant.available %}disabled{% endunless %}
+            data-variant-json='{{ variant | json }}'
+          >
+            {{ variant.title }}
+          </option>
+        {%- endfor -%}
+      </select>
+
+      {%- comment -%} Add to Cart {%- endcomment -%}
+      <form method="post" action="/cart/add" data-product-form>
+        <input type="hidden" name="id" value="{{ current_variant.id }}" data-variant-id>
+
+        <div class="product-detail__quantity">
+          <label class="product-detail__quantity-label" for="Quantity-{{ section.id }}">Quantity</label>
+          {%- render 'quantity-selector', id: section.id -%}
+        </div>
+
+        <button
+          type="submit"
+          class="product-detail__add-btn btn btn--primary btn--full"
+          data-add-to-cart
+          {% unless current_variant.available %}disabled{% endunless %}
+        >
+          {%- if current_variant.available -%}
+            {{ 'products.add_to_cart' | t }}
+          {%- else -%}
+            {{ 'products.sold_out' | t }}
+          {%- endif -%}
+        </button>
+      </form>
+
+      {%- comment -%} Description {%- endcomment -%}
+      {%- if product.description != blank -%}
+        <div class="product-detail__description rte">
+          {{ product.description }}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{{ 'crownz19-product.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'crownz19-product.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Product Detail",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show vendor",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_zoom",
+      "label": "Enable image zoom",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Detail"
+    }
+  ]
+}
+{% endschema %}

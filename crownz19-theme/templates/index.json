@@ -1,0 +1,31 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero-banner",
+      "settings": {}
+    },
+    "product_showcase": {
+      "type": "product-showcase",
+      "settings": {
+        "background_color": "#E8E4DC",
+        "section_height": 900
+      },
+      "blocks": {}
+    },
+    "sphere_grid": {
+      "type": "sphere-grid",
+      "settings": {},
+      "blocks": {}
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero",
+    "product_showcase",
+    "sphere_grid",
+    "newsletter"
+  ]
+}

@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZIION — Pulse</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="light-theme.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0F0E12;
+      color: #fff;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      overflow-x: hidden;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Header ── */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(15, 14, 18, 0.8);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      padding: 0 32px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .header-left { display: flex; align-items: center; gap: 16px; }
+
+    .logo-text {
+      font-size: 18px; font-weight: 800; letter-spacing: 6px;
+      color: #fff; text-transform: uppercase; text-decoration: none;
+    }
+
+    .search-bar {
+      flex: 0 1 400px; height: 40px;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px; display: flex; align-items: center; padding: 0 14px; gap: 10px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .search-bar:focus-within { border-color: rgba(255,255,255,0.12); background: rgba(255,255,255,0.06); }
+    .search-icon { opacity: 0.3; flex-shrink: 0; }
+    .search-bar input {
+      flex: 1; background: none; border: none; outline: none;
+      color: rgba(255,255,255,0.5); font-size: 13px; font-family: inherit;
+    }
+    .search-bar input::placeholder { color: rgba(255,255,255,0.2); }
+    .header-right { display: flex; align-items: center; gap: 12px; }
+    .header-icon {
+      width: 36px; height: 36px; display: flex; align-items: center;
+      justify-content: center; border-radius: 10px; cursor: pointer;
+      transition: background 0.15s; color: rgba(255,255,255,0.35);
+    }
+    .header-icon:hover { background: rgba(255,255,255,0.06); color: #fff; }
+    .avatar {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: linear-gradient(135deg, #4D4D4D, #322D2A); cursor: pointer;
+    }
+
+    /* ── Layout ── */
+    .main-layout { display: flex; flex: 1; overflow: hidden; }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 220px; flex-shrink: 0;
+      border-right: 1px solid rgba(255,255,255,0.04);
+      padding: 20px 12px;
+      display: flex; flex-direction: column; gap: 4px; overflow-y: auto;
+    }
+
+    .sidebar-create {
+      width: 100%; height: 40px; background: #fff; color: #0F0E12;
+      border: none; border-radius: 10px; font-size: 13px; font-weight: 600;
+      letter-spacing: 0.05em; cursor: pointer; transition: opacity 0.15s;
+      margin-bottom: 12px; display: flex; align-items: center;
+      justify-content: center; gap: 8px; font-family: inherit;
+    }
+    .sidebar-create:hover { opacity: 0.85; }
+
+    .nav-item {
+      display: flex; align-items: center; gap: 12px; padding: 10px 12px;
+      border-radius: 10px; cursor: pointer; transition: background 0.15s, color 0.15s;
+      color: rgba(255,255,255,0.3); font-size: 13px; font-weight: 500;
+      letter-spacing: 0.02em; text-decoration: none;
+    }
+    .nav-item:hover { background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.7); }
+    .nav-item.active { background: rgba(255,255,255,0.06); color: #fff; }
+    .nav-item svg { width: 18px; height: 18px; opacity: 0.5; flex-shrink: 0; }
+    .nav-item.active svg { opacity: 1; }
+    .sidebar-divider { height: 1px; background: rgba(255,255,255,0.04); margin: 8px 0; }
+
+    /* ── Content ── */
+    .content {
+      flex: 1; overflow-y: auto;
+      padding: 32px 40px 80px;
+    }
+
+    .content-inner {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    /* ── Page Header ── */
+    .page-header {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .page-title { font-size: 28px; font-weight: 800; letter-spacing: -0.03em; }
+    .page-desc { font-size: 13px; font-weight: 400; color: rgba(255,255,255,0.4); margin-top: 4px; }
+
+    .header-controls { display: flex; align-items: center; gap: 10px; }
+
+    .sort-btn {
+      display: flex; align-items: center; gap: 6px;
+      padding: 8px 14px; border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      color: rgba(255,255,255,0.5); font-size: 12px; font-weight: 600;
+      cursor: pointer; font-family: inherit; transition: all 0.15s;
+    }
+    .sort-btn:hover { border-color: rgba(255,255,255,0.12); color: #fff; }
+    .sort-btn svg { width: 12px; height: 12px; }
+
+    /* ── Filter Tabs ── */
+    .filter-row { display: flex; align-items: center; gap: 4px; margin-bottom: 20px; }
+
+    .filter-tab {
+      padding: 7px 16px; border-radius: 8px; font-size: 12px; font-weight: 600;
+      color: rgba(255,255,255,0.4); background: transparent; border: none;
+      cursor: pointer; transition: all 0.15s; font-family: inherit; letter-spacing: 0.02em;
+    }
+    .filter-tab:hover { color: rgba(255,255,255,0.75); background: rgba(255,255,255,0.05); }
+    .filter-tab.active { color: #fff; background: rgba(255,255,255,0.1); }
+
+    /* ── Market Grid ── */
+    .market-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    /* ── Market Card (Kalshi-style) ── */
+    .market-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 16px;
+      padding: 22px 24px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: border-color 0.2s, background 0.2s;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .market-card:hover {
+      border-color: rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.06);
+    }
+
+    /* Card header: category icon + label */
+    .card-cat {
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    .cat-icon {
+      width: 24px; height: 24px; border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; flex-shrink: 0;
+    }
+
+    .cat-label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.08em; color: rgba(255,255,255,0.5);
+    }
+
+    .cat-event .cat-icon { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); }
+    .cat-event .cat-label { color: rgba(255,255,255,0.5); }
+    .cat-venue .cat-icon { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); }
+    .cat-venue .cat-label { color: rgba(255,255,255,0.5); }
+    .cat-culture .cat-icon { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); }
+    .cat-culture .cat-label { color: rgba(255,255,255,0.5); }
+    .cat-dream .cat-icon { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); }
+    .cat-dream .cat-label { color: rgba(255,255,255,0.5); }
+    .cat-idea .cat-icon { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); }
+    .cat-idea .cat-label { color: rgba(255,255,255,0.5); }
+
+    /* Card title (question-style) */
+    .card-title {
+      font-size: 16px; font-weight: 700; letter-spacing: -0.02em;
+      line-height: 1.4; color: #fff;
+    }
+
+    /* Options rows */
+    .card-options { display: flex; flex-direction: column; gap: 10px; }
+
+    .option-row {
+      display: flex; align-items: center; gap: 12px;
+    }
+
+    .option-avatar {
+      width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+    }
+
+    .option-label {
+      flex: 1; font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.75);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    .option-bar {
+      flex: 1; height: 3px; background: rgba(255,255,255,0.04);
+      border-radius: 2px; overflow: hidden; margin: 0 4px;
+    }
+
+    .option-fill {
+      height: 100%; border-radius: 2px;
+      background: rgba(255,255,255,0.15);
+    }
+
+    .option-odds {
+      font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.35);
+      flex-shrink: 0; width: 36px; text-align: right;
+    }
+
+    .option-pct {
+      flex-shrink: 0;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 13px; font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+      border: 1px solid transparent;
+      min-width: 56px; text-align: center;
+    }
+
+    .pct-green {
+      background: rgba(255,255,255,0.07);
+      color: rgba(255,255,255,0.7);
+      border-color: rgba(255,255,255,0.12);
+    }
+    .pct-green:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.25);
+      color: #fff;
+    }
+    .pct-green.active {
+      background: rgba(213,255,90,0.15);
+      border-color: #D5FF5A;
+      box-shadow: 0 0 12px rgba(213,255,90,0.15);
+      color: #D5FF5A;
+    }
+
+    /* Card footer */
+    .card-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .card-vol {
+      font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.35);
+    }
+
+    .card-meta {
+      font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.3);
+      display: flex; align-items: center; gap: 6px;
+    }
+
+    .meta-dot {
+      width: 2px; height: 2px; border-radius: 50%; background: rgba(255,255,255,0.15);
+    }
+
+    /* Progress bar for Dream cards */
+    .card-progress {
+      display: flex; align-items: center; gap: 10px;
+    }
+
+    .progress-track {
+      flex: 1; height: 4px; background: rgba(255,255,255,0.04);
+      border-radius: 2px; overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%; border-radius: 2px;
+      background: linear-gradient(90deg, rgba(213,255,90,0.5), rgba(213,255,90,0.25));
+    }
+
+    .progress-label {
+      font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.55); flex-shrink: 0;
+    }
+
+    /* ── Scrollbar ── */
+    .content::-webkit-scrollbar, .sidebar::-webkit-scrollbar { width: 5px; }
+    .content::-webkit-scrollbar-track, .sidebar::-webkit-scrollbar-track { background: transparent; }
+    .content::-webkit-scrollbar-thumb, .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 3px; }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .market-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .content { padding: 24px 16px 60px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <a class="logo-text" href="cosmos-grid.html">ZIION</a>
+    </div>
+    <div class="search-bar">
+      <svg class="search-icon" width="15" height="15" viewBox="0 0 16 16" fill="none">
+        <path d="M14 14L10 10M11.333 6.667a4.667 4.667 0 1 1-9.333 0 4.667 4.667 0 0 1 9.333 0z" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <input type="text" placeholder="Search proposals...">
+    </div>
+    <div class="header-right">
+      <div class="header-icon" title="Notifications">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+        </svg>
+      </div>
+      <div class="avatar"></div>
+    </div>
+  </div>
+
+  <div class="main-layout">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <button class="sidebar-create">
+        <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+          <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        Create
+      </button>
+      <a class="nav-item" href="cosmos-grid.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <a class="nav-item" href="library.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/></svg>
+        Library
+      </a>
+      <a class="nav-item" href="threads.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Threads
+      </a>
+      <a class="nav-item" href="directory.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Connections
+      </a>
+      <a class="nav-item" href="assets.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Assets
+      </a>
+      <a class="nav-item" href="world.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        World
+      </a>
+      <a class="nav-item active" href="pulse.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Pulse
+      </a>
+      <div class="sidebar-divider"></div>
+      <a class="nav-item" href="book-19keys.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/></svg>
+        Book 19Keys
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Calendar
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Messages
+      </a>
+      <div class="sidebar-divider"></div>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </a>
+
+      <div id="themeToggle" class="theme-toggle" title="Switch to light mode">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+      <div class="content-inner">
+
+        <!-- Page Header -->
+        <div class="page-header">
+          <div>
+            <div class="page-title">Pulse</div>
+            <div class="page-desc">Community decisions, votes, and collective intelligence for the movement.</div>
+          </div>
+          <div class="header-controls">
+            <button class="sort-btn">
+              Trending
+              <svg viewBox="0 0 12 12" fill="none"><path d="M3 5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="sort-btn">
+              Frequency
+              <svg viewBox="0 0 12 12" fill="none"><path d="M3 5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filter-row">
+          <button class="filter-tab active">All Markets</button>
+          <button class="filter-tab">Events</button>
+          <button class="filter-tab">Content</button>
+          <button class="filter-tab">Community</button>
+          <button class="filter-tab">Land</button>
+          <button class="filter-tab">Platform</button>
+        </div>
+
+        <!-- Market Grid -->
+        <div class="market-grid">
+
+          <!-- Card 1: April Pop-Up City -->
+          <div class="market-card">
+            <div class="card-cat cat-event">
+              <div class="cat-icon">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              </div>
+              <span class="cat-label">Event</span>
+            </div>
+            <div class="card-title">Which city should 19keys do a pop-up in April?</div>
+            <div class="card-options">
+              <div class="option-row">
+                <div class="option-avatar" style="background:linear-gradient(135deg,#34d399,#10b981)"></div>
+                <span class="option-label">Atlanta</span>
+                <span class="option-odds">1.45x</span>
+                <div class="option-pct pct-green" onclick="toggleVote(this)">38%</div>
+              </div>
+              <div class="option-row">
+                <div class="option-avatar" style="background:linear-gradient(135deg,#60a5fa,#3b82f6)"></div>
+                <span class="option-label">Houston</span>
+                <span class="option-odds">1.80x</span>
+                <div class="option-pct pct-green" onclick="toggleVote(this)">28%</div>
+              </div>
+              <div class="option-row">
+                <div class="option-avatar" style="background:linear-gradient(135deg,#a78bfa,#8b5cf6)"></div>
+                <span class="option-label">Chicago</span>
+                <span class="option-odds">2.90x</span>
+                <div class="option-pct pct-green" onclick="toggleVote(this)">19%</div>
+              </div>
+              <div class="option-row">
+                <div class="option-avatar" style="background:linear-gradient(135deg,#f472b6,#ec4899)"></div>
+                <span class="option-label">DC / DMV</span>
+                <span class="option-odds">4.20x</span>
+                <div class="option-pct pct-green" onclick="toggleVote(this)">15%</div>
+              </div>
+            </div>
+            <div class="card-footer">
+              <span class="card-vol">4,217 votes</span>
+              <span class="card-meta">April 2026 <span class="meta-dot"></span> 89 comments</span>
+            </div>
+          </div>
+
+          <!-- Card 2: Content Type -->
+          <div class="market-card">
+            <div class="card-cat cat-idea">
+              <div class="cat-icon">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+              </div>
+              <span class="cat-label">Content</span>
+            </div>
+            <div class="card-title">What type of content should 19keys make next?</div>
+            <div class="card-options">
+              <div class="option-row">
+                <div class="option-avatar" style="background:linear-gradient(135deg,#fbbf24,#f59e0b)"></div>
+                <span class="option-label">Financial literacy deep dives</span>
+                <span class="option-odds">1.30x</span>
+                <div class="option-pct pct-green" onclick="toggleVote(this)">41%</div>
+              </div>
+              <div class="option-row">
+                <div class="option-avatar" style="background:linear-gradient(135deg,#fb923c,#f97316)"></div>
+                <span class="option-label">Entrepreneur spotlight series</span>
+                <span class="option-odds">2.10x</span>
+                <div class="option-pct pct-green" onclick="toggleVote(this)">27%</div>
+              </div>
+              <div class="option-row">
+                <div class="option-avatar" style="background:linear-gradient(135deg,#34d399,#10b981)"></div>
+                <span class="option-label">Land & real estate education</span>
+                <span class="option-odds">2.60x</span>
+                <div class="option-pct pct-green" onclick="toggleVote(this)">21%</div>
+              </div>
+              <div class="option-row">
+                <div class="option-avatar" style="background:linear-gradient(135deg,#e879f9,#d946ef)"></div>
+                <span class="option-label">Spiritual / mental health talks</span>
+                <span class="option-odds">6.50x</span>
+                <div class="option-pct pct-green" onclick="toggleVote(this)">11%</div>
+              </div>
+            </div>
+            <div class="card-footer">
+              <span class="card-vol">3,892 votes</span>
+              <span class="card-meta">Community Poll <span class="meta-dot"></span> 142 comments</span>
+            </div>
+          </div>
+
+          <!-- Card 3: Next Interview Guest -->
+          <div class="market-card">
+            <div class="card-cat cat-culture">
+              <div class="cat-icon">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+              </div>
+              <span class="cat-label">Culture</span>
+            </div>
+            <div class="card-title">Who should 19keys interview next?</div>
+            <div class="card-options">
+              <div class="option-row">
+                <div class="option-avatar" style="background:linear-gradient(135deg,#a78bfa,#8b5cf6)"></div>
+                <span class="option-label">Killer Mike</span>
+                <span class="option-odds">1.55x</span>
+                <div class="option-pct pct-green" onclick="toggleVote(this)">34%</div>
+              </div>
+              <div class="option-row">
+                <div class="option-avatar" style="background:linear-gradient(135deg,#c084fc,#a855f7)"></div>
+                <span class="option-label">Tabitha Brown</span>
+                <span class="option-odds">2.00x</span>
+                <div class="option-pct pct-green" onclick="toggleVote(this)">26%</div>
+              </div>
+              <div class="option-row">
+                <div class="option-avatar" style="background:linear-gradient(135deg,#818cf8,#6366f1)"></div>
+                <span class="option-label">Earn Your Leisure</span>
+                <span class="option-odds">2.40x</span>
+                <div class="option-pct pct-green" onclick="toggleVote(this)">22%</div>
+              </div>
+              <div class="option-row">
+                <div class="option-avatar" style="background:linear-gradient(135deg,#475569,#334155)"></div>
+                <span class="option-label">Dr. Boyce Watkins</span>
+                <span class="option-odds">3.80x</span>
+                <div class="option-pct pct-green" onclick="toggleVote(this)">18%</div>
+              </div>
+            </div>
+            <div class="card-footer">
+              <span class="card-vol">5,103 votes</span>
+              <span class="card-meta">Interviews <span class="meta-dot"></span> 203 comments</span>
+            </div>
+          </div>
+
+          <!-- Card 4: Black Community Priority -->
+          <div class="market-card">
+            <div class="card-cat cat-culture">
+              <div class="cat-icon">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+              </div>
+              <span class="cat-label">Community</span>
+            </div>
+            <div class="card-title">What does the Black community need to see happen most in 2026?</div>
+            <div class="card-options">
+              <div class="option-row">
+                <div class="option-avatar" style="background:linear-gradient(135deg,#34d399,#10b981)"></div>
+                <span class="option-label">Group economics & buy Black push</span>
+                <span class="option-odds">1.25x</span>
+                <div class="option-pct pct-green" onclick="toggleVote(this)">43%</div>
+              </div>
+              <div class="option-row">
+                <div class="option-avatar" style="background:linear-gradient(135deg,#fbbf24,#f59e0b)"></div>
+                <span class="option-label">Land ownership movement</span>
+                <span class="option-odds">1.70x</span>
+                <div class="option-pct pct-green" onclick="toggleVote(this)">31%</div>
+              </div>
+              <div class="option-row">
+                <div class="option-avatar" style="background:linear-gradient(135deg,#f472b6,#ec4899)"></div>
+                <span class="option-label">Youth mentorship programs</span>
+                <span class="option-odds">3.90x</span>
+                <div class="option-pct pct-green" onclick="toggleVote(this)">16%</div>
+              </div>
+              <div class="option-row">
+                <div class="option-avatar" style="background:linear-gradient(135deg,#475569,#334155)"></div>
+                <span class="option-label">Tech & AI education access</span>
+                <span class="option-odds">6.20x</span>
+                <div class="option-pct pct-green" onclick="toggleVote(this)">10%</div>
+              </div>
+            </div>
+            <div class="card-footer">
+              <span class="card-vol">8,431 votes</span>
+              <span class="card-meta">National <span class="meta-dot"></span> 312 comments</span>
+            </div>
+          </div>
+
+          <!-- Card 5: Land Purchase Location -->
+          <div class="market-card">
+            <div class="card-cat cat-dream">
+              <div class="cat-icon">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              </div>
+              <span class="cat-label">Land</span>
+            </div>
+            <div class="card-title">Where should we buy land for a community hub?</div>
+            <div class="card-options">
+              <div class="option-row">
+                <div class="option-avatar" style="background:linear-gradient(135deg,#f472b6,#ec4899)"></div>
+                <span class="option-label">Georgia — rural acreage</span>
+                <span class="option-odds">1.40x</span>
+                <div class="option-pct pct-green" onclick="toggleVote(this)">36%</div>
+              </div>
+              <div class="option-row">
+                <div class="option-avatar" style="background:linear-gradient(135deg,#fb923c,#f97316)"></div>
+                <span class="option-label">Texas — outside Houston</span>
+                <span class="option-odds">1.85x</span>
+                <div class="option-pct pct-green" onclick="toggleVote(this)">27%</div>
+              </div>
+              <div class="option-row">
+                <div class="option-avatar" style="background:linear-gradient(135deg,#38bdf8,#0ea5e9)"></div>
+                <span class="option-label">North Carolina — Durham area</span>
+                <span class="option-odds">3.10x</span>
+                <div class="option-pct pct-green" onclick="toggleVote(this)">19%</div>
+              </div>
+              <div class="option-row">
+                <div class="option-avatar" style="background:linear-gradient(135deg,#475569,#334155)"></div>
+                <span class="option-label">International — Ghana / Costa Rica</span>
+                <span class="option-odds">4.50x</span>
+                <div class="option-pct pct-green" onclick="toggleVote(this)">18%</div>
+              </div>
+            </div>
+            <div class="card-progress">
+              <div class="progress-track"><div class="progress-fill" style="width:42%"></div></div>
+              <div class="progress-label">$210K / $500K goal</div>
+            </div>
+            <div class="card-footer">
+              <span class="card-vol">6,724 votes</span>
+              <span class="card-meta">Land Fund <span class="meta-dot"></span> 187 comments</span>
+            </div>
+          </div>
+
+          <!-- Card 6: Platform Features -->
+          <div class="market-card">
+            <div class="card-cat cat-idea">
+              <div class="cat-icon">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+              </div>
+              <span class="cat-label">Platform</span>
+            </div>
+            <div class="card-title">What should we add to ZIION next?</div>
+            <div class="card-options">
+              <div class="option-row">
+                <div class="option-avatar" style="background:linear-gradient(135deg,#fbbf24,#f59e0b)"></div>
+                <span class="option-label">Marketplace — buy/sell Black-owned</span>
+                <span class="option-odds">1.35x</span>
+                <div class="option-pct pct-green" onclick="toggleVote(this)">39%</div>
+              </div>
+              <div class="option-row">
+                <div class="option-avatar" style="background:linear-gradient(135deg,#60a5fa,#3b82f6)"></div>
+                <span class="option-label">Group chat & live rooms</span>
+                <span class="option-odds">2.20x</span>
+                <div class="option-pct pct-green" onclick="toggleVote(this)">25%</div>
+              </div>
+              <div class="option-row">
+                <div class="option-avatar" style="background:linear-gradient(135deg,#e879f9,#d946ef)"></div>
+                <span class="option-label">Community treasury & investment pool</span>
+                <span class="option-odds">2.80x</span>
+                <div class="option-pct pct-green" onclick="toggleVote(this)">21%</div>
+              </div>
+              <div class="option-row">
+                <div class="option-avatar" style="background:linear-gradient(135deg,#475569,#334155)"></div>
+                <span class="option-label">Event ticketing system</span>
+                <span class="option-odds">5.00x</span>
+                <div class="option-pct pct-green" onclick="toggleVote(this)">15%</div>
+              </div>
+            </div>
+            <div class="card-footer">
+              <span class="card-vol">3,156 votes</span>
+              <span class="card-meta">Product <span class="meta-dot"></span> 97 comments</span>
+            </div>
+          </div>
+
+          <!-- Card 7: April Event Type -->
+          <div class="market-card">
+            <div class="card-cat cat-event">
+              <div class="cat-icon">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              </div>
+              <span class="cat-label">Event</span>
+            </div>
+            <div class="card-title">What type of event should 19keys host in April?</div>
+            <div class="card-options">
+              <div class="option-row">
+                <div class="option-avatar" style="background:linear-gradient(135deg,#34d399,#10b981)"></div>
+                <span class="option-label">Financial freedom workshop</span>
+                <span class="option-odds">1.50x</span>
+                <div class="option-pct pct-green" onclick="toggleVote(this)">35%</div>
+              </div>
+              <div class="option-row">
+                <div class="option-avatar" style="background:linear-gradient(135deg,#a78bfa,#8b5cf6)"></div>
+                <span class="option-label">Networking mixer + live podcast</span>
+                <span class="option-odds">1.75x</span>
+                <div class="option-pct pct-green" onclick="toggleVote(this)">30%</div>
+              </div>
+              <div class="option-row">
+                <div class="option-avatar" style="background:linear-gradient(135deg,#fbbf24,#f59e0b)"></div>
+                <span class="option-label">Community town hall</span>
+                <span class="option-odds">2.80x</span>
+                <div class="option-pct pct-green" onclick="toggleVote(this)">20%</div>
+              </div>
+              <div class="option-row">
+                <div class="option-avatar" style="background:linear-gradient(135deg,#475569,#334155)"></div>
+                <span class="option-label">Black business expo</span>
+                <span class="option-odds">4.50x</span>
+                <div class="option-pct pct-green" onclick="toggleVote(this)">15%</div>
+              </div>
+            </div>
+            <div class="card-footer">
+              <span class="card-vol">2,890 votes</span>
+              <span class="card-meta">April 2026 <span class="meta-dot"></span> 64 comments</span>
+            </div>
+          </div>
+
+          <!-- Card 8: Investment Priority -->
+          <div class="market-card">
+            <div class="card-cat cat-dream">
+              <div class="cat-icon">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              </div>
+              <span class="cat-label">Community</span>
+            </div>
+            <div class="card-title">Where should the community invest collectively first?</div>
+            <div class="card-options">
+              <div class="option-row">
+                <div class="option-avatar" style="background:linear-gradient(135deg,#34d399,#10b981)"></div>
+                <span class="option-label">Commercial real estate</span>
+                <span class="option-odds">1.40x</span>
+                <div class="option-pct pct-green" onclick="toggleVote(this)">37%</div>
+              </div>
+              <div class="option-row">
+                <div class="option-avatar" style="background:linear-gradient(135deg,#f472b6,#ec4899)"></div>
+                <span class="option-label">Black-owned franchise</span>
+                <span class="option-odds">2.00x</span>
+                <div class="option-pct pct-green" onclick="toggleVote(this)">26%</div>
+              </div>
+              <div class="option-row">
+                <div class="option-avatar" style="background:linear-gradient(135deg,#60a5fa,#3b82f6)"></div>
+                <span class="option-label">Agricultural land</span>
+                <span class="option-odds">2.50x</span>
+                <div class="option-pct pct-green" onclick="toggleVote(this)">22%</div>
+              </div>
+              <div class="option-row">
+                <div class="option-avatar" style="background:linear-gradient(135deg,#475569,#334155)"></div>
+                <span class="option-label">Tech startup fund</span>
+                <span class="option-odds">4.80x</span>
+                <div class="option-pct pct-green" onclick="toggleVote(this)">15%</div>
+              </div>
+            </div>
+            <div class="card-progress">
+              <div class="progress-track"><div class="progress-fill" style="width:68%"></div></div>
+              <div class="progress-label">$340K / $500K pooled</div>
+            </div>
+            <div class="card-footer">
+              <span class="card-vol">7,245 votes</span>
+              <span class="card-meta">Investment <span class="meta-dot"></span> 256 comments</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Toggle vote on percentage buttons
+    function toggleVote(btn) {
+      event.stopPropagation();
+      btn.classList.toggle('active');
+    }
+
+    // Filter tabs
+    document.querySelectorAll('.filter-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+  </script>
+
+  <script src="theme-toggle.js"></script>
+</body>
+</html>

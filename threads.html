@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZIION — Threads</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="light-theme.css">
+  <style>
+    /* ── Password Gate — Muted Construction Aesthetic ── */
+    .gate-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      background: #0a0a0a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .gate-overlay.unlocked {
+      opacity: 0;
+      transform: scale(1.02);
+      pointer-events: none;
+    }
+    .gate-vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.6) 100%);
+      pointer-events: none;
+    }
+    .gate-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+    .gate-logo {
+      font-family: 'Inter', sans-serif;
+      font-size: 28px;
+      font-weight: 200;
+      letter-spacing: 16px;
+      color: rgba(255,255,255,0.12);
+      margin-bottom: 60px;
+      text-indent: 16px;
+      text-transform: uppercase;
+    }
+    .gate-divider {
+      width: 40px;
+      height: 1px;
+      background: rgba(255,255,255,0.06);
+      margin-bottom: 32px;
+    }
+    .gate-input-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+    .gate-label {
+      font-size: 8px;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      color: rgba(255,255,255,0.08);
+    }
+    .gate-input {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      border-radius: 0;
+      padding: 12px 20px;
+      font-family: 'Inter', sans-serif;
+      font-size: 20px;
+      font-weight: 200;
+      color: rgba(255,255,255,0.3);
+      text-align: center;
+      letter-spacing: 12px;
+      width: 140px;
+      outline: none;
+      transition: border-color 0.5s ease, color 0.5s ease;
+      -webkit-text-security: disc;
+    }
+    .gate-input:focus {
+      border-bottom-color: rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.5);
+    }
+    .gate-input.shake {
+      animation: gateShake 0.4s ease;
+      border-bottom-color: rgba(255,60,60,0.2);
+    }
+    .gate-hint {
+      font-size: 8px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.04);
+      margin-top: 48px;
+      letter-spacing: 3px;
+      text-transform: lowercase;
+    }
+    @keyframes gateShake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-6px); }
+      40% { transform: translateX(6px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #0F0E12;
+      color: #fff;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      overflow-x: hidden;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ── Sticky Header ── */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(15, 14, 18, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .logo-text {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: #fff;
+    }
+
+    /* ── Search Bar ── */
+    .search-bar {
+      flex: 0 1 420px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+      gap: 10px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .search-bar:focus-within {
+      border-color: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .search-icon { opacity: 0.4; flex-shrink: 0; }
+
+    .search-bar input {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    .search-bar input::placeholder { color: rgba(255, 255, 255, 0.3); }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-icon {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .header-icon:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4D4D4D, #322D2A);
+      cursor: pointer;
+    }
+
+    /* ── Main Layout: Sidebar + Content ── */
+    .main-layout {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* ── Left Sidebar ── */
+    .sidebar {
+      width: 220px;
+      flex-shrink: 0;
+      border-right: 1px solid rgba(255,255,255,0.06);
+      padding: 20px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      overflow-y: auto;
+    }
+
+    .sidebar-create {
+      width: 100%;
+      height: 40px;
+      background: #fff;
+      color: #0F0E12;
+      border: none;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: opacity 0.15s;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: inherit;
+    }
+
+    .sidebar-create:hover { opacity: 0.85; }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      color: rgba(255,255,255,0.4);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+    }
+
+    .nav-item:hover { background: rgba(255,255,255,0.06); color: #fff; }
+    .nav-item.active { background: rgba(255,255,255,0.08); color: #fff; }
+
+    .nav-item svg { width: 18px; height: 18px; opacity: 0.6; flex-shrink: 0; }
+    .nav-item.active svg { opacity: 1; }
+
+    .sidebar-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.06);
+      margin: 8px 0;
+    }
+
+    /* ── Center Content ── */
+    .center-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0;
+    }
+
+    /* ── Page Header ── */
+    .page-header {
+      padding: 32px 32px 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+
+    .page-subtitle {
+      font-size: 14px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 0.02em;
+    }
+
+    /* ── Post Composer ── */
+    .composer {
+      padding: 20px 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .composer-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4D4D4D, #322D2A);
+      flex-shrink: 0;
+    }
+
+    .composer-input {
+      flex: 1;
+      height: 42px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 0 16px;
+      color: rgba(255,255,255,0.4);
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .composer-input:focus {
+      border-color: rgba(255,255,255,0.2);
+      color: #fff;
+    }
+
+    .composer-btn {
+      height: 42px;
+      padding: 0 24px;
+      background: #fff;
+      color: #0F0E12;
+      border: none;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: opacity 0.15s;
+      font-family: inherit;
+    }
+
+    .composer-btn:hover { opacity: 0.85; }
+
+    /* ── Feed Tabs ── */
+    .feed-tabs {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 0 24px;
+    }
+
+    .feed-tab {
+      padding: 14px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: rgba(255,255,255,0.3);
+      cursor: pointer;
+      border-bottom: 1px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .feed-tab:hover { color: rgba(255,255,255,0.6); }
+    .feed-tab.active { color: rgba(255,255,255,0.9); border-bottom-color: rgba(255,255,255,0.5); }
+
+    /* ── Topic Filters ── */
+    .topic-filters {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 24px;
+      overflow-x: auto;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .topic-pill {
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+      background: transparent;
+      color: rgba(255,255,255,0.35);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .topic-pill:hover { border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); }
+    .topic-pill.active { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.9); border-color: rgba(255,255,255,0.15); }
+
+    /* ── Thread Cards ── */
+    .feed-list {
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+    }
+
+    .thread-card {
+      padding: 24px 28px;
+      background: rgba(255,255,255,0.03);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+      cursor: pointer;
+    }
+
+    .thread-card:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(255,255,255,0.1);
+      transform: translateY(-2px);
+    }
+
+    .thread-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+
+    .thread-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4D4D4D, #322D2A);
+      flex-shrink: 0;
+    }
+
+    .thread-title {
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.4;
+      letter-spacing: -0.01em;
+    }
+
+    .thread-author {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 0.02em;
+      margin-bottom: 12px;
+    }
+
+    .thread-body {
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.75;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 20px;
+      letter-spacing: 0.01em;
+    }
+
+    .thread-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .thread-action {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: transparent;
+      color: rgba(255,255,255,0.25);
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: color 0.2s, background 0.2s;
+      font-family: 'Inter', sans-serif;
+      line-height: 1;
+    }
+
+    .thread-action:hover { color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.06); }
+
+    .thread-action svg { width: 18px; height: 18px; }
+
+    /* ── Scrollbar ── */
+    .center-content::-webkit-scrollbar,
+    .sidebar::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .center-content::-webkit-scrollbar-track,
+    .sidebar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .center-content::-webkit-scrollbar-thumb,
+    .sidebar::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.1);
+      border-radius: 3px;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .header { padding: 0 16px; }
+      .search-bar { flex: 0 1 280px; }
+      .page-header { padding: 24px 20px 20px; }
+      .page-title { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Password Gate -->
+  <div class="gate-overlay" id="gateOverlay">
+    <div class="gate-vignette"></div>
+    <div class="gate-content">
+      <div class="gate-logo">ziion</div>
+      <div class="gate-divider"></div>
+      <div class="gate-input-wrap">
+        <div class="gate-label">access code</div>
+        <input class="gate-input" id="gateInput" type="text" maxlength="4" autofocus autocomplete="off" inputmode="numeric">
+      </div>
+      <div class="gate-hint">private preview</div>
+    </div>
+  </div>
+  <script>
+    (function(){
+      const code = '19';
+      const overlay = document.getElementById('gateOverlay');
+      const input = document.getElementById('gateInput');
+      if(sessionStorage.getItem('ziion_unlocked')==='true'){
+        overlay.style.display='none';
+      }
+      input.addEventListener('input', function(){
+        if(this.value === code){
+          sessionStorage.setItem('ziion_unlocked','true');
+          overlay.classList.add('unlocked');
+          setTimeout(()=> overlay.style.display='none', 700);
+        } else if(this.value.length >= code.length){
+          this.classList.add('shake');
+          setTimeout(()=>{ this.classList.remove('shake'); this.value=''; }, 500);
+        }
+      });
+    })();
+  </script>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <div class="logo-text">ZIION</div>
+    </div>
+
+    <div class="search-bar">
+      <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M14 14L10 10M11.333 6.667a4.667 4.667 0 1 1-9.333 0 4.667 4.667 0 0 1 9.333 0z"
+              stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <input type="text" placeholder="Search threads, people, topics...">
+    </div>
+
+    <div class="header-right">
+      <div class="header-icon" title="Notifications">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+        </svg>
+      </div>
+      <div class="header-icon" title="Messages">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+      </div>
+      <div class="avatar"></div>
+    </div>
+  </div>
+
+  <!-- Main 2-Column Layout -->
+  <div class="main-layout">
+
+    <!-- Left Sidebar -->
+    <div class="sidebar">
+      <button class="sidebar-create">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        Create
+      </button>
+
+      <a class="nav-item" href="cosmos-grid.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+        </svg>
+        Dashboard
+      </a>
+      <a class="nav-item" href="library.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/>
+        </svg>
+        Library
+      </a>
+      <a class="nav-item active" href="threads.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+        Threads
+      </a>
+      <a class="nav-item" href="directory.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+        Connections
+      </a>
+      <a class="nav-item" href="assets.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        Assets
+      </a>
+      <a class="nav-item" href="world.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+        </svg>
+        World
+      </a>
+      <a class="nav-item" href="pulse.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+        </svg>
+        Pulse
+      </a>
+
+      <div class="sidebar-divider"></div>
+
+      <a class="nav-item" href="book-19keys.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/>
+        </svg>
+        Book 19Keys
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        Calendar
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+        </svg>
+        Messages
+      </a>
+
+      <div class="sidebar-divider"></div>
+
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+        Settings
+      </a>
+
+      <div id="themeToggle" class="theme-toggle" title="Switch to light mode">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </div>
+    </div>
+
+    <!-- Center Content -->
+    <div class="center-content">
+
+      <!-- Page Header -->
+      <div class="page-header">
+        <div class="page-title">Threads</div>
+        <div class="page-subtitle">Community conversations and shared ideas</div>
+      </div>
+
+      <!-- Post Composer -->
+      <div class="composer">
+        <div class="composer-avatar"></div>
+        <input class="composer-input" type="text" placeholder="Start a thread...">
+        <button class="composer-btn">Post</button>
+      </div>
+
+      <!-- Feed Tabs -->
+      <div class="feed-tabs">
+        <div class="feed-tab active">Hot</div>
+        <div class="feed-tab">New</div>
+        <div class="feed-tab">Top</div>
+      </div>
+
+      <!-- Topic Filters -->
+      <div class="topic-filters">
+        <div class="topic-pill active">All Topics</div>
+        <div class="topic-pill">Wealth</div>
+        <div class="topic-pill">Wellness</div>
+        <div class="topic-pill">Cognition</div>
+        <div class="topic-pill">Community</div>
+        <div class="topic-pill">Tech</div>
+        <div class="topic-pill">Culture</div>
+      </div>
+
+      <!-- Thread Feed -->
+      <div class="feed-list">
+
+        <!-- Thread 1 -->
+        <div class="thread-card">
+          <div class="thread-header">
+            <div class="thread-avatar" style="background: linear-gradient(135deg, #4D4D4D, #322D2A)"></div>
+            <div class="thread-title">On the Future of Wealth</div>
+          </div>
+          <div class="thread-author">u/19Keys</div>
+          <div class="thread-body">The old models of wealth creation are collapsing. What we're witnessing isn't just a market correction - it's a complete paradigm shift in how value is created, distributed, and preserved. The question isn't whether change is coming. It's whether you're positioned for the transition.</div>
+          <div class="thread-actions">
+            <div class="thread-action">+</div>
+            <div class="thread-action">&minus;</div>
+            <div class="thread-action">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Thread 2 -->
+        <div class="thread-card">
+          <div class="thread-header">
+            <div class="thread-avatar" style="background: linear-gradient(135deg, #4D4D4D, #322D2A)"></div>
+            <div class="thread-title">The Body Is Not a Machine</div>
+          </div>
+          <div class="thread-author">u/SuperNatural</div>
+          <div class="thread-body">We've been conditioned to treat our bodies like machines that need optimizing. But the body has its own intelligence, its own rhythms. When you stop fighting it and start listening, everything changes. Here's what body intelligence actually looks like in practice.</div>
+          <div class="thread-actions">
+            <div class="thread-action">+</div>
+            <div class="thread-action">&minus;</div>
+            <div class="thread-action">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Thread 3 -->
+        <div class="thread-card">
+          <div class="thread-header">
+            <div class="thread-avatar" style="background: linear-gradient(135deg, #4D4D4D, #322D2A)"></div>
+            <div class="thread-title">The Metacognition Framework</div>
+          </div>
+          <div class="thread-author">u/MiriamDeAna</div>
+          <div class="thread-body">Most people think they're thinking when they're really just rearranging their biases. True metacognition requires a level of self-awareness that most educational systems never teach. Here's the framework I use to actually think about thinking.</div>
+          <div class="thread-actions">
+            <div class="thread-action">+</div>
+            <div class="thread-action">&minus;</div>
+            <div class="thread-action">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Thread 4 -->
+        <div class="thread-card">
+          <div class="thread-header">
+            <div class="thread-avatar" style="background: linear-gradient(135deg, #4D4D4D, #322D2A)"></div>
+            <div class="thread-title">Building Sovereign Communities in 2026</div>
+          </div>
+          <div class="thread-author">u/AntoinePatton</div>
+          <div class="thread-body">We keep talking about building, but what does sovereign community infrastructure actually look like? I've been studying the models that are working and the patterns are clear. Here's what separates communities that thrive from those that die.</div>
+          <div class="thread-actions">
+            <div class="thread-action">+</div>
+            <div class="thread-action">&minus;</div>
+            <div class="thread-action">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Thread 5 -->
+        <div class="thread-card">
+          <div class="thread-header">
+            <div class="thread-avatar" style="background: linear-gradient(135deg, #4D4D4D, #322D2A)"></div>
+            <div class="thread-title">AI Won't Replace You. Someone Using AI Will.</div>
+          </div>
+          <div class="thread-author">u/KatherinJoyette</div>
+          <div class="thread-body">The conversation about AI displacement is missing the point entirely. The real shift isn't automation - it's augmentation. The gap between those who learn to leverage these tools and those who don't will be the defining inequality of this decade.</div>
+          <div class="thread-actions">
+            <div class="thread-action">+</div>
+            <div class="thread-action">&minus;</div>
+            <div class="thread-action">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Thread 6 -->
+        <div class="thread-card">
+          <div class="thread-header">
+            <div class="thread-avatar" style="background: linear-gradient(135deg, #4D4D4D, #322D2A)"></div>
+            <div class="thread-title">Reclaiming Cultural Sovereignty</div>
+          </div>
+          <div class="thread-author">u/YahkevedLevi</div>
+          <div class="thread-body">Culture is the operating system of a people. When you lose control of your cultural narrative, you lose control of everything. This isn't about nostalgia - it's about building the infrastructure for cultural self-determination.</div>
+          <div class="thread-actions">
+            <div class="thread-action">+</div>
+            <div class="thread-action">&minus;</div>
+            <div class="thread-action">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // ── Tab switching ──
+    document.querySelectorAll('.feed-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.feed-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+
+    // ── Topic filter switching ──
+    document.querySelectorAll('.topic-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        document.querySelectorAll('.topic-pill').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+      });
+    });
+
+    // ── Sidebar nav switching ──
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', (e) => {
+        const href = item.getAttribute('href');
+        if (!href || href === '#') {
+          e.preventDefault();
+        }
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        item.classList.add('active');
+      });
+    });
+
+    // ── Vote buttons ──
+    document.querySelectorAll('.vote-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const col = btn.closest('.vote-col');
+        const countEl = col.querySelector('.vote-count');
+        let count = parseInt(countEl.textContent);
+        const dir = btn.dataset.dir;
+        const isUp = dir === 'up';
+        const wasActive = btn.classList.contains(isUp ? 'upvoted' : 'downvoted');
+
+        // Clear both states
+        col.querySelectorAll('.vote-btn').forEach(b => b.classList.remove('upvoted', 'downvoted'));
+
+        if (wasActive) {
+          // Toggle off
+          countEl.textContent = count + (isUp ? -1 : 1);
+        } else {
+          // Apply vote
+          btn.classList.add(isUp ? 'upvoted' : 'downvoted');
+          countEl.textContent = count + (isUp ? 1 : -1);
+        }
+      });
+    });
+  </script>
+
+  <script src="theme-toggle.js"></script>
+</body>
+</html>

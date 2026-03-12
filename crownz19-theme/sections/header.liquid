@@ -1,0 +1,178 @@
+{%- liquid
+  assign logo = section.settings.logo
+  assign logo_width = section.settings.logo_width
+-%}
+
+<header class="site-header" data-header role="banner">
+  <div class="site-header__inner">
+    {%- comment -%} Mobile menu toggle {%- endcomment -%}
+    <button class="site-header__menu-toggle" data-menu-toggle aria-label="{{ 'accessibility.menu' | t }}" aria-expanded="false">
+      <span class="hamburger">
+        <span class="hamburger__line"></span>
+        <span class="hamburger__line"></span>
+        <span class="hamburger__line"></span>
+      </span>
+    </button>
+
+    {%- comment -%} Navigation left (desktop) {%- endcomment -%}
+    <nav class="site-header__nav site-header__nav--left" role="navigation" aria-label="Main">
+      {%- for link in section.settings.menu.links -%}
+        {%- if forloop.index <= 3 -%}
+          <a href="{{ link.url }}" class="site-header__nav-link {% if link.active %}is-active{% endif %}">
+            {{ link.title }}
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
+    </nav>
+
+    {%- comment -%} Logo center {%- endcomment -%}
+    <div class="site-header__logo">
+      <a href="{{ routes.root_url }}" class="site-header__logo-link" aria-label="{{ shop.name }}">
+        {%- if logo != blank -%}
+          <img
+            src="{{ logo | image_url: width: logo_width | times: 2 }}"
+            alt="{{ logo.alt | default: shop.name | escape }}"
+            width="{{ logo_width }}"
+            height="{{ logo_width | divided_by: logo.aspect_ratio }}"
+            loading="eager"
+            class="site-header__logo-img"
+          >
+        {%- else -%}
+          <span class="site-header__logo-text">{{ shop.name }}</span>
+        {%- endif -%}
+      </a>
+    </div>
+
+    {%- comment -%} Navigation right (desktop) {%- endcomment -%}
+    <nav class="site-header__nav site-header__nav--right" role="navigation">
+      {%- for link in section.settings.menu.links -%}
+        {%- if forloop.index > 3 -%}
+          <a href="{{ link.url }}" class="site-header__nav-link {% if link.active %}is-active{% endif %}">
+            {{ link.title }}
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
+    </nav>
+
+    {%- comment -%} Icons right {%- endcomment -%}
+    <div class="site-header__icons">
+      <a href="{{ routes.search_url }}" class="site-header__icon" aria-label="{{ 'accessibility.search' | t }}">
+        {%- render 'icon-search' -%}
+      </a>
+      <a href="{{ routes.cart_url }}" class="site-header__icon site-header__cart" data-cart-toggle aria-label="{{ 'accessibility.cart' | t }}">
+        {%- render 'icon-cart' -%}
+        <span class="site-header__cart-count" data-cart-count>{{ cart.item_count }}</span>
+      </a>
+    </div>
+  </div>
+
+  {%- comment -%} Mobile navigation drawer {%- endcomment -%}
+  <div class="mobile-nav" data-mobile-nav aria-hidden="true">
+    <div class="mobile-nav__inner">
+      <nav class="mobile-nav__links" role="navigation" aria-label="Mobile">
+        {%- for link in section.settings.menu.links -%}
+          <a href="{{ link.url }}" class="mobile-nav__link {% if link.active %}is-active{% endif %}">
+            {{ link.title }}
+          </a>
+        {%- endfor -%}
+      </nav>
+      <div class="mobile-nav__footer">
+        <a href="{{ routes.account_url }}" class="mobile-nav__link">Account</a>
+        <a href="{{ routes.search_url }}" class="mobile-nav__link">Search</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<script>
+  (function() {
+    const header = document.querySelector('[data-header]');
+    const menuToggle = document.querySelector('[data-menu-toggle]');
+    const mobileNav = document.querySelector('[data-mobile-nav]');
+    let lastScroll = 0;
+
+    /* Sticky header - hide on scroll down, show on scroll up */
+    window.addEventListener('scroll', function() {
+      const currentScroll = window.pageYOffset;
+      if (currentScroll > 100) {
+        header.classList.add('is-scrolled');
+        if (currentScroll > lastScroll && currentScroll > 200) {
+          header.classList.add('is-hidden');
+        } else {
+          header.classList.remove('is-hidden');
+        }
+      } else {
+        header.classList.remove('is-scrolled');
+        header.classList.remove('is-hidden');
+      }
+      lastScroll = currentScroll;
+    }, { passive: true });
+
+    /* Mobile menu toggle */
+    if (menuToggle && mobileNav) {
+      menuToggle.addEventListener('click', function() {
+        const isOpen = menuToggle.getAttribute('aria-expanded') === 'true';
+        menuToggle.setAttribute('aria-expanded', !isOpen);
+        mobileNav.setAttribute('aria-hidden', isOpen);
+        document.body.classList.toggle('mobile-nav-open', !isOpen);
+      });
+    }
+
+    /* Cart drawer toggle */
+    const cartToggle = document.querySelector('[data-cart-toggle]');
+    if (cartToggle && window.CROWNZ19 && window.CROWNZ19.cartType === 'drawer') {
+      cartToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.dispatchEvent(new CustomEvent('cart:toggle'));
+      });
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Header",
+  "tag": "div",
+  "class": "header-section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 60,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
+      "label": "Logo width",
+      "default": 140
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Navigation menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky",
+      "label": "Sticky header",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Header style",
+      "options": [
+        { "value": "light", "label": "Light" },
+        { "value": "dark", "label": "Dark" },
+        { "value": "transparent", "label": "Transparent" }
+      ],
+      "default": "light"
+    }
+  ]
+}
+{% endschema %}

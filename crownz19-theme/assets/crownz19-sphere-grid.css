@@ -1,0 +1,240 @@
+/* ==========================================================================
+   CROWNZ19 Sphere Grid
+   4x3 grid of concave 3D glass orbs on dark background
+   ========================================================================== */
+
+.sphere-grid {
+  padding: var(--spacing-3xl) var(--spacing-lg);
+  overflow: hidden;
+}
+
+/* Header */
+.sphere-grid__header {
+  text-align: center;
+  margin-bottom: var(--spacing-2xl);
+}
+
+.sphere-grid__heading {
+  font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+  font-weight: 200;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0 0 var(--spacing-sm);
+}
+
+.sphere-grid__subheading {
+  font-size: 0.85rem;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.06em;
+  margin: 0;
+}
+
+/* Grid layout: 4 columns */
+.sphere-grid__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--spacing-xl);
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Individual sphere item */
+.sphere-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0;
+  transform: translateY(30px) scale(0.9);
+  transition: opacity 0.6s ease, transform 0.6s var(--ease-out);
+}
+
+.sphere-item.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.sphere-item__link {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+/* Orb container */
+.sphere-item__orb {
+  width: 100%;
+  aspect-ratio: 1;
+  max-width: 220px;
+  border-radius: 50%;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.4s var(--ease-out);
+}
+
+.sphere-item__link:hover .sphere-item__orb {
+  transform: scale(1.06);
+}
+
+/* Orb inner - creates the concave glass effect */
+.sphere-item__orb-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+  /* Concave depth: dark outer ring, lighter center */
+  background: radial-gradient(
+    circle at 40% 35%,
+    rgba(60, 60, 70, 0.6) 0%,
+    rgba(20, 20, 25, 0.9) 50%,
+    rgba(5, 5, 8, 1) 100%
+  );
+  /* Inner shadow for depth */
+  box-shadow:
+    inset 0 6px 20px rgba(0, 0, 0, 0.7),
+    inset 0 -4px 16px rgba(255, 255, 255, 0.03),
+    0 4px 24px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+/* Image inside sphere */
+.sphere-item__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  opacity: 0.55;
+  transition: opacity 0.4s ease;
+}
+
+.sphere-item__link:hover .sphere-item__img {
+  opacity: 0.75;
+}
+
+/* Glass overlay */
+.sphere-item__glass {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 35% 30%,
+    rgba(255, 255, 255, 0.08) 0%,
+    transparent 55%
+  );
+  pointer-events: none;
+}
+
+/* Highlight / reflection */
+.sphere-item__highlight {
+  position: absolute;
+  top: 8%;
+  left: 20%;
+  width: 45%;
+  height: 30%;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 255, 255, 0.12) 0%,
+    transparent 70%
+  );
+  transform: rotate(-15deg);
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.sphere-item__link:hover .sphere-item__highlight {
+  opacity: 1.4;
+}
+
+/* Bottom shadow / depth */
+.sphere-item__shadow {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: inset 0 -20px 40px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}
+
+/* Empty state */
+.sphere-item__empty {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 40% 35%,
+    rgba(40, 40, 50, 0.5) 0%,
+    rgba(10, 10, 15, 1) 100%
+  );
+}
+
+/* Label */
+.sphere-item__label {
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  transition: color 0.3s ease;
+}
+
+.sphere-item__link:hover .sphere-item__label {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Hover glow effect */
+.sphere-item__orb::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.06) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.sphere-item__link:hover .sphere-item__orb::after {
+  opacity: 1;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 1024px) {
+  .sphere-grid__grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-lg);
+  }
+}
+
+@media (max-width: 768px) {
+  .sphere-grid {
+    padding: var(--spacing-2xl) var(--spacing-md);
+  }
+
+  .sphere-grid__grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-md);
+  }
+
+  .sphere-item__orb {
+    max-width: 160px;
+  }
+
+  .sphere-item__label {
+    font-size: 0.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .sphere-grid__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+  }
+
+  .sphere-item__orb {
+    max-width: 140px;
+  }
+}

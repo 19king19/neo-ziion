@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sovereign Empire — Intelligence Sweep Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --void: #050505;
+    --surface-1: #0a0a0a;
+    --surface-2: #111111;
+    --surface-3: #1a1a1a;
+    --green: #00ff41;
+    --green-dim: #00cc34;
+    --green-glow: #33ff66;
+    --green-10: rgba(0,255,65,0.1);
+    --green-20: rgba(0,255,65,0.2);
+    --green-05: rgba(0,255,65,0.05);
+    --gold: #c8b560;
+    --gold-dim: #a89848;
+    --gold-10: rgba(200,181,96,0.1);
+    --white: #f0f0f0;
+    --muted: #777;
+    --border: #1a1a1a;
+    --mono: 'JetBrains Mono', 'SF Mono', monospace;
+    --sans: 'Inter', -apple-system, sans-serif;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  html { font-size:16px; -webkit-font-smoothing:antialiased; }
+
+  body {
+    background: var(--void);
+    color: var(--white);
+    font-family: var(--sans);
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  #matrix-rain {
+    position:fixed; top:0; left:0; width:100%; height:100%;
+    z-index:0; opacity:0.03; pointer-events:none;
+  }
+
+  .app { position:relative; z-index:1; min-height:100vh; display:flex; }
+
+  /* --- Sidebar --- */
+  .sidebar {
+    width: 280px;
+    min-height: 100vh;
+    background: var(--surface-1);
+    border-right: 1px solid var(--border);
+    padding: 32px 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar-header {
+    padding: 0 24px 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+
+  .sidebar-header .label {
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .sidebar-header h1 {
+    font-family: var(--sans);
+    font-weight: 200;
+    font-size: 1.4rem;
+    letter-spacing: -0.02em;
+    color: var(--white);
+  }
+
+  .scan-status {
+    padding: 12px 24px;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 8px;
+  }
+
+  .scan-status .live {
+    color: var(--green);
+    animation: pulse 1.5s ease infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .scan-bar {
+    width: 100%;
+    height: 2px;
+    background: var(--surface-3);
+    margin-top: 8px;
+  }
+
+  .scan-bar-fill {
+    height: 100%;
+    background: var(--green);
+    transition: width 0.5s ease;
+  }
+
+  .total-badge {
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 8px;
+  }
+
+  .total-badge .count {
+    font-family: var(--mono);
+    font-size: 2rem;
+    font-weight: 500;
+    color: var(--green);
+  }
+
+  .total-badge .label {
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* Keyword nav */
+  .kw-nav { flex: 1; padding: 8px 0; }
+
+  .kw-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px 24px;
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 0.8125rem;
+    cursor: pointer;
+    transition: all 120ms ease;
+    text-align: left;
+    border-left: 2px solid transparent;
+  }
+
+  .kw-btn:hover {
+    background: var(--green-05);
+    color: var(--white);
+  }
+
+  .kw-btn.active {
+    background: var(--green-10);
+    color: var(--green);
+    border-left-color: var(--green);
+  }
+
+  .kw-btn .kw-count {
+    font-size: 0.75rem;
+    color: var(--muted);
+    min-width: 36px;
+    text-align: right;
+  }
+
+  .kw-btn.active .kw-count { color: var(--green); }
+
+  .kw-btn-all {
+    color: var(--gold);
+  }
+  .kw-btn-all.active {
+    background: var(--gold-10);
+    color: var(--gold);
+    border-left-color: var(--gold);
+  }
+  .kw-btn-all.active .kw-count { color: var(--gold); }
+
+  /* --- Main Content --- */
+  .main {
+    margin-left: 280px;
+    flex: 1;
+    padding: 32px 40px;
+    min-height: 100vh;
+  }
+
+  /* Search bar */
+  .search-wrap {
+    margin-bottom: 24px;
+  }
+
+  .search-input {
+    width: 100%;
+    max-width: 600px;
+    font-family: var(--mono);
+    font-size: 0.875rem;
+    padding: 12px 16px;
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    color: var(--white);
+    outline: none;
+    transition: border-color 120ms ease;
+  }
+
+  .search-input::placeholder { color: var(--muted); }
+  .search-input:focus { border-color: var(--green); }
+
+  /* Section header */
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-header h2 {
+    font-family: var(--sans);
+    font-weight: 200;
+    font-size: 1.75rem;
+    color: var(--white);
+  }
+
+  .section-header .badge {
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border: 1px solid var(--green);
+    color: var(--green);
+  }
+
+  /* Note cards grid */
+  .notes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .note-card {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    padding: 20px;
+    cursor: pointer;
+    transition: border-color 150ms ease;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .note-card:hover {
+    border-color: var(--green);
+  }
+
+  .note-card .note-title {
+    font-family: var(--sans);
+    font-weight: 400;
+    font-size: 0.9375rem;
+    color: var(--white);
+    margin-bottom: 6px;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .note-card .note-date {
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .note-card .note-preview {
+    font-family: var(--sans);
+    font-weight: 300;
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    color: #999;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .note-card .note-tags {
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .note-tag {
+    font-family: var(--mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border: 1px solid var(--green-20);
+    color: var(--green-dim);
+  }
+
+  /* Expanded note modal */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(5,5,5,0.85);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--surface-1);
+    border: 1px solid var(--green);
+    max-width: 800px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 32px;
+  }
+
+  .modal-close {
+    float: right;
+    background: none;
+    border: 1px solid var(--muted);
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    padding: 4px 12px;
+    cursor: pointer;
+    transition: all 120ms ease;
+  }
+
+  .modal-close:hover {
+    border-color: var(--green);
+    color: var(--green);
+  }
+
+  .modal h3 {
+    font-family: var(--sans);
+    font-weight: 300;
+    font-size: 1.5rem;
+    color: var(--white);
+    margin-bottom: 8px;
+    padding-right: 80px;
+  }
+
+  .modal .modal-date {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  .modal .modal-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 20px;
+  }
+
+  .modal .modal-body {
+    font-family: var(--sans);
+    font-weight: 300;
+    font-size: 0.9375rem;
+    line-height: 1.8;
+    color: #bbb;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  /* Loading state */
+  .loading {
+    text-align: center;
+    padding: 80px 20px;
+  }
+
+  .loading h2 {
+    font-family: var(--sans);
+    font-weight: 200;
+    font-size: 1.5rem;
+    color: var(--white);
+    margin-bottom: 16px;
+  }
+
+  .loading p {
+    font-family: var(--mono);
+    font-size: 0.8125rem;
+    color: var(--green);
+    animation: pulse 1.5s ease infinite;
+  }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 0.875rem;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--void); }
+  ::-webkit-scrollbar-thumb { background: var(--surface-3); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--green-20); }
+</style>
+</head>
+<body>
+<canvas id="matrix-rain"></canvas>
+
+<div class="app">
+  <!-- Sidebar -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="label">19Keys // Sovereign Empire</div>
+      <h1>Intelligence Sweep</h1>
+    </div>
+
+    <div class="scan-status" id="scan-status">
+      <span class="live">SCANNING...</span>
+      <div id="scan-text">Loading data...</div>
+      <div class="scan-bar"><div class="scan-bar-fill" id="scan-bar" style="width:0%"></div></div>
+    </div>
+
+    <div class="total-badge">
+      <div class="count" id="total-count">—</div>
+      <div class="label">Total Matches</div>
+    </div>
+
+    <div class="kw-nav" id="kw-nav"></div>
+  </nav>
+
+  <!-- Main -->
+  <main class="main" id="main">
+    <div class="search-wrap">
+      <input class="search-input" id="search" type="text" placeholder="filter notes..." />
+    </div>
+
+    <div class="section-header">
+      <h2 id="section-title">All Keywords</h2>
+      <span class="badge" id="section-badge">—</span>
+    </div>
+
+    <div id="content">
+      <div class="loading">
+        <h2>Scanning your notes...</h2>
+        <p>Waiting for data</p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" id="modal">
+    <button class="modal-close" id="modal-close">ESC</button>
+    <h3 id="modal-title"></h3>
+    <div class="modal-date" id="modal-date"></div>
+    <div class="modal-tags" id="modal-tags"></div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+// Matrix Rain
+(function(){
+  const c=document.getElementById('matrix-rain'),x=c.getContext('2d');
+  function r(){c.width=innerWidth;c.height=innerHeight}r();
+  addEventListener('resize',r);
+  const f=14,ch='アイウエオカキクケコサシスセソタチツテトナニヌネノ0123456789ABCDEF';
+  let cols=Math.floor(c.width/f),d=new Array(cols).fill(1);
+  addEventListener('resize',()=>{cols=Math.floor(c.width/f);d=new Array(cols).fill(1)});
+  setInterval(()=>{
+    x.fillStyle='rgba(5,5,5,0.05)';x.fillRect(0,0,c.width,c.height);
+    x.fillStyle='#00ff41';x.font=f+'px monospace';
+    for(let i=0;i<d.length;i++){
+      x.fillText(ch[Math.floor(Math.random()*ch.length)],i*f,d[i]*f);
+      if(d[i]*f>c.height&&Math.random()>0.975)d[i]=0;d[i]++;
+    }
+  },50);
+})();
+
+// Dashboard App
+const state = {
+  data: null,
+  activeKeyword: 'all',
+  searchQuery: '',
+  allNotes: []
+};
+
+// Build flat note list with keyword tags
+function buildNoteIndex(data) {
+  const noteMap = {};
+  for (const kw of data.keywords) {
+    for (const note of (data.results[kw] || [])) {
+      const id = note.name;
+      if (!noteMap[id]) {
+        noteMap[id] = { ...note, keywords: [kw] };
+      } else {
+        noteMap[id].keywords.push(kw);
+      }
+    }
+  }
+  // Sort by number of keyword matches (most relevant first), then date
+  return Object.values(noteMap).sort((a, b) => b.keywords.length - a.keywords.length);
+}
+
+function renderSidebar(data) {
+  const nav = document.getElementById('kw-nav');
+  let html = `<button class="kw-btn kw-btn-all ${state.activeKeyword === 'all' ? 'active' : ''}" data-kw="all">
+    <span>ALL KEYWORDS</span><span class="kw-count">${data.total_matches}</span>
+  </button>`;
+
+  // Sort keywords by count descending
+  const sorted = [...data.keywords].sort((a, b) => data.summary[b] - data.summary[a]);
+  for (const kw of sorted) {
+    const count = data.summary[kw] || 0;
+    html += `<button class="kw-btn ${state.activeKeyword === kw ? 'active' : ''}" data-kw="${kw}">
+      <span>${kw}</span><span class="kw-count">${count}</span>
+    </button>`;
+  }
+  nav.innerHTML = html;
+
+  nav.querySelectorAll('.kw-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.activeKeyword = btn.dataset.kw;
+      render();
+    });
+  });
+}
+
+function renderScanStatus(data) {
+  const el = document.getElementById('scan-status');
+  const bar = document.getElementById('scan-bar');
+  const pct = Math.round((data.scan.scanned / data.scan.total_notes) * 100);
+  bar.style.width = pct + '%';
+
+  if (data.scan.complete) {
+    el.innerHTML = `<span style="color:var(--green);">COMPLETE</span>
+      <div>${data.scan.scanned.toLocaleString()} notes scanned in ${data.scan.elapsed}s</div>`;
+  } else {
+    el.innerHTML = `<span class="live">SCANNING...</span>
+      <div id="scan-text">${data.scan.scanned.toLocaleString()} / ${data.scan.total_notes.toLocaleString()} notes (${pct}%)</div>
+      <div class="scan-bar"><div class="scan-bar-fill" style="width:${pct}%"></div></div>`;
+  }
+
+  document.getElementById('total-count').textContent = data.total_matches.toLocaleString();
+}
+
+function getFilteredNotes() {
+  let notes = state.allNotes;
+
+  if (state.activeKeyword !== 'all') {
+    notes = notes.filter(n => n.keywords.includes(state.activeKeyword));
+  }
+
+  if (state.searchQuery) {
+    const q = state.searchQuery.toLowerCase();
+    notes = notes.filter(n =>
+      n.name.toLowerCase().includes(q) ||
+      n.preview.toLowerCase().includes(q) ||
+      n.keywords.some(k => k.toLowerCase().includes(q))
+    );
+  }
+
+  return notes;
+}
+
+function renderNotes(notes) {
+  const content = document.getElementById('content');
+
+  if (notes.length === 0) {
+    content.innerHTML = '<div class="empty-state">No notes match this filter.</div>';
+    return;
+  }
+
+  let html = '<div class="notes-grid">';
+  for (const note of notes) {
+    const tagsHtml = note.keywords.map(k => `<span class="note-tag">${k}</span>`).join('');
+    html += `
+      <div class="note-card" data-name="${encodeURIComponent(note.name)}">
+        <div class="note-title">${escHtml(note.name)}</div>
+        <div class="note-date">${escHtml(note.date)}</div>
+        <div class="note-preview">${escHtml(note.preview)}</div>
+        <div class="note-tags">${tagsHtml}</div>
+      </div>`;
+  }
+  html += '</div>';
+  content.innerHTML = html;
+
+  content.querySelectorAll('.note-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const name = decodeURIComponent(card.dataset.name);
+      const note = state.allNotes.find(n => n.name === name);
+      if (note) openModal(note);
+    });
+  });
+}
+
+function render() {
+  if (!state.data) return;
+  renderSidebar(state.data);
+  renderScanStatus(state.data);
+
+  const kw = state.activeKeyword;
+  const title = document.getElementById('section-title');
+  const badge = document.getElementById('section-badge');
+
+  const filtered = getFilteredNotes();
+  if (kw === 'all') {
+    title.textContent = 'All Keywords';
+  } else {
+    title.textContent = `"${kw}"`;
+  }
+  badge.textContent = filtered.length + ' notes';
+
+  renderNotes(filtered);
+}
+
+function openModal(note) {
+  document.getElementById('modal-title').textContent = note.name;
+  document.getElementById('modal-date').textContent = note.date;
+  document.getElementById('modal-tags').innerHTML =
+    note.keywords.map(k => `<span class="note-tag">${k}</span>`).join('');
+  document.getElementById('modal-body').textContent = note.preview;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+
+function escHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+// Events
+document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('modal-overlay').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) closeModal();
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeModal();
+});
+
+document.getElementById('search').addEventListener('input', (e) => {
+  state.searchQuery = e.target.value;
+  render();
+});
+
+// Data loading — poll for JSON file
+async function loadData() {
+  try {
+    const resp = await fetch('notes-data.json?t=' + Date.now());
+    if (!resp.ok) return false;
+    const data = await resp.json();
+    state.data = data;
+    state.allNotes = buildNoteIndex(data);
+    render();
+    return data.scan.complete;
+  } catch {
+    return false;
+  }
+}
+
+// Poll until scan is complete
+async function poll() {
+  const done = await loadData();
+  if (!done) {
+    setTimeout(poll, 5000); // check every 5s
+  }
+}
+
+poll();
+</script>
+</body>
+</html>

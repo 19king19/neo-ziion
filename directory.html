@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZIION — Connections</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="light-theme.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0F0E12;
+      color: #fff;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      overflow-x: hidden;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ── Header ── */
+    .header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(15, 14, 18, 0.85);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 0 24px; height: 64px;
+      display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+    }
+    .header-left { display: flex; align-items: center; gap: 16px; }
+    .logo-text { font-size: 18px; font-weight: 800; letter-spacing: 6px; color: #fff; text-transform: uppercase; text-decoration: none; }
+    .search-bar {
+      flex: 0 1 420px; height: 40px;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px; display: flex; align-items: center; padding: 0 14px; gap: 10px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .search-bar:focus-within { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.08); }
+    .search-icon { opacity: 0.4; flex-shrink: 0; }
+    .search-bar input { flex:1; background:none; border:none; outline:none; color:rgba(255,255,255,0.6); font-size:14px; font-family:inherit; }
+    .search-bar input::placeholder { color: rgba(255,255,255,0.3); }
+    .header-right { display: flex; align-items: center; gap: 12px; }
+    .header-icon { width:36px; height:36px; display:flex; align-items:center; justify-content:center; border-radius:8px; cursor:pointer; transition:background 0.15s; color:rgba(255,255,255,0.5); }
+    .header-icon:hover { background: rgba(255,255,255,0.08); color: #fff; }
+    .avatar { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#4D4D4D,#322D2A); cursor:pointer; }
+
+    /* ── Layout ── */
+    .main-layout { display: flex; flex: 1; overflow: hidden; }
+
+    /* ── Sidebar ── */
+    .sidebar { width:220px; flex-shrink:0; border-right:1px solid rgba(255,255,255,0.06); padding:20px 12px; display:flex; flex-direction:column; gap:4px; overflow-y:auto; }
+    .sidebar-create { width:100%; height:40px; background:#fff; color:#0F0E12; border:none; border-radius:10px; font-size:13px; font-weight:500; letter-spacing:0.05em; cursor:pointer; transition:opacity 0.15s; margin-bottom:12px; display:flex; align-items:center; justify-content:center; gap:8px; font-family:inherit; }
+    .sidebar-create:hover { opacity: 0.85; }
+    .nav-item { display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:10px; cursor:pointer; transition:background 0.15s,color 0.15s; color:rgba(255,255,255,0.4); font-size:13px; font-weight:500; letter-spacing:0.02em; text-decoration:none; }
+    .nav-item:hover { background: rgba(255,255,255,0.06); color: #fff; }
+    .nav-item.active { background: rgba(255,255,255,0.08); color: #fff; }
+    .nav-item svg { width:18px; height:18px; opacity:0.6; flex-shrink:0; }
+    .nav-item.active svg { opacity: 1; }
+    .sidebar-divider { height:1px; background:rgba(255,255,255,0.06); margin:8px 0; }
+
+    /* ── Directory Content ── */
+    .directory-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 32px 40px;
+    }
+
+    .directory-content::-webkit-scrollbar { width: 6px; }
+    .directory-content::-webkit-scrollbar-track { background: transparent; }
+    .directory-content::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+
+    .dir-header {
+      margin-bottom: 32px;
+    }
+
+    .dir-title {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+
+    .dir-subtitle {
+      font-size: 14px;
+      color: rgba(255,255,255,0.35);
+      font-weight: 400;
+    }
+
+    /* ── Filter Bar ── */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+
+    .filter-chip {
+      padding: 8px 18px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.5);
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .filter-chip:hover { background: rgba(255,255,255,0.1); color: #fff; }
+    .filter-chip.active { background: #fff; color: #0F0E12; border-color: #fff; }
+
+    /* ── Portrait Grid ── */
+    .portrait-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    /* ── Portrait Card ── */
+    .portrait-card {
+      cursor: pointer;
+      border-radius: 8px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.06);
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+    }
+
+    .portrait-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255,255,255,0.15);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+    }
+
+    .portrait-img {
+      width: 100%;
+      height: 280px;
+      background-size: cover;
+      background-position: center top;
+      position: relative;
+      filter: grayscale(100%) contrast(1.1);
+      transition: filter 0.4s ease;
+    }
+
+    .portrait-card:hover .portrait-img {
+      filter: grayscale(100%) contrast(1.2) brightness(1.05);
+    }
+
+    .portrait-img::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, #0F0E12 0%, rgba(15,14,18,0.4) 40%, transparent 100%);
+    }
+
+    .portrait-info {
+      padding: 14px 16px 18px;
+      position: relative;
+    }
+
+    .portrait-name {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 4px;
+    }
+
+    .portrait-type {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 6px;
+    }
+
+    .portrait-role {
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+      font-weight: 400;
+    }
+
+    .portrait-online {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #B2B2B2;
+      border: 2px solid #0F0E12;
+    }
+
+    .portrait-online.active {
+      background: #D5FF5A;
+    }
+
+    /* ══════════════════════════════════════════
+       PROFILE OVERLAY (click to expand)
+       ══════════════════════════════════════════ */
+    .profile-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .profile-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .profile-panel {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    /* Left: Portrait */
+    .profile-left {
+      width: 45%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .profile-portrait {
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center top;
+      filter: grayscale(100%) contrast(1.15);
+    }
+
+    .profile-portrait::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, transparent 50%, #0F0E12 100%);
+    }
+
+    .profile-portrait::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(15,14,18,0.7) 0%, transparent 30%);
+      z-index: 1;
+    }
+
+    .profile-quote {
+      position: absolute;
+      bottom: 80px;
+      left: 40px;
+      right: 60px;
+      z-index: 2;
+    }
+
+    .profile-quote-text {
+      font-size: 18px;
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.5;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 12px;
+    }
+
+    .profile-quote-attr {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.4);
+    }
+
+    .profile-back {
+      position: absolute;
+      top: 32px;
+      left: 32px;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: rgba(255,255,255,0.6);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+
+    .profile-back:hover { background: rgba(255,255,255,0.15); color: #fff; }
+
+    /* Right: Bio */
+    .profile-right {
+      width: 55%;
+      height: 100%;
+      padding: 60px 50px;
+      overflow-y: auto;
+      background: #0F0E12;
+    }
+
+    .profile-right::-webkit-scrollbar { width: 4px; }
+    .profile-right::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+    .profile-tabs {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 36px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding-bottom: 12px;
+    }
+
+    .profile-tab {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.35);
+      cursor: pointer;
+      transition: color 0.15s;
+      padding-bottom: 4px;
+    }
+
+    .profile-tab:hover { color: rgba(255,255,255,0.6); }
+    .profile-tab.active { color: #fff; border-bottom: 2px solid #fff; margin-bottom: -13px; }
+
+    .profile-name-full {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+      line-height: 1.1;
+    }
+
+    .profile-handle {
+      font-size: 14px;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 24px;
+    }
+
+    .profile-cog-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 28px;
+    }
+
+    .profile-cog-badge svg { opacity: 0.5; }
+
+    .profile-section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+      margin-bottom: 12px;
+    }
+
+    .profile-bio-text {
+      font-size: 14px;
+      line-height: 1.75;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 32px;
+      font-weight: 400;
+    }
+
+    .profile-stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .profile-stat-item {
+      padding: 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px;
+    }
+
+    .profile-stat-value {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .profile-stat-label {
+      font-size: 11px;
+      color: rgba(255,255,255,0.35);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .profile-working-on {
+      margin-bottom: 32px;
+    }
+
+    .working-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .working-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      flex-shrink: 0;
+    }
+
+    .working-dot.live { background: #D5FF5A; }
+
+    .working-text {
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .working-tag {
+      margin-left: auto;
+      font-size: 11px;
+      padding: 3px 10px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 4px;
+      color: rgba(255,255,255,0.35);
+      font-weight: 600;
+    }
+
+    .profile-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.06);
+      margin: 4px 0 28px;
+    }
+
+    .profile-connect-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 28px;
+      background: #fff;
+      color: #0F0E12;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.15s;
+      font-family: inherit;
+      margin-bottom: 12px;
+    }
+
+    .profile-connect-btn:hover { opacity: 0.85; }
+
+    .profile-message-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 28px;
+      background: transparent;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+      font-family: inherit;
+      margin-left: 8px;
+    }
+
+    .profile-message-btn:hover { background: rgba(255,255,255,0.06); }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <a class="logo-text" href="cosmos-grid.html">ZIION</a>
+    </div>
+    <div class="search-bar">
+      <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="dirSearch" placeholder="Search connections..." oninput="searchDirectory(this.value)">
+    </div>
+    <div class="header-right">
+      <div class="header-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      </div>
+      <div class="avatar"></div>
+    </div>
+  </div>
+
+  <div class="main-layout">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <button class="sidebar-create">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        Create
+      </button>
+
+      <a class="nav-item" href="cosmos-grid.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <a class="nav-item" href="library.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/></svg>
+        Library
+      </a>
+      <a class="nav-item" href="threads.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Threads
+      </a>
+      <a class="nav-item active" href="directory.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Connections
+      </a>
+      <a class="nav-item" href="assets.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Assets
+      </a>
+      <a class="nav-item" href="world.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        World
+      </a>
+      <a class="nav-item" href="pulse.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Pulse
+      </a>
+
+      <div class="sidebar-divider"></div>
+
+      <a class="nav-item" href="book-19keys.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/></svg>
+        Book 19Keys
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Calendar
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Messages
+      </a>
+
+      <div class="sidebar-divider"></div>
+
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </a>
+
+      <div id="themeToggle" class="theme-toggle" title="Switch to light mode">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </div>
+    </div>
+
+    <!-- Directory Content -->
+    <div class="directory-content">
+      <div class="dir-header">
+        <div class="dir-title">Connections</div>
+        <div class="dir-subtitle">The nation. Upload a photo — AI renders it black & white so every portrait is unified.</div>
+      </div>
+
+      <!-- Filters -->
+      <div class="filter-bar">
+        <div class="filter-chip active" onclick="filterDir('all', this)">All Members</div>
+        <div class="filter-chip" onclick="filterDir('leadership', this)">Leadership</div>
+        <div class="filter-chip" onclick="filterDir('builder', this)">Builders</div>
+        <div class="filter-chip" onclick="filterDir('creative', this)">Creatives</div>
+        <div class="filter-chip" onclick="filterDir('educator', this)">Educators</div>
+        <div class="filter-chip" onclick="filterDir('analyst', this)">Analysts</div>
+      </div>
+
+      <!-- Portrait Grid -->
+      <div class="portrait-grid" id="portraitGrid">
+        <!-- Cards injected by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Overlay -->
+  <div class="profile-overlay" id="profileOverlay">
+    <div class="profile-panel">
+      <div class="profile-left">
+        <div class="profile-portrait" id="profilePortrait"></div>
+        <button class="profile-back" onclick="closeProfile()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          Back
+        </button>
+        <div class="profile-quote">
+          <div class="profile-quote-text" id="profileQuote"></div>
+          <div class="profile-quote-attr" id="profileQuoteAttr"></div>
+        </div>
+      </div>
+      <div class="profile-right">
+        <div class="profile-tabs">
+          <div class="profile-tab active">Bio</div>
+          <div class="profile-tab">Projects</div>
+          <div class="profile-tab">Network</div>
+        </div>
+
+        <div class="profile-name-full" id="profileName"></div>
+        <div class="profile-handle" id="profileHandle"></div>
+
+        <div class="profile-cog-badge" id="profileCogBadge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          <span id="profileCogType"></span>
+        </div>
+
+        <div class="profile-section-label">About</div>
+        <div class="profile-bio-text" id="profileBio"></div>
+
+        <div class="profile-stat-grid" id="profileStats"></div>
+
+        <div class="profile-section-label">Currently Working On</div>
+        <div class="profile-working-on" id="profileWorking"></div>
+
+        <div class="profile-divider"></div>
+
+        <button class="profile-connect-btn">Connect</button>
+        <button class="profile-message-btn">Message</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── MEMBER DATA ──
+    const members = [
+      {
+        id: '19keys',
+        name: '19Keys',
+        handle: '@19Keys',
+        cogType: 'The Architect',
+        role: 'Global Thought Leader',
+        category: 'leadership',
+        online: true,
+        img: 'https://cdn.prod.website-files.com/6625f84a24635f45a41cb4c6/67dbac30ee44df4eb2817119_SIX_9CC238BA-1C28-4313-BA72-30BA0368E84E.JPG',
+        quote: '"The greatest form of wealth is the ability to think clearly in a world designed to confuse you."',
+        bio: 'Visionary thought leader, educator, and systems architect operating at the intersection of consciousness, economics, and technology. 19Keys has spent over a decade building frameworks that help individuals and communities achieve financial sovereignty through decentralized systems, ancient wisdom, and modern strategy. His work spans digital media, blockchain infrastructure, and community development across the global diaspora.',
+        stats: [
+          { value: '2.4M', label: 'Community' },
+          { value: '12', label: 'Ventures' },
+          { value: '340+', label: 'Episodes' },
+          { value: '47', label: 'Countries' }
+        ],
+        working: [
+          { text: 'ZIION Platform — Building sovereign digital infrastructure', tag: 'Active', live: true },
+          { text: 'Crown Society — Community wealth building initiative', tag: 'Active', live: true },
+          { text: 'Generational Wealth Masterclass — Season 2 production', tag: 'In Production', live: false },
+          { text: 'T1 Energy — Clean technology ventures', tag: 'Active', live: true }
+        ]
+      },
+      {
+        id: 'mariam',
+        name: 'Mariam',
+        handle: '@Mariam',
+        cogType: 'The Analyst',
+        role: 'Creative Strategist',
+        category: 'creative',
+        online: true,
+        img: 'https://cdn.cosmos.so/72a94605-316a-4519-9582-feabed5d5f55',
+        quote: '"The mind is not something you have — it is something you build, one decision at a time."',
+        bio: 'Creative strategist and cultural architect operating at the intersection of art, identity, and global media. Mariam brings a sharp analytical lens to brand storytelling and visual communication, crafting narratives that resonate across cultures and platforms. Her work spans creative direction, strategic consulting, and cultural programming for impact-driven organizations.',
+        stats: [
+          { value: '180K', label: 'Audience' },
+          { value: '3', label: 'Brands' },
+          { value: '58', label: 'Campaigns' },
+          { value: '12', label: 'Markets' }
+        ],
+        working: [
+          { text: 'Crown Society Creative — Visual identity and direction', tag: 'Active', live: true },
+          { text: 'Cultural Strategy Lab — Research and programming', tag: 'Research', live: false },
+          { text: 'ZIION Creative — Platform brand systems', tag: 'Active', live: true }
+        ]
+      },
+      {
+        id: 'rashad',
+        name: 'Rashad Bilal',
+        handle: '@RashadBilal',
+        cogType: 'The Strategist',
+        role: 'Financial Educator',
+        category: 'educator',
+        online: true,
+        img: 'https://speakerdata2.s3.amazonaws.com/photo/image/958998/Screenshot_2025-01-21_145736.jpg',
+        quote: '"Financial literacy is not a luxury — it is a necessity for liberation."',
+        bio: 'Co-founder of Earn Your Leisure, financial advisor, and media entrepreneur dedicated to making financial literacy accessible to underserved communities. Rashad has built one of the largest financial education platforms in the world, bridging Wall Street knowledge with Main Street accessibility through podcasts, live events, and digital media that reaches millions.',
+        stats: [
+          { value: '3M+', label: 'Community' },
+          { value: '500+', label: 'Episodes' },
+          { value: '50K+', label: 'Event Attendees' },
+          { value: '8', label: 'Ventures' }
+        ],
+        working: [
+          { text: 'Earn Your Leisure — Financial education media empire', tag: 'Active', live: true },
+          { text: 'EYL University — Online financial education platform', tag: 'Active', live: true },
+          { text: 'Invest Fest — Annual investment conference', tag: 'Annual', live: false }
+        ]
+      },
+      {
+        id: 'akua',
+        name: 'Akua Spirit',
+        handle: '@AkuaSpirit',
+        cogType: 'The Visionary',
+        role: 'Cultural Director',
+        category: 'creative',
+        online: true,
+        img: 'https://cdn.cosmos.so/7257ed61-f55e-499c-8cd2-717751f68fb4',
+        quote: '"Culture is not decoration — it is the operating system of a people."',
+        bio: 'Cultural strategist, designer, and creative director working at the intersection of Pan-African identity, fashion, and digital media. Akua leads cultural programming and visual identity across multiple community platforms, ensuring that design serves as a vehicle for narrative reclamation. Her work spans brand development, editorial art direction, and heritage-forward design systems.',
+        stats: [
+          { value: '220K', label: 'Audience' },
+          { value: '6', label: 'Brand Partners' },
+          { value: '71', label: 'Articles' },
+          { value: '3', label: 'Exhibitions' }
+        ],
+        working: [
+          { text: 'Crown Society Visual Identity — Brand system overhaul', tag: 'Creative', live: true },
+          { text: 'Diaspora Decoded — Documentary series', tag: 'In Production', live: false },
+          { text: 'Pan-African Design Archive — Digital heritage project', tag: 'Active', live: true }
+        ]
+      },
+      {
+        id: 'jaylen',
+        name: 'Jaylen Brown',
+        handle: '@JaylenBrown',
+        cogType: 'The Champion',
+        role: 'Professional Athlete & Investor',
+        category: 'leadership',
+        online: false,
+        img: 'https://cdn.nba.com/headshots/nba/latest/1040x760/1627759.png',
+        quote: '"Excellence is not given — it is earned through relentless discipline and purpose."',
+        bio: 'NBA All-Star, Finals MVP, and entrepreneur leveraging his platform to drive social change and economic empowerment. Beyond basketball, Jaylen is a vocal advocate for education, technology, and community investment, consistently using his visibility to create impact off the court. His interests span venture capital, AI, and systemic reform in sports and education.',
+        stats: [
+          { value: '10M+', label: 'Following' },
+          { value: '1', label: 'Finals MVP' },
+          { value: '5', label: 'Ventures' },
+          { value: '8', label: 'Years Pro' }
+        ],
+        working: [
+          { text: '7uice — Technology and venture platform', tag: 'Active', live: true },
+          { text: 'Community Investment Fund — Social impact initiative', tag: 'Active', live: true },
+          { text: 'Boston Celtics — 2024 NBA Champions', tag: 'Pro', live: true }
+        ]
+      },
+      {
+        id: 'supernatural',
+        name: 'SuperNatural',
+        handle: '@SuperNatural',
+        cogType: 'The Healer',
+        role: 'Wellness Practitioner',
+        category: 'educator',
+        online: true,
+        img: 'https://cdn.cosmos.so/4873a311-ee07-450b-a243-ebac96437a24',
+        quote: '"Your body is not separate from your empire — it is the first territory you must govern."',
+        bio: 'Holistic wellness practitioner, breathwork facilitator, and cold exposure specialist integrating ancient body wisdom with modern biohacking science. SuperNatural teaches a systems-based approach to physical sovereignty — understanding the body as the primary infrastructure of personal power. His protocols combine fasting, breathwork, cold therapy, and mindfulness practices.',
+        stats: [
+          { value: '145K', label: 'Practitioners' },
+          { value: '52', label: 'Episodes' },
+          { value: '8', label: 'Retreats' },
+          { value: '12', label: 'Protocols' }
+        ],
+        working: [
+          { text: 'Morning Protocol App — Digital wellness companion', tag: 'Building', live: true },
+          { text: 'Cold Exposure Research — Clinical partnership', tag: 'Research', live: false },
+          { text: 'Body & Beyond Podcast — Season 4', tag: 'Active', live: true }
+        ]
+      },
+      {
+        id: 'antoine',
+        name: 'Antoine Digital',
+        handle: '@AntoineDigital',
+        cogType: 'The Builder',
+        role: 'Tech Architect',
+        category: 'builder',
+        online: true,
+        img: 'https://fellows.echoinggreen.org/wp-content/uploads/2019/11/2019-Antoine-Patton-1-e1580400228140.jpg',
+        quote: '"Build what you believe in — the market will follow conviction over trends."',
+        bio: 'Tech entrepreneur, architect, and systems builder operating at the intersection of technology, design, and community infrastructure. Antoine specializes in translating complex technical concepts into tangible products and sustainable business models, with a focus on building tools and platforms that empower creators and entrepreneurs to own their digital presence.',
+        stats: [
+          { value: '104K', label: 'Community' },
+          { value: '6', label: 'Products Built' },
+          { value: '12', label: 'Partnerships' },
+          { value: '3', label: 'Platforms' }
+        ],
+        working: [
+          { text: 'Digital Architecture Studio — Product design and engineering', tag: 'Active', live: true },
+          { text: 'Creator Economy Tools — SaaS platform development', tag: 'Building', live: true },
+          { text: 'ZIION Tech — Infrastructure consulting', tag: 'Active', live: false }
+        ]
+      },
+      {
+        id: 'ledger',
+        name: 'LedgerMind',
+        handle: '@LedgerMind',
+        cogType: 'The Strategist',
+        role: 'Financial Analyst',
+        category: 'analyst',
+        online: true,
+        img: 'https://cdn.cosmos.so/b8a536ec-d951-454f-9c65-c6d2a34171d7',
+        quote: '"Money is a story we all agreed to believe. Rewrite the story, rewrite your reality."',
+        bio: 'Financial analyst, cash flow architect, and economic educator breaking down complex financial systems into actionable frameworks for wealth building. LedgerMind specializes in helping individuals map their cash flow, understand market cycles, and build investment strategies aligned with long-term generational wealth goals rather than short-term speculation.',
+        stats: [
+          { value: '310K', label: 'Students' },
+          { value: '118', label: 'Episodes' },
+          { value: '$45M', label: 'Assets Guided' },
+          { value: '8', label: 'Courses' }
+        ],
+        working: [
+          { text: 'Cash Flow Architecture — Financial planning tool', tag: 'Building', live: true },
+          { text: 'Market Analysis Reports — Weekly community intel', tag: 'Active', live: true },
+          { text: 'Hidden Figures of Finance — Documentary series', tag: 'In Production', live: false }
+        ]
+      }
+    ];
+
+    // ── RENDER PORTRAIT GRID ──
+    function renderGrid(filter = 'all', search = '') {
+      const grid = document.getElementById('portraitGrid');
+      const q = search.toLowerCase();
+      let html = '';
+
+      members.forEach(m => {
+        if (filter !== 'all' && m.category !== filter) return;
+        if (q && !m.name.toLowerCase().includes(q) && !m.role.toLowerCase().includes(q) && !m.cogType.toLowerCase().includes(q)) return;
+
+        html += `
+          <div class="portrait-card" onclick="openProfile('${m.id}')">
+            <div class="portrait-img" style="background-image: url('${m.img}')"></div>
+            <div class="portrait-info">
+              <div class="portrait-online ${m.online ? 'active' : ''}"></div>
+              <div class="portrait-name">${m.name}</div>
+              <div class="portrait-type">${m.cogType}</div>
+              <div class="portrait-role">${m.role}</div>
+            </div>
+          </div>
+        `;
+      });
+
+      grid.innerHTML = html || '<div style="grid-column:1/-1;text-align:center;padding:60px 0;color:rgba(255,255,255,0.3);font-size:16px;">No members found</div>';
+    }
+
+    // ── OPEN PROFILE ──
+    function openProfile(id) {
+      const m = members.find(x => x.id === id);
+      if (!m) return;
+
+      document.getElementById('profilePortrait').style.backgroundImage = `url('${m.img}')`;
+      document.getElementById('profileQuote').textContent = m.quote;
+      document.getElementById('profileQuoteAttr').textContent = '— ' + m.name;
+      document.getElementById('profileName').textContent = m.name;
+      document.getElementById('profileHandle').textContent = m.handle + ' · ' + m.role;
+      document.getElementById('profileCogType').textContent = m.cogType;
+      document.getElementById('profileBio').textContent = m.bio;
+
+      // Stats
+      let statsHtml = '';
+      m.stats.forEach(s => {
+        statsHtml += `<div class="profile-stat-item"><div class="profile-stat-value">${s.value}</div><div class="profile-stat-label">${s.label}</div></div>`;
+      });
+      document.getElementById('profileStats').innerHTML = statsHtml;
+
+      // Working on
+      let workHtml = '';
+      m.working.forEach(w => {
+        workHtml += `<div class="working-item"><div class="working-dot ${w.live ? 'live' : ''}"></div><div class="working-text">${w.text}</div><div class="working-tag">${w.tag}</div></div>`;
+      });
+      document.getElementById('profileWorking').innerHTML = workHtml;
+
+      const overlay = document.getElementById('profileOverlay');
+      overlay.style.display = 'flex';
+      requestAnimationFrame(() => overlay.classList.add('active'));
+
+      document.body.style.overflow = 'hidden';
+    }
+
+    // ── CLOSE PROFILE ──
+    function closeProfile() {
+      const overlay = document.getElementById('profileOverlay');
+      overlay.classList.remove('active');
+      setTimeout(() => {
+        overlay.style.display = 'none';
+        document.body.style.overflow = '';
+      }, 300);
+    }
+
+    // Close on escape
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeProfile();
+    });
+
+    // Close on overlay background click
+    document.getElementById('profileOverlay').addEventListener('click', e => {
+      if (e.target === e.currentTarget) closeProfile();
+    });
+
+    // ── FILTER ──
+    function filterDir(cat, el) {
+      document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+      renderGrid(cat, document.getElementById('dirSearch').value);
+    }
+
+    // ── SEARCH ──
+    function searchDirectory(q) {
+      const activeChip = document.querySelector('.filter-chip.active');
+      const cat = activeChip ? activeChip.textContent.toLowerCase().replace(' ', '') : 'all';
+      const catMap = { 'allmembers': 'all', 'leadership': 'leadership', 'builders': 'builder', 'creatives': 'creative', 'educators': 'educator', 'analysts': 'analyst' };
+      renderGrid(catMap[cat] || 'all', q);
+    }
+
+    // ── INIT ──
+    renderGrid();
+  </script>
+  <script src="theme-toggle.js"></script>
+</body>
+</html>

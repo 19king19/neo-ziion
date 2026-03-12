@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZIION — World</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="light-theme.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #0F0E12;
+      color: #fff;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      overflow-x: hidden;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ── Sticky Header ── */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(15, 14, 18, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .logo-text {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 6px;
+      color: #fff;
+      text-transform: uppercase;
+      text-decoration: none;
+    }
+
+    .search-bar {
+      flex: 0 1 420px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+      gap: 10px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .search-bar:focus-within {
+      border-color: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .search-icon { opacity: 0.4; flex-shrink: 0; }
+
+    .search-bar input {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    .search-bar input::placeholder { color: rgba(255, 255, 255, 0.3); }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-icon {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .header-icon:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4D4D4D, #322D2A);
+      cursor: pointer;
+    }
+
+    /* ── Main Layout ── */
+    .main-layout {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* ── Left Sidebar ── */
+    .sidebar {
+      width: 220px;
+      flex-shrink: 0;
+      border-right: 1px solid rgba(255,255,255,0.06);
+      padding: 20px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      overflow-y: auto;
+    }
+
+    .sidebar-create {
+      width: 100%;
+      height: 40px;
+      background: #fff;
+      color: #0F0E12;
+      border: none;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: opacity 0.15s;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: inherit;
+    }
+
+    .sidebar-create:hover { opacity: 0.85; }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      color: rgba(255,255,255,0.4);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+    }
+
+    .nav-item:hover { background: rgba(255,255,255,0.06); color: #fff; }
+    .nav-item.active { background: rgba(255,255,255,0.08); color: #fff; }
+
+    .nav-item svg { width: 18px; height: 18px; opacity: 0.6; flex-shrink: 0; }
+    .nav-item.active svg { opacity: 1; }
+
+    .sidebar-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.06);
+      margin: 8px 0;
+    }
+
+    /* ── World Grid Content ── */
+    .world-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 32px;
+    }
+
+    .world-header {
+      margin-bottom: 32px;
+    }
+
+    .world-title {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .world-subtitle {
+      font-size: 14px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 0.02em;
+    }
+
+    /* ── Masonry Grid ── */
+    .masonry {
+      columns: 4;
+      column-gap: 16px;
+    }
+
+    .masonry-card {
+      break-inside: avoid;
+      margin-bottom: 16px;
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .masonry-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+    }
+
+    .masonry-card:hover .card-overlay {
+      opacity: 1;
+    }
+
+    /* Card types by color */
+    .card-gradient {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 20px;
+      position: relative;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .card-gradient::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(15,14,18,0.95) 0%, rgba(15,14,18,0.5) 40%, rgba(15,14,18,0.15) 100%);
+      z-index: 0;
+    }
+
+    .card-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(255,255,255,0.02) 60%);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .card-label {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.35;
+      color: #fff;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-author {
+      font-size: 11px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .card-dot {
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+    }
+
+    .card-stat {
+      font-size: 11px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.35);
+    }
+
+    /* ── Card Sizes ── */
+    .card-sm .card-gradient { min-height: 160px; }
+    .card-md .card-gradient { min-height: 220px; }
+    .card-lg .card-gradient { min-height: 300px; }
+    .card-xl .card-gradient { min-height: 380px; }
+
+    /* ── Gradient Backgrounds ── */
+    .grad-emerald { background: linear-gradient(145deg, #3a5a00, #0F0E12 80%); }
+    .grad-violet { background: linear-gradient(145deg, #322D2A, #0F0E12 80%); }
+    .grad-blue { background: linear-gradient(145deg, #1e2a1f, #0F0E12 80%); }
+    .grad-amber { background: linear-gradient(145deg, #4a4000, #0F0E12 80%); }
+    .grad-rose { background: linear-gradient(145deg, #2a2520, #0F0E12 80%); }
+    .grad-cyan { background: linear-gradient(145deg, #1a2a18, #0F0E12 80%); }
+    .grad-slate { background: linear-gradient(145deg, #1e1e1e, #0F0E12 80%); }
+    .grad-orange { background: linear-gradient(145deg, #3a3000, #0F0E12 80%); }
+    .grad-indigo { background: linear-gradient(145deg, #252520, #0F0E12 80%); }
+    .grad-teal { background: linear-gradient(145deg, #2a3a10, #0F0E12 80%); }
+    .grad-pink { background: linear-gradient(145deg, #2a2018, #0F0E12 80%); }
+    .grad-lime { background: linear-gradient(145deg, #3a4a00, #0F0E12 80%); }
+
+    /* ── Image Cards ── */
+    .card-image {
+      width: 100%;
+      display: block;
+      border-radius: 0;
+    }
+
+    .card-image-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 20px;
+      background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+    }
+
+    /* ── Scrollbar ── */
+    .world-content::-webkit-scrollbar,
+    .sidebar::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .world-content::-webkit-scrollbar-track,
+    .sidebar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .world-content::-webkit-scrollbar-thumb,
+    .sidebar::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.1);
+      border-radius: 3px;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 1400px) {
+      .masonry { columns: 3; }
+    }
+
+    @media (max-width: 1000px) {
+      .masonry { columns: 2; }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .masonry { columns: 1; }
+      .world-content { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <a class="logo-text" href="cosmos-grid.html">ZIION</a>
+    </div>
+
+    <div class="search-bar">
+      <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M14 14L10 10M11.333 6.667a4.667 4.667 0 1 1-9.333 0 4.667 4.667 0 0 1 9.333 0z"
+              stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <input type="text" placeholder="Search the world...">
+    </div>
+
+    <div class="header-right">
+      <div class="header-icon" title="Notifications">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+        </svg>
+      </div>
+      <div class="avatar"></div>
+    </div>
+  </div>
+
+  <!-- Main Layout -->
+  <div class="main-layout">
+
+    <!-- Left Sidebar -->
+    <div class="sidebar">
+      <button class="sidebar-create">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        Create
+      </button>
+
+      <a class="nav-item" href="cosmos-grid.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+        </svg>
+        Dashboard
+      </a>
+      <a class="nav-item" href="library.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/>
+        </svg>
+        Library
+      </a>
+      <a class="nav-item" href="threads.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+        Threads
+      </a>
+      <a class="nav-item" href="directory.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+        Connections
+      </a>
+      <a class="nav-item" href="assets.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        Assets
+      </a>
+      <a class="nav-item active" href="world.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+        </svg>
+        World
+      </a>
+      <a class="nav-item" href="pulse.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+        </svg>
+        Pulse
+      </a>
+
+      <div class="sidebar-divider"></div>
+
+      <a class="nav-item" href="book-19keys.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/>
+        </svg>
+        Book 19Keys
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        Calendar
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+        </svg>
+        Messages
+      </a>
+
+      <div class="sidebar-divider"></div>
+
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+        Settings
+      </a>
+
+      <div id="themeToggle" class="theme-toggle" title="Switch to light mode">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </div>
+    </div>
+
+    <!-- World Grid Content -->
+    <div class="world-content">
+      <div class="world-header">
+        <div class="world-title">World</div>
+        <div class="world-subtitle">Your sovereign node on the network</div>
+      </div>
+
+      <div class="masonry">
+        <!-- Row 1 -->
+        <div class="masonry-card card-lg">
+          <div class="card-gradient grad-emerald" style="background-image: url('https://cdn.cosmos.so/e5a5468c-c8f5-4e2a-8b4f-69a9061bb24b')">
+            <div class="card-overlay"></div>
+            <div class="card-label">Wealth</div>
+            <div class="card-title">Building Generational Wealth Through Decentralized Systems</div>
+            <div class="card-meta">
+              <span class="card-author">u/19Keys</span>
+              <span class="card-dot"></span>
+              <span class="card-stat">247 upvotes</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="masonry-card card-sm">
+          <div class="card-gradient grad-slate" style="background-image: url('https://cdn.cosmos.so/0a5e231d-9847-4edc-b9c0-c6d7bc34c9f8')">
+            <div class="card-overlay"></div>
+            <div class="card-label">Community</div>
+            <div class="card-title">Weekly Roundtable: What Are You Building?</div>
+            <div class="card-meta">
+              <span class="card-author">u/ZiionCore</span>
+              <span class="card-dot"></span>
+              <span class="card-stat">89 replies</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="masonry-card card-md">
+          <div class="card-gradient grad-violet" style="background-image: url('https://cdn.cosmos.so/b8a536ec-d951-454f-9c65-c6d2a34171d7')">
+            <div class="card-overlay"></div>
+            <div class="card-label">Cognition</div>
+            <div class="card-title">The Metacognition Framework: Thinking About How You Think</div>
+            <div class="card-meta">
+              <span class="card-author">u/MiriamDeAna</span>
+              <span class="card-dot"></span>
+              <span class="card-stat">58 upvotes</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="masonry-card card-xl">
+          <div class="card-gradient grad-blue" style="background-image: url('https://cdn.cosmos.so/2ea6af2c-ab79-4ecb-8e0b-b9318b16a352')">
+            <div class="card-overlay"></div>
+            <div class="card-label">Tech</div>
+            <div class="card-title">Why Every Sovereign Citizen Needs to Understand Zero-Knowledge Proofs</div>
+            <div class="card-meta">
+              <span class="card-author">u/CryptoMansa</span>
+              <span class="card-dot"></span>
+              <span class="card-stat">192 upvotes</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="masonry-card card-md">
+          <div class="card-gradient grad-amber" style="background-image: url('https://cdn.cosmos.so/4873a311-ee07-450b-a243-ebac96437a24')">
+            <div class="card-overlay"></div>
+            <div class="card-label">Wellness</div>
+            <div class="card-title">Morning Protocols That Actually Work</div>
+            <div class="card-meta">
+              <span class="card-author">u/SuperNatural</span>
+              <span class="card-dot"></span>
+              <span class="card-stat">31 upvotes</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="masonry-card card-sm">
+          <div class="card-gradient grad-rose" style="background-image: url('https://cdn.cosmos.so/72a94605-316a-4519-9582-feabed5d5f55')">
+            <div class="card-overlay"></div>
+            <div class="card-label">Culture</div>
+            <div class="card-title">Reclaiming Our Narrative Through Art</div>
+            <div class="card-meta">
+              <span class="card-author">u/AkuaSpirit</span>
+              <span class="card-dot"></span>
+              <span class="card-stat">64 upvotes</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="masonry-card card-lg">
+          <div class="card-gradient grad-cyan" style="background-image: url('https://cdn.cosmos.so/be6ba81c-089a-4998-aff5-ace79eaffc5d')">
+            <div class="card-overlay"></div>
+            <div class="card-label">Politics</div>
+            <div class="card-title">Policy Frameworks for Economic Liberation: A Deep Dive</div>
+            <div class="card-meta">
+              <span class="card-author">u/BuilderKing</span>
+              <span class="card-dot"></span>
+              <span class="card-stat">73 upvotes</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="masonry-card card-sm">
+          <div class="card-gradient grad-indigo" style="background-image: url('https://cdn.cosmos.so/81a736b8-8263-4038-887b-a214241da971')">
+            <div class="card-overlay"></div>
+            <div class="card-label">Music</div>
+            <div class="card-title">Sound Frequencies and Productivity</div>
+            <div class="card-meta">
+              <span class="card-author">u/WaveArchitect</span>
+              <span class="card-dot"></span>
+              <span class="card-stat">42 upvotes</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="masonry-card card-md">
+          <div class="card-gradient grad-teal" style="background-image: url('https://cdn.cosmos.so/397b2464-79a2-4be3-9296-5f908c008c14')">
+            <div class="card-overlay"></div>
+            <div class="card-label">Wealth</div>
+            <div class="card-title">Cash Flow Mapping: See Where Your Money Actually Goes</div>
+            <div class="card-meta">
+              <span class="card-author">u/LedgerMind</span>
+              <span class="card-dot"></span>
+              <span class="card-stat">118 upvotes</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="masonry-card card-xl">
+          <div class="card-gradient grad-orange" style="background-image: url('https://cdn.cosmos.so/10ee66be-4577-4145-b00e-3d2733f4539a')">
+            <div class="card-overlay"></div>
+            <div class="card-label">Community</div>
+            <div class="card-title">From Consumers to Creators: The Ziion Blueprint</div>
+            <div class="card-meta">
+              <span class="card-author">u/19Keys</span>
+              <span class="card-dot"></span>
+              <span class="card-stat">314 upvotes</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="masonry-card card-sm">
+          <div class="card-gradient grad-pink" style="background-image: url('https://cdn.cosmos.so/2947b6be-10d7-4891-baad-67448f1e5286')">
+            <div class="card-overlay"></div>
+            <div class="card-label">Wellness</div>
+            <div class="card-title">Cold Exposure and Mental Clarity</div>
+            <div class="card-meta">
+              <span class="card-author">u/SuperNatural</span>
+              <span class="card-dot"></span>
+              <span class="card-stat">27 upvotes</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="masonry-card card-md">
+          <div class="card-gradient grad-lime" style="background-image: url('https://cdn.cosmos.so/156b6aaa-d158-4b0c-84a7-920547f73163')">
+            <div class="card-overlay"></div>
+            <div class="card-label">Tech</div>
+            <div class="card-title">Building Your First Smart Contract: A Beginner's Path</div>
+            <div class="card-meta">
+              <span class="card-author">u/CryptoMansa</span>
+              <span class="card-dot"></span>
+              <span class="card-stat">86 upvotes</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="masonry-card card-lg">
+          <div class="card-gradient grad-violet" style="background-image: url('https://cdn.cosmos.so/75e9da1e-88fc-4367-81f4-49f266a42b20')">
+            <div class="card-overlay"></div>
+            <div class="card-label">Cognition</div>
+            <div class="card-title">The Science of Decision Fatigue and How to Architect Your Day</div>
+            <div class="card-meta">
+              <span class="card-author">u/MiriamDeAna</span>
+              <span class="card-dot"></span>
+              <span class="card-stat">95 upvotes</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="masonry-card card-sm">
+          <div class="card-gradient grad-emerald" style="background-image: url('https://cdn.cosmos.so/2eb731ea-6d9e-4852-aa2a-b5864ffd937e')">
+            <div class="card-overlay"></div>
+            <div class="card-label">Wealth</div>
+            <div class="card-title">Land Ownership: The Oldest Wealth Strategy</div>
+            <div class="card-meta">
+              <span class="card-author">u/BuilderKing</span>
+              <span class="card-dot"></span>
+              <span class="card-stat">156 upvotes</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="masonry-card card-md">
+          <div class="card-gradient grad-slate" style="background-image: url('https://cdn.cosmos.so/7257ed61-f55e-499c-8cd2-717751f68fb4')">
+            <div class="card-overlay"></div>
+            <div class="card-label">Culture</div>
+            <div class="card-title">Design Language of the Diaspora: Visual Identity in the Digital Age</div>
+            <div class="card-meta">
+              <span class="card-author">u/AkuaSpirit</span>
+              <span class="card-dot"></span>
+              <span class="card-stat">71 upvotes</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="masonry-card card-lg">
+          <div class="card-gradient grad-rose" style="background-image: url('https://cdn.cosmos.so/500b3274-196f-42aa-b68e-256e8ade8af6')">
+            <div class="card-overlay"></div>
+            <div class="card-label">Politics</div>
+            <div class="card-title">Voting With Your Wallet: Economic Activism in Practice</div>
+            <div class="card-meta">
+              <span class="card-author">u/19Keys</span>
+              <span class="card-dot"></span>
+              <span class="card-stat">203 upvotes</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="theme-toggle.js"></script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+{
+  "general": {
+    "skip_to_content": "Skip to content",
+    "cart": "Cart",
+    "search": "Search",
+    "close": "Close",
+    "menu": "Menu",
+    "loading": "Loading...",
+    "404": {
+      "title": "Page not found",
+      "subtitle": "The page you're looking for doesn't exist or has been moved.",
+      "link": "Return Home"
+    }
+  },
+  "products": {
+    "add_to_cart": "Add to Cart",
+    "sold_out": "Sold Out",
+    "coming_soon": "Coming Soon",
+    "quantity": "Quantity",
+    "price": "Price",
+    "sale": "Sale",
+    "from_price": "From {{ price }}",
+    "variant": "Variant"
+  },
+  "cart": {
+    "title": "Your Cart",
+    "empty": "Your cart is empty",
+    "continue_shopping": "Continue Shopping",
+    "checkout": "Checkout",
+    "subtotal": "Subtotal",
+    "remove": "Remove",
+    "update": "Update",
+    "shipping_note": "Shipping & taxes calculated at checkout",
+    "free_shipping_message": "Free shipping on orders over ${{ threshold }}"
+  },
+  "collections": {
+    "title": "Collections",
+    "all": "All Products",
+    "filter": "Filter",
+    "sort": "Sort by",
+    "no_products": "No products found"
+  },
+  "customer": {
+    "login": "Log In",
+    "register": "Create Account",
+    "logout": "Log Out",
+    "account": "My Account",
+    "orders": "Order History",
+    "addresses": "Addresses"
+  },
+  "newsletter": {
+    "title": "Stay Connected",
+    "subtitle": "Join the CROWNZ19 community",
+    "placeholder": "Enter your email",
+    "submit": "Subscribe",
+    "success": "Thank you for subscribing"
+  },
+  "manifest": {
+    "title": "The Manifest",
+    "subtitle": "A Museum of Crown History",
+    "explore": "Explore the Timeline"
+  },
+  "accessibility": {
+    "skip_to_content": "Skip to content",
+    "close_cart": "Close cart drawer",
+    "open_cart": "Open cart drawer",
+    "previous_slide": "Previous",
+    "next_slide": "Next"
+  }
+}

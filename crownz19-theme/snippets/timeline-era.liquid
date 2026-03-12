@@ -1,0 +1,66 @@
+{%- comment -%}
+  Timeline era room - individual panel in the manifest horizontal scroll
+  Usage: {% render 'timeline-era', block: block, index: forloop.index %}
+{%- endcomment -%}
+
+{%- liquid
+  assign era_title = block.settings.era_title
+  assign era_period = block.settings.era_period
+  assign era_description = block.settings.era_description
+  assign era_image = block.settings.era_image
+  assign accent_color = block.settings.accent_color | default: '#c8a96e'
+  assign bg_image = block.settings.background_image
+-%}
+
+<div
+  class="timeline-era"
+  data-timeline-era
+  data-era-index="{{ index }}"
+  style="--era-accent: {{ accent_color }};"
+  {{ block.shopify_attributes }}
+>
+  {%- comment -%} Background layer {%- endcomment -%}
+  <div class="timeline-era__bg">
+    {%- if bg_image != blank -%}
+      <img
+        src="{{ bg_image | image_url: width: 1920 }}"
+        alt=""
+        loading="lazy"
+        class="timeline-era__bg-img"
+      >
+    {%- endif -%}
+    <div class="timeline-era__bg-overlay"></div>
+  </div>
+
+  {%- comment -%} Content layer {%- endcomment -%}
+  <div class="timeline-era__content" data-era-content>
+    <div class="timeline-era__meta">
+      <span class="timeline-era__number">{{ index | prepend: '0' | slice: -2, 2 }}</span>
+      {%- if era_period != blank -%}
+        <span class="timeline-era__period">{{ era_period }}</span>
+      {%- endif -%}
+    </div>
+
+    <h3 class="timeline-era__title">{{ era_title | default: 'Era Title' }}</h3>
+
+    {%- if era_description != blank -%}
+      <div class="timeline-era__description">{{ era_description }}</div>
+    {%- endif -%}
+
+    {%- if era_image != blank -%}
+      <div class="timeline-era__artifact" data-era-artifact>
+        <img
+          src="{{ era_image | image_url: width: 800 }}"
+          alt="{{ era_image.alt | default: era_title | escape }}"
+          loading="lazy"
+          class="timeline-era__artifact-img"
+        >
+      </div>
+    {%- endif -%}
+  </div>
+
+  {%- comment -%} Decorative elements {%- endcomment -%}
+  <div class="timeline-era__decoration">
+    <div class="timeline-era__line"></div>
+  </div>
+</div>

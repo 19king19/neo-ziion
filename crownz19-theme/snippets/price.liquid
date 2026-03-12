@@ -1,0 +1,45 @@
+{%- comment -%}
+  Price snippet
+  Usage: {% render 'price', product: product %}
+{%- endcomment -%}
+
+{%- liquid
+  assign on_sale = false
+  if product.compare_at_price > product.price
+    assign on_sale = true
+  endif
+-%}
+
+<div class="price {% if on_sale %}price--on-sale{% endif %}">
+  {%- if on_sale -%}
+    <s class="price__compare">{{ product.compare_at_price | money }}</s>
+  {%- endif -%}
+  <span class="price__regular">{{ product.price | money }}</span>
+  {%- if product.price_varies -%}
+    <span class="price__from">{{ 'products.product.from' | t }}</span>
+  {%- endif -%}
+</div>
+
+<style>
+  .price {
+    font-size: 0.8rem;
+    font-weight: 300;
+    color: var(--crownz-charcoal, #1a1a1a);
+  }
+
+  .price__compare {
+    color: rgba(0, 0, 0, 0.4);
+    margin-right: 6px;
+    text-decoration: line-through;
+  }
+
+  .price--on-sale .price__regular {
+    color: #8b2020;
+  }
+
+  .price__from {
+    font-size: 0.7rem;
+    color: rgba(0, 0, 0, 0.4);
+    margin-right: 4px;
+  }
+</style>

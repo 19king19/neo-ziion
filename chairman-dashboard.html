@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chairman Dashboard — 19Keys IP Vault</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void:#050505;--s0:#080808;--s1:#0c0c0c;--s2:#111;--s3:#181818;--s4:#222;
+  --green:#00ff41;--green-dim:#00cc34;--green-10:rgba(0,255,65,.08);--green-20:rgba(0,255,65,.15);--green-03:rgba(0,255,65,.03);
+  --gold:#c8b560;--gold-dim:#a89848;--gold-10:rgba(200,181,96,.08);--gold-20:rgba(200,181,96,.15);
+  --red:#ff3b3b;--red-10:rgba(255,59,59,.08);--red-20:rgba(255,59,59,.15);
+  --orange:#ff8c00;--orange-10:rgba(255,140,0,.08);
+  --yellow:#e6c619;--yellow-10:rgba(230,198,25,.08);
+  --cyan:#00d4ff;--cyan-10:rgba(0,212,255,.08);
+  --white:#eee;--white-80:rgba(238,238,238,.8);--muted:#666;--muted-light:#888;
+  --border:#1a1a1a;--border-hover:#333;
+  --mono:'JetBrains Mono',monospace;--sans:'Inter',-apple-system,sans-serif;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{font-size:15px;-webkit-font-smoothing:antialiased}
+body{background:var(--void);color:var(--white);font-family:var(--sans);font-weight:300;overflow-x:hidden}
+
+/* Matrix rain */
+#rain{position:fixed;inset:0;z-index:0;opacity:.025;pointer-events:none}
+
+/* Layout */
+.app{position:relative;z-index:1;min-height:100vh;display:grid;grid-template-columns:260px 1fr;grid-template-rows:auto 1fr}
+
+/* ── NAV ── */
+.nav{grid-row:1/3;background:var(--s0);border-right:1px solid var(--border);overflow-y:auto;display:flex;flex-direction:column}
+.nav-brand{padding:20px 18px 14px;border-bottom:1px solid var(--border)}
+.nav-brand .mono{font-family:var(--mono);font-size:.5625rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+.nav-brand h1{font-weight:200;font-size:1.2rem;letter-spacing:-.01em}
+
+/* KPI strip */
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border-bottom:1px solid var(--border)}
+.kpi{background:var(--s0);padding:12px 14px}
+.kpi .v{font-family:var(--mono);font-size:1.1rem;font-weight:500}
+.kpi .l{font-family:var(--mono);font-size:.5rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-top:2px}
+.kpi.green .v{color:var(--green)}.kpi.gold .v{color:var(--gold)}.kpi.red .v{color:var(--red)}.kpi.cyan .v{color:var(--cyan)}
+
+/* Nav sections */
+.nav-section{padding:6px 0;border-bottom:1px solid var(--border)}
+.nav-section-title{font-family:var(--mono);font-size:.5625rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);padding:8px 18px 4px}
+.nav-item{display:flex;align-items:center;justify-content:space-between;padding:5px 18px;font-family:var(--mono);font-size:.7rem;color:var(--muted);cursor:pointer;transition:all 80ms;border-left:2px solid transparent}
+.nav-item:hover{background:var(--green-03);color:var(--white-80)}
+.nav-item.active{background:var(--green-10);color:var(--green);border-left-color:var(--green)}
+.nav-item .c{font-size:.65rem;opacity:.6}
+.nav-item.active .c{opacity:1;color:var(--green)}
+/* Priority colors */
+.nav-item.p-critical.active{background:var(--red-10);color:var(--red);border-left-color:var(--red)}
+.nav-item.p-critical.active .c{color:var(--red)}
+.nav-item.p-high.active{background:var(--orange-10);color:var(--orange);border-left-color:var(--orange)}
+.nav-item.p-high.active .c{color:var(--orange)}
+.nav-item.p-medium.active{background:var(--yellow-10);color:var(--yellow);border-left-color:var(--yellow)}
+.nav-item.p-medium.active .c{color:var(--yellow)}
+.nav-item.gold-item.active{background:var(--gold-10);color:var(--gold);border-left-color:var(--gold)}
+.nav-item.gold-item.active .c{color:var(--gold)}
+
+/* ── HEADER ── */
+.header{padding:16px 28px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.search{flex:1;min-width:200px;font-family:var(--mono);font-size:.8rem;padding:8px 14px;background:var(--s1);border:1px solid var(--border);color:var(--white);outline:none;transition:border-color 100ms}
+.search:focus{border-color:var(--green)}.search::placeholder{color:#444}
+.sort-sel{font-family:var(--mono);font-size:.7rem;padding:8px 10px;background:var(--s1);border:1px solid var(--border);color:var(--white);outline:none;cursor:pointer}
+.view-btns{display:flex}
+.vbtn{font-family:var(--mono);font-size:.625rem;padding:8px 12px;background:var(--s1);border:1px solid var(--border);color:var(--muted);cursor:pointer;transition:all 80ms;letter-spacing:.04em;text-transform:uppercase}
+.vbtn:first-child{border-right:none}.vbtn.active{background:var(--green-10);color:var(--green);border-color:var(--green)}
+.active-filters{display:flex;gap:6px;flex-wrap:wrap}
+.active-filter{font-family:var(--mono);font-size:.5625rem;padding:3px 8px;background:var(--green-10);border:1px solid var(--green-20);color:var(--green);cursor:pointer;text-transform:uppercase;letter-spacing:.04em}
+.active-filter:hover{background:var(--red-10);border-color:var(--red);color:var(--red)}
+
+/* ── MAIN ── */
+.main{overflow-y:auto;padding:20px 28px;position:relative}
+
+/* Section title */
+.sec-head{display:flex;align-items:baseline;gap:10px;margin-bottom:16px}
+.sec-head h2{font-weight:200;font-size:1.3rem;letter-spacing:-.01em}
+.sec-head .cnt{font-family:var(--mono);font-size:.625rem;color:var(--green);padding:2px 8px;border:1px solid var(--green-20)}
+
+/* ── OVERVIEW PANEL ── */
+.overview{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:24px}
+.ov-card{background:var(--s1);border:1px solid var(--border);padding:14px;cursor:pointer;transition:border-color 100ms}
+.ov-card:hover{border-color:var(--green)}
+.ov-card.active{border-color:var(--green);background:var(--green-03)}
+.ov-card .ov-val{font-family:var(--mono);font-size:1.5rem;font-weight:500;color:var(--green)}
+.ov-card .ov-lbl{font-family:var(--mono);font-size:.5rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-top:3px}
+.ov-card .ov-sub{font-family:var(--mono);font-size:.5rem;color:var(--muted-light);margin-top:1px}
+.ov-card.t1 .ov-val{color:var(--gold)}.ov-card.t6 .ov-val{color:var(--muted)}
+
+/* ── GRID VIEW ── */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:10px}
+
+/* Card */
+.card{background:var(--s1);border:1px solid var(--border);padding:14px 16px;cursor:pointer;transition:border-color 100ms;display:flex;flex-direction:column;gap:8px}
+.card:hover{border-color:var(--border-hover)}
+.card-row1{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.card-title{font-weight:400;font-size:.8125rem;line-height:1.3;flex:1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-score-badge{font-family:var(--mono);font-size:.75rem;font-weight:500;padding:2px 8px;border:1px solid;white-space:nowrap;flex-shrink:0}
+.card-row2{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.tier-badge{font-family:var(--mono);font-size:.5rem;letter-spacing:.06em;text-transform:uppercase;padding:2px 6px;border:1px solid}
+.tier-1{border-color:var(--gold);color:var(--gold)}.tier-2{border-color:var(--green);color:var(--green)}
+.tier-3{border-color:var(--cyan);color:var(--cyan)}.tier-4{border-color:var(--muted-light);color:var(--muted-light)}
+.tier-5{border-color:var(--border-hover);color:var(--muted)}.tier-6{border-color:var(--border);color:#444}
+.cat-badge{font-family:var(--mono);font-size:.5rem;text-transform:uppercase;color:var(--muted-light);letter-spacing:.04em}
+.val-badge{font-family:var(--mono);font-size:.5rem;padding:1px 5px;border:1px solid var(--gold-20);color:var(--gold-dim)}
+.card-date{font-family:var(--mono);font-size:.5625rem;color:#444;margin-left:auto}
+.card-preview{font-size:.75rem;line-height:1.55;color:#555;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-pips{display:flex;gap:8px}
+.pip-group{display:flex;flex-direction:column;align-items:center;gap:1px}
+.pip-row{display:flex;gap:1px}
+.pip{width:5px;height:5px;background:var(--s3)}.pip.on{background:var(--green)}
+.pip-label{font-family:var(--mono);font-size:.4375rem;color:#444;text-transform:uppercase}
+.card-tags{display:flex;gap:3px;flex-wrap:wrap}
+.tag{font-family:var(--mono);font-size:.5rem;padding:1px 5px;border:1px solid var(--border);color:#555}
+.tag.brand{border-color:var(--gold-20);color:var(--gold-dim)}
+.flag-badge{font-family:var(--mono);font-size:.5rem;padding:1px 5px;border:1px solid}
+.flag-legal{border-color:var(--red);color:var(--red)}.flag-cleanup{border-color:var(--orange);color:var(--orange)}
+.flag-dev{border-color:var(--yellow);color:var(--yellow)}.flag-clean{border-color:var(--green-20);color:var(--green-dim)}
+
+/* ── TABLE VIEW ── */
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.75rem}
+th{font-family:var(--mono);font-size:.5625rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:left;padding:6px 8px;border-bottom:1px solid var(--border);cursor:pointer;white-space:nowrap;user-select:none}
+th:hover{color:var(--green)}
+td{padding:6px 8px;border-bottom:1px solid var(--s2);vertical-align:top}
+tr{cursor:pointer;transition:background 60ms}tr:hover{background:var(--green-03)}
+.td-s{font-family:var(--mono);font-weight:500;text-align:center}
+.td-t{font-weight:400;max-width:280px;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+
+/* Score colors */
+.sc-h{color:var(--red)}.sc-hh{color:var(--orange)}.sc-m{color:var(--yellow)}.sc-l{color:var(--green)}.sc-a{color:var(--muted)}
+
+/* ── MODAL ── */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(5,5,5,.92);z-index:100;align-items:center;justify-content:center;padding:24px}
+.modal-bg.open{display:flex}
+.modal{background:var(--s1);border:1px solid var(--green-20);max-width:860px;width:100%;max-height:88vh;overflow-y:auto;padding:28px}
+.modal-x{float:right;background:none;border:1px solid var(--border);color:var(--muted);font-family:var(--mono);font-size:.7rem;padding:4px 12px;cursor:pointer}
+.modal-x:hover{border-color:var(--green);color:var(--green)}
+.modal h3{font-weight:300;font-size:1.25rem;padding-right:80px;line-height:1.3;margin-bottom:4px}
+.modal .m-date{font-family:var(--mono);font-size:.6875rem;color:var(--muted);margin-bottom:12px}
+.modal .m-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.modal .m-scores{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:12px}
+.m-sc{padding:10px;background:var(--s2);border:1px solid var(--border);text-align:center}
+.m-sc .sv{font-family:var(--mono);font-size:1.3rem;font-weight:500;color:var(--green)}
+.m-sc .sl{font-family:var(--mono);font-size:.5rem;text-transform:uppercase;color:var(--muted);margin-top:2px}
+.modal .m-composite{padding:14px;border:1px solid;text-align:center;margin-bottom:14px;font-family:var(--mono)}
+.m-composite .cv{font-size:1.8rem;font-weight:700}.m-composite .cl{font-size:.7rem;margin-top:2px}
+.modal .m-val{display:flex;gap:8px;margin-bottom:14px}
+.m-val-item{padding:8px 14px;border:1px solid var(--gold-20);font-family:var(--mono);font-size:.75rem;color:var(--gold)}
+.modal .m-assess{padding:14px;background:var(--s2);border-left:2px solid var(--gold);margin-bottom:14px;font-size:.8125rem;line-height:1.6;color:#aaa}
+.m-assess .m-assess-title{font-family:var(--mono);font-size:.5625rem;text-transform:uppercase;color:var(--gold);margin-bottom:6px;letter-spacing:.06em}
+.modal .m-body{font-size:.875rem;line-height:1.7;color:#888;white-space:pre-wrap;word-wrap:break-word;margin-top:12px}
+.m-body-title{font-family:var(--mono);font-size:.5625rem;text-transform:uppercase;color:var(--muted);margin-bottom:6px;letter-spacing:.06em}
+
+/* Empty */
+.empty{text-align:center;padding:60px 20px;color:var(--muted);font-family:var(--mono);font-size:.8rem}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--void)}::-webkit-scrollbar-thumb{background:var(--s3)}
+</style>
+</head>
+<body>
+<canvas id="rain"></canvas>
+<div class="app">
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="nav-brand">
+    <div class="mono">Sovereign Mind Media</div>
+    <h1>Chairman Dashboard</h1>
+  </div>
+  <div class="kpis" id="kpis"></div>
+  <div id="nav-filters"></div>
+</nav>
+
+<!-- HEADER -->
+<header class="header">
+  <input class="search" id="search" placeholder="search vault..." />
+  <select class="sort-sel" id="sort">
+    <option value="score-desc">Score ↓</option>
+    <option value="score-asc">Score ↑</option>
+    <option value="tier-asc">Tier: Hard IP first</option>
+    <option value="orig">Originality</option>
+    <option value="comm">Commercial</option>
+    <option value="cult">Cultural</option>
+    <option value="dev">Dev Stage</option>
+    <option value="align">Alignment</option>
+  </select>
+  <div class="view-btns">
+    <div class="vbtn active" data-v="grid">Grid</div>
+    <div class="vbtn" data-v="table">Table</div>
+  </div>
+  <div class="active-filters" id="active-filters"></div>
+</header>
+
+<!-- MAIN -->
+<main class="main" id="main">
+  <div class="overview" id="overview"></div>
+  <div class="sec-head"><h2 id="sec-title">All Assets</h2><span class="cnt" id="sec-cnt">—</span></div>
+  <div id="content"></div>
+</main>
+</div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="mbg">
+  <div class="modal" id="modal"></div>
+</div>
+
+<script>
+// Rain
+!function(){const c=document.getElementById('rain'),x=c.getContext('2d');function r(){c.width=innerWidth;c.height=innerHeight}r();addEventListener('resize',r);const f=14,ch='アウオカキクケコ0123456789';let cols=Math.floor(c.width/f),d=new Array(cols).fill(1);addEventListener('resize',()=>{cols=Math.floor(c.width/f);d=new Array(cols).fill(1)});setInterval(()=>{x.fillStyle='rgba(5,5,5,0.05)';x.fillRect(0,0,c.width,c.height);x.fillStyle='#00ff41';x.font=f+'px monospace';for(let i=0;i<d.length;i++){x.fillText(ch[Math.floor(Math.random()*ch.length)],i*f,d[i]*f);if(d[i]*f>c.height&&Math.random()>.975)d[i]=0;d[i]++}},50)}();
+
+// State
+const S={vault:[],filtered:[],view:'grid',sort:'score-desc',search:'',filters:{tier:null,priority:null,brand:null,topic:null,category:null}};
+let STATS={};
+
+const esc=s=>{const d=document.createElement('div');d.textContent=s;return d.innerHTML};
+const pips=(v,mx=5)=>{let h='';for(let i=1;i<=mx;i++)h+=`<div class="pip ${i<=v?'on':''}"></div>`;return h};
+
+const TIER_LABELS={1:'HARD IP',2:'EXECUTABLE',3:'STRATEGIC',4:'CREATIVE',5:'RAW MATERIAL',6:'NOISE'};
+const PRIO_COLORS={CRITICAL:'sc-h',HIGH:'sc-hh',MEDIUM:'sc-m',LOW:'sc-l',ARCHIVE:'sc-a'};
+
+function buildKPIs(){
+  document.getElementById('kpis').innerHTML=`
+    <div class="kpi"><div class="v">${STATS.total}</div><div class="l">Total</div></div>
+    <div class="kpi gold"><div class="v">${STATS.hard_ip_count||0}</div><div class="l">Hard IP</div></div>
+    <div class="kpi cyan"><div class="v">${STATS.by_tier?.['2_executable']||0}</div><div class="l">Executable</div></div>
+    <div class="kpi"><div class="v">${STATS.avg_score||'—'}</div><div class="l">Avg /25</div></div>
+    <div class="kpi red"><div class="v">${STATS.noise_count||0}</div><div class="l">Noise</div></div>
+    <div class="kpi gold"><div class="v">${(STATS.valuation_tiers?.GOLD||0)+(STATS.valuation_tiers?.PLATINUM||0)}</div><div class="l">Gold+ Assets</div></div>`;
+}
+
+function buildNav(){
+  const nf=document.getElementById('nav-filters');
+  let h='';
+
+  // Tier
+  h+=`<div class="nav-section"><div class="nav-section-title">Tier</div>`;
+  h+=navItem('tier','','ALL',S.vault.length);
+  const tierOrder=[1,2,3,4,5,6];
+  for(const t of tierOrder){
+    const cnt=S.vault.filter(n=>n.tier===t).length;
+    if(cnt)h+=navItem('tier',t,`T${t} ${TIER_LABELS[t]}`,cnt,t===1?'gold-item':'');
+  }
+  h+=`</div>`;
+
+  // Priority
+  h+=`<div class="nav-section"><div class="nav-section-title">Priority</div>`;
+  h+=navItem('priority','','ALL',S.vault.filter(n=>n.tier<=4).length);
+  for(const p of ['HIGH','MEDIUM','LOW']){
+    const cnt=S.vault.filter(n=>n.priority===p).length;
+    if(cnt)h+=navItem('priority',p,p,cnt,'p-'+p.toLowerCase());
+  }
+  h+=`</div>`;
+
+  // Brand
+  const brands=Object.entries(STATS.by_brand||{}).sort((a,b)=>b[1]-a[1]);
+  if(brands.length){
+    h+=`<div class="nav-section"><div class="nav-section-title">Brand</div>`;
+    h+=navItem('brand','','ALL','');
+    for(const[tag,cnt] of brands.slice(0,10)){
+      h+=navItem('brand',tag,tag.replace('#',''),cnt,'gold-item');
+    }
+    h+=`</div>`;
+  }
+
+  // Topic
+  const topics=Object.entries(STATS.by_topic||{}).sort((a,b)=>b[1]-a[1]);
+  if(topics.length){
+    h+=`<div class="nav-section"><div class="nav-section-title">Topic</div>`;
+    h+=navItem('topic','','ALL','');
+    for(const[tag,cnt] of topics.slice(0,12)){
+      h+=navItem('topic',tag,tag.replace('#',''),cnt);
+    }
+    h+=`</div>`;
+  }
+
+  // Category
+  const cats=Object.entries(STATS.by_category||{}).sort((a,b)=>b[1]-a[1]);
+  if(cats.length){
+    h+=`<div class="nav-section"><div class="nav-section-title">Category</div>`;
+    h+=navItem('category','','ALL','');
+    for(const[cat,cnt] of cats.slice(0,15)){
+      h+=navItem('category',cat,cat,cnt);
+    }
+    h+=`</div>`;
+  }
+
+  nf.innerHTML=h;
+  nf.querySelectorAll('.nav-item').forEach(el=>{
+    el.addEventListener('click',()=>{
+      S.filters[el.dataset.ft]=el.dataset.fv||null;
+      render();
+    });
+  });
+}
+
+function navItem(ft,fv,label,cnt,cls=''){
+  const active=(S.filters[ft]===fv||(S.filters[ft]===null&&fv===''))?'active':'';
+  return `<div class="nav-item ${active} ${cls}" data-ft="${ft}" data-fv="${fv}"><span>${label}</span><span class="c">${cnt}</span></div>`;
+}
+
+function buildOverview(){
+  const ov=document.getElementById('overview');
+  const tiers=[1,2,3,4,5,6];
+  ov.innerHTML=tiers.map(t=>{
+    const cnt=S.vault.filter(n=>n.tier===t).length;
+    const pct=Math.round(cnt/S.vault.length*100);
+    const active=S.filters.tier===t?'active':'';
+    return `<div class="ov-card t${t} ${active}" data-tier="${t}">
+      <div class="ov-val">${cnt}</div>
+      <div class="ov-lbl">${TIER_LABELS[t]}</div>
+      <div class="ov-sub">${pct}%</div>
+    </div>`;
+  }).join('');
+  ov.querySelectorAll('.ov-card').forEach(el=>{
+    el.addEventListener('click',()=>{
+      const t=parseInt(el.dataset.tier);
+      S.filters.tier=S.filters.tier===t?null:t;
+      render();
+    });
+  });
+}
+
+function applyFilters(){
+  let n=S.vault;
+  const f=S.filters;
+  if(f.tier) n=n.filter(x=>x.tier===f.tier);
+  if(f.priority) n=n.filter(x=>x.priority===f.priority);
+  if(f.brand) n=n.filter(x=>(x.tags?.brand||[]).includes(f.brand));
+  if(f.topic) n=n.filter(x=>(x.tags?.topic||[]).includes(f.topic));
+  if(f.category) n=n.filter(x=>x.category===f.category);
+  if(S.search){
+    const q=S.search.toLowerCase();
+    n=n.filter(x=>x.name.toLowerCase().includes(q)||x.preview.toLowerCase().includes(q)||
+      x.category.toLowerCase().includes(q)||(x.ip_assessment||'').toLowerCase().includes(q));
+  }
+  const s=S.sort;
+  const sc=x=>x.scores?.composite||0;
+  if(s==='score-desc')n.sort((a,b)=>sc(b)-sc(a));
+  else if(s==='score-asc')n.sort((a,b)=>sc(a)-sc(b));
+  else if(s==='tier-asc')n.sort((a,b)=>a.tier-b.tier||(sc(b)-sc(a)));
+  else if(s==='orig')n.sort((a,b)=>(b.scores?.originality||0)-(a.scores?.originality||0));
+  else if(s==='comm')n.sort((a,b)=>(b.scores?.commercial_value||0)-(a.scores?.commercial_value||0));
+  else if(s==='cult')n.sort((a,b)=>(b.scores?.cultural_weight||0)-(a.scores?.cultural_weight||0));
+  else if(s==='dev')n.sort((a,b)=>(b.scores?.development_stage||0)-(a.scores?.development_stage||0));
+  else if(s==='align')n.sort((a,b)=>(b.scores?.brand_alignment||0)-(a.scores?.brand_alignment||0));
+  S.filtered=n;
+}
+
+function renderActiveFilters(){
+  const af=document.getElementById('active-filters');
+  const active=Object.entries(S.filters).filter(([k,v])=>v!==null);
+  af.innerHTML=active.map(([k,v])=>`<span class="active-filter" data-ft="${k}">${typeof v==='number'?'T'+v:v} ×</span>`).join('');
+  af.querySelectorAll('.active-filter').forEach(el=>{
+    el.addEventListener('click',()=>{S.filters[el.dataset.ft]=null;render()});
+  });
+}
+
+function renderGrid(){
+  const notes=S.filtered;
+  if(!notes.length) return '<div class="empty">No assets match current filters.</div>';
+  let h='<div class="grid">';
+  for(const n of notes){
+    const comp=n.scores?.composite||0;
+    const scCls=comp>=20?'sc-h':comp>=15?'sc-hh':comp>=11?'sc-m':'sc-l';
+    const brandTags=(n.tags?.brand||[]).slice(0,2).map(t=>`<span class="tag brand">${t}</span>`).join('');
+    const topicTags=(n.tags?.topic||[]).slice(0,2).map(t=>`<span class="tag">${t}</span>`).join('');
+    const valBadge=n.valuation_tier?`<span class="val-badge">${n.valuation_tier}</span>`:'';
+    const flagBadges=(n.flags||[]).filter(f=>f!=='CLEAN'&&f!=='ARCHIVE').map(f=>`<span class="flag-badge flag-${f==='LEGAL_ACTION'?'legal':f==='NEEDS_CLEANUP'?'cleanup':'dev'}">${f}</span>`).join('');
+    const o=n.scores?.originality||0,cm=n.scores?.commercial_value||0,cu=n.scores?.cultural_weight||0,dv=n.scores?.development_stage||0,al=n.scores?.brand_alignment||0;
+    const shortDate=(n.date||'').split(' at ')[0].replace(/^(Sun|Mon|Tue|Wed|Thu|Fri|Sat)\w*,?\s*/,'').trim();
+
+    h+=`<div class="card" data-id="${n.id}">
+      <div class="card-row1">
+        <div class="card-title">${esc(n.name)}</div>
+        <div class="card-score-badge ${scCls}" style="border-color:currentColor">${comp}/25</div>
+      </div>
+      <div class="card-row2">
+        <span class="tier-badge tier-${n.tier}">T${n.tier}</span>
+        <span class="cat-badge">${n.category}</span>
+        ${valBadge}${flagBadges}
+        <span class="card-date">${shortDate}</span>
+      </div>
+      <div class="card-preview">${esc(n.preview)}</div>
+      <div class="card-pips">
+        <div class="pip-group"><div class="pip-row">${pips(o)}</div><div class="pip-label">orig</div></div>
+        <div class="pip-group"><div class="pip-row">${pips(cm)}</div><div class="pip-label">comm</div></div>
+        <div class="pip-group"><div class="pip-row">${pips(cu)}</div><div class="pip-label">cult</div></div>
+        <div class="pip-group"><div class="pip-row">${pips(dv)}</div><div class="pip-label">dev</div></div>
+        <div class="pip-group"><div class="pip-row">${pips(al)}</div><div class="pip-label">align</div></div>
+      </div>
+      <div class="card-tags">${brandTags}${topicTags}</div>
+    </div>`;
+  }
+  return h+'</div>';
+}
+
+function renderTable(){
+  const notes=S.filtered;
+  if(!notes.length) return '<div class="empty">No assets match current filters.</div>';
+  let h=`<div class="tbl-wrap"><table><thead><tr>
+    <th>T</th><th>Score</th><th>Title</th><th>Category</th><th>Val</th><th>O</th><th>C</th><th>Cu</th><th>D</th><th>A</th><th>Flag</th>
+  </tr></thead><tbody>`;
+  for(const n of notes){
+    const comp=n.scores?.composite||0;
+    const scCls=comp>=20?'sc-h':comp>=15?'sc-hh':comp>=11?'sc-m':'sc-l';
+    const flag=(n.flags||[]).filter(f=>f!=='CLEAN'&&f!=='ARCHIVE')[0]||'';
+    h+=`<tr data-id="${n.id}">
+      <td class="td-s" style="color:var(--${n.tier===1?'gold':n.tier===2?'green':n.tier===3?'cyan':'muted'})">${n.tier}</td>
+      <td class="td-s ${scCls}">${comp}</td>
+      <td class="td-t">${esc(n.name)}</td>
+      <td style="font-family:var(--mono);font-size:.65rem;white-space:nowrap">${n.category}</td>
+      <td style="font-family:var(--mono);font-size:.65rem;color:var(--gold)">${n.valuation_tier||''}</td>
+      <td class="td-s">${n.scores?.originality||0}</td>
+      <td class="td-s">${n.scores?.commercial_value||0}</td>
+      <td class="td-s">${n.scores?.cultural_weight||0}</td>
+      <td class="td-s">${n.scores?.development_stage||0}</td>
+      <td class="td-s">${n.scores?.brand_alignment||0}</td>
+      <td style="font-family:var(--mono);font-size:.55rem;color:var(--orange)">${flag}</td>
+    </tr>`;
+  }
+  return h+'</tbody></table></div>';
+}
+
+function openModal(id){
+  const n=S.vault.find(x=>x.id===id);if(!n)return;
+  const comp=n.scores?.composite||0;
+  const scCls=comp>=20?'sc-h':comp>=15?'sc-hh':comp>=11?'sc-m':'sc-l';
+  const borderColor=comp>=20?'var(--red)':comp>=15?'var(--orange)':comp>=11?'var(--yellow)':'var(--green)';
+  const prioLabel=n.priority||'LOW';
+  const o=n.scores?.originality||0,cm=n.scores?.commercial_value||0,cu=n.scores?.cultural_weight||0,dv=n.scores?.development_stage||0,al=n.scores?.brand_alignment||0;
+  const allTags=[...(n.tags?.brand||[]),...(n.tags?.topic||[])];
+  const kwTags=(n.matched_keywords||[]).map(k=>`<span style="font-family:var(--mono);font-size:.6rem;padding:2px 6px;background:var(--green-10);border:1px solid var(--green-20);color:var(--green)">${k}</span>`).join('');
+  const flagsHtml=(n.flags||[]).map(f=>`<span class="flag-badge flag-${f==='LEGAL_ACTION'?'legal':f==='NEEDS_CLEANUP'?'cleanup':f==='NEEDS_DEVELOPMENT'?'dev':'clean'}">${f}</span>`).join(' ');
+  const valHtml=n.valuation_tier?`<div class="m-val"><div class="m-val-item">${n.valuation_tier}</div><div class="m-val-item">${n.estimated_value||''}</div></div>`:'';
+
+  document.getElementById('modal').innerHTML=`
+    <button class="modal-x" onclick="closeModal()">ESC</button>
+    <h3>${esc(n.name)}</h3>
+    <div class="m-date">${n.date} — ID #${n.id}</div>
+    <div class="m-row">${kwTags}</div>
+    <div class="m-row">
+      <span class="tier-badge tier-${n.tier}" style="font-size:.6rem;padding:3px 8px">TIER ${n.tier} — ${TIER_LABELS[n.tier]}</span>
+      <span class="cat-badge" style="font-size:.6rem;border:1px solid var(--border);padding:3px 8px">${n.category}</span>
+    </div>
+    <div class="m-row">${flagsHtml}</div>
+    ${valHtml}
+    <div class="m-scores">
+      <div class="m-sc"><div class="sv">${o}</div><div class="sl">Originality</div></div>
+      <div class="m-sc"><div class="sv">${cm}</div><div class="sl">Commercial</div></div>
+      <div class="m-sc"><div class="sv">${cu}</div><div class="sl">Cultural</div></div>
+      <div class="m-sc"><div class="sv">${dv}</div><div class="sl">Dev Stage</div></div>
+      <div class="m-sc"><div class="sv">${al}</div><div class="sl">Alignment</div></div>
+    </div>
+    <div class="m-composite ${scCls}" style="border-color:${borderColor}">
+      <div class="cv ${scCls}">${comp}/25</div>
+      <div class="cl">${prioLabel} PRIORITY</div>
+    </div>
+    <div class="m-assess">
+      <div class="m-assess-title">Chairman's Assessment</div>
+      ${esc(n.ip_assessment||'')}
+    </div>
+    <div class="m-row">${allTags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+    <div class="m-body-title">Source Content</div>
+    <div class="m-body">${esc(n.preview)}</div>`;
+  document.getElementById('mbg').classList.add('open');
+}
+
+function closeModal(){document.getElementById('mbg').classList.remove('open')}
+
+function render(){
+  applyFilters();
+  buildNav();
+  buildOverview();
+  renderActiveFilters();
+  document.getElementById('sec-cnt').textContent=S.filtered.length+' assets';
+  const activeF=Object.entries(S.filters).filter(([k,v])=>v!==null);
+  document.getElementById('sec-title').textContent=activeF.length?activeF.map(([k,v])=>typeof v==='number'?'Tier '+v:v).join(' / '):'All Assets';
+  document.getElementById('content').innerHTML=S.view==='grid'?renderGrid():renderTable();
+  document.querySelectorAll('[data-id]').forEach(el=>{
+    el.addEventListener('click',()=>openModal(parseInt(el.dataset.id)));
+  });
+}
+
+// Events
+document.getElementById('search').addEventListener('input',e=>{S.search=e.target.value;render()});
+document.getElementById('sort').addEventListener('change',e=>{S.sort=e.target.value;render()});
+document.querySelectorAll('.vbtn').forEach(b=>{b.addEventListener('click',()=>{
+  document.querySelectorAll('.vbtn').forEach(x=>x.classList.remove('active'));b.classList.add('active');
+  S.view=b.dataset.v;render();
+})});
+document.getElementById('mbg').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+
+// Load
+fetch('ip-vault-v2.json?t='+Date.now()).then(r=>r.json()).then(data=>{
+  S.vault=data.vault;
+  STATS=data.stats;
+  buildKPIs();
+  render();
+});
+</script>
+</body>
+</html>

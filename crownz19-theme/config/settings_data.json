@@ -1,0 +1,23 @@
+{
+  "current": {
+    "color_primary": "#E8E4DC",
+    "color_dark": "#0a0a0a",
+    "color_text": "#1a1a1a",
+    "color_text_light": "#f5f3ef",
+    "color_accent": "#8a8580",
+    "logo_width": 140,
+    "cart_type": "drawer",
+    "free_shipping_threshold": "100",
+    "sections": {
+      "header": {
+        "type": "header",
+        "settings": {}
+      },
+      "footer": {
+        "type": "footer",
+        "settings": {}
+      }
+    },
+    "content_for_index": []
+  }
+}

@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Build with 19Keys</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg:       #0A0A0B;
+      --surface:  #111113;
+      --card:     #161618;
+      --border:   rgba(255,255,255,0.06);
+      --border-hi: rgba(255,255,255,0.12);
+      --text:     #F0EDE8;
+      --muted:    rgba(240,237,232,0.45);
+      --subtle:   rgba(240,237,232,0.12);
+      --gold:     #BBA882;
+      --gold-dim: rgba(187,168,130,0.18);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, sans-serif;
+      font-weight: 300;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+      height: 68px;
+      background: rgba(10,10,11,0.82);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      color: var(--text);
+      text-transform: uppercase;
+    }
+    .nav-cta {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-decoration: none;
+      padding: 9px 22px;
+      border: 1px solid rgba(187,168,130,0.35);
+      transition: border-color .25s, background .25s;
+    }
+    .nav-cta:hover { border-color: var(--gold); background: var(--gold-dim); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 48px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 50% at 50% 30%, rgba(187,168,130,0.06) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 60% at 20% 80%, rgba(255,255,255,0.02) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hero-inner { position: relative; max-width: 720px; }
+    .hero-eyebrow {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+    }
+    .hero-eyebrow::before,
+    .hero-eyebrow::after {
+      content: '';
+      width: 36px;
+      height: 1px;
+      background: var(--gold);
+      opacity: 0.5;
+    }
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(52px, 8vw, 88px);
+      font-weight: 300;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      margin-bottom: 28px;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--gold);
+    }
+    .hero-sub {
+      font-size: 15px;
+      font-weight: 300;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      max-width: 440px;
+      margin: 0 auto 52px;
+      line-height: 1.75;
+    }
+    .hero-scroll {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .hero-scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      opacity: 0.4;
+    }
+
+    /* ── SECTION ── */
+    section { padding: 96px 48px; }
+    .section-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(32px, 4vw, 48px);
+      font-weight: 300;
+      line-height: 1.15;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+    .section-desc {
+      font-size: 14px;
+      color: var(--muted);
+      max-width: 480px;
+      line-height: 1.8;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── SERVICES ── */
+    #services { background: var(--surface); }
+    .services-header {
+      max-width: 1140px;
+      margin: 0 auto 56px;
+    }
+    .service-grid {
+      max-width: 1140px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+    .service-card {
+      background: var(--card);
+      padding: 36px 32px;
+      cursor: pointer;
+      transition: background .22s, border-color .22s;
+      position: relative;
+      overflow: hidden;
+    }
+    .service-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--gold);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .3s;
+    }
+    .service-card:hover { background: #1A1A1D; }
+    .service-card:hover::after { transform: scaleX(1); }
+    .service-card.active { background: #1E1C1A; }
+    .service-card.active::after { transform: scaleX(1); }
+    .service-card.active .card-select { background: var(--gold); border-color: var(--gold); color: #0A0A0B; }
+
+    .card-num {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      color: var(--muted);
+      margin-bottom: 20px;
+      font-weight: 400;
+    }
+    .card-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+    .card-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 28px;
+    }
+    .card-select {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid var(--border-hi);
+      padding: 8px 16px;
+      transition: all .22s;
+    }
+    .card-select svg { width: 10px; height: 10px; }
+
+    /* ── BOOKING FORM ── */
+    #bookingForm {
+      max-width: 760px;
+      margin: 0 auto;
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity .4s, transform .4s;
+      pointer-events: none;
+      display: none;
+    }
+    #bookingForm.visible {
+      opacity: 1;
+      transform: none;
+      pointer-events: all;
+      display: block;
+    }
+    .form-context {
+      margin-bottom: 44px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid var(--border);
+    }
+    .form-context-label {
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .form-context-service {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 300;
+      color: var(--text);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    .form-field { display: flex; flex-direction: column; gap: 8px; }
+    .form-field.full { grid-column: 1 / -1; }
+    .form-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .form-input,
+    .form-select,
+    .form-textarea {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 300;
+      padding: 14px 18px;
+      outline: none;
+      transition: border-color .2s;
+      width: 100%;
+      -webkit-appearance: none;
+    }
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus { border-color: var(--gold); }
+    .form-input::placeholder,
+    .form-textarea::placeholder { color: rgba(240,237,232,0.2); }
+    .form-textarea { resize: vertical; min-height: 100px; }
+    .form-select { cursor: pointer; }
+    .form-select option { background: #111113; }
+
+    .offer-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 28px 0 36px;
+      padding: 24px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .offer-label-block { flex: 1; }
+    .offer-label {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+    .offer-note { font-size: 12px; color: var(--muted); }
+    .offer-input-wrap { display: flex; align-items: center; gap: 0; }
+    .offer-currency {
+      background: #1A1A1D;
+      border: 1px solid var(--border);
+      border-right: none;
+      padding: 14px 16px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .offer-input {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 300;
+      padding: 14px 18px;
+      outline: none;
+      width: 140px;
+      transition: border-color .2s;
+    }
+    .offer-input:focus { border-color: var(--gold); }
+    .offer-input::placeholder { color: rgba(240,237,232,0.2); }
+
+    .submit-btn {
+      width: 100%;
+      padding: 18px 32px;
+      background: transparent;
+      border: 1px solid rgba(187,168,130,0.4);
+      color: var(--gold);
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background .25s, border-color .25s, color .25s;
+    }
+    .submit-btn:hover {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: #0A0A0B;
+    }
+
+    /* ── SUCCESS ── */
+    #successState {
+      display: none;
+      text-align: center;
+      padding: 72px 24px;
+    }
+    #successState.visible { display: block; }
+    .success-icon {
+      width: 56px;
+      height: 56px;
+      border: 1px solid rgba(187,168,130,0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 28px;
+    }
+    .success-icon svg { width: 22px; height: 22px; stroke: var(--gold); fill: none; }
+    .success-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 38px;
+      font-weight: 300;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+    .success-sub { font-size: 14px; color: var(--muted); max-width: 360px; margin: 0 auto; }
+
+    /* ── BOOKING SECTION ── */
+    #booking { background: var(--bg); }
+    .booking-inner {
+      max-width: 1140px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+    .booking-sidebar {}
+    .booking-sidebar-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 36px;
+      font-weight: 300;
+      line-height: 1.15;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+    .booking-sidebar-note { font-size: 13px; color: var(--muted); line-height: 1.8; margin-bottom: 36px; }
+    .booking-detail {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .booking-detail-icon {
+      width: 32px;
+      height: 32px;
+      border: 1px solid var(--border-hi);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .booking-detail-icon svg { width: 13px; height: 13px; stroke: var(--gold); fill: none; }
+    .booking-detail-text { font-size: 13px; color: var(--muted); }
+    .booking-detail-text strong { display: block; color: var(--text); font-weight: 400; font-size: 13px; margin-bottom: 2px; }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 40px 48px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 16px;
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .footer-note { font-size: 11px; color: var(--muted); letter-spacing: 0.08em; opacity: 0.5; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 0 24px; }
+      section { padding: 72px 24px; }
+      .service-grid { grid-template-columns: 1fr 1fr; }
+      .booking-inner { grid-template-columns: 1fr; gap: 48px; }
+      footer { padding: 32px 24px; flex-direction: column; gap: 12px; text-align: center; }
+    }
+    @media (max-width: 600px) {
+      .hero { padding: 100px 24px 60px; }
+      .service-grid { grid-template-columns: 1fr; }
+      .form-grid { grid-template-columns: 1fr; }
+      .offer-row { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+  <!-- EmailJS — auto-sends offer emails without requiring submitter to click Send -->
+  <!-- Setup: emailjs.com → create account → add Email Service → create Template → paste your keys below -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">19 Keys</div>
+    <a href="#services" class="nav-cta">Select Format</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-eyebrow">Build with 19Keys</div>
+      <h1 class="hero-title">
+        Strategic clarity<br>for <em>those who<br>move culture.</em>
+      </h1>
+      <p class="hero-sub">
+        Select a format below, describe your vision,<br>and submit your offer.
+      </p>
+      <div class="hero-scroll">
+        <div class="hero-scroll-line"></div>
+        <span>Select a format</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="services-header">
+      <div class="section-label">Formats</div>
+      <h2 class="section-title">How would you like to build?</h2>
+      <p class="section-desc">Choose the format that aligns with your intention. Each engagement is reviewed and accepted selectively.</p>
+    </div>
+
+    <div class="service-grid">
+
+      <div class="service-card" onclick="selectService(this)" data-service="1:1 Consultation">
+        <div class="card-num">01</div>
+        <div class="card-name">1:1 Consultation</div>
+        <div class="card-desc">A focused session to sharpen strategy, reframe your positioning, or pressure-test a decision. Built for founders, creators, and executives moving fast.</div>
+        <div class="card-select">
+          <svg viewBox="0 0 10 10" fill="currentColor"><polygon points="2,1 9,5 2,9"/></svg>
+          Select
+        </div>
+      </div>
+
+      <div class="service-card" onclick="selectService(this)" data-service="Speaking Event">
+        <div class="card-num">02</div>
+        <div class="card-name">Speaking Event</div>
+        <div class="card-desc">Keynote or panel presence for conferences, summits, and brand activations. 19Keys brings original frameworks and cultural fluency to every stage.</div>
+        <div class="card-select">
+          <svg viewBox="0 0 10 10" fill="currentColor"><polygon points="2,1 9,5 2,9"/></svg>
+          Select
+        </div>
+      </div>
+
+      <div class="service-card" onclick="selectService(this)" data-service="Podcast Feature">
+        <div class="card-num">03</div>
+        <div class="card-name">Podcast Feature</div>
+        <div class="card-desc">A long-form conversation on culture, strategy, consciousness, or technology. Depth-first dialogue for audiences who want more than surface takes.</div>
+        <div class="card-select">
+          <svg viewBox="0 0 10 10" fill="currentColor"><polygon points="2,1 9,5 2,9"/></svg>
+          Select
+        </div>
+      </div>
+
+      <div class="service-card" onclick="selectService(this)" data-service="Panel Discussion">
+        <div class="card-num">04</div>
+        <div class="card-name">Panel Discussion</div>
+        <div class="card-desc">Moderated or seated panel formats for industry events. Brings perspective, structure, and conviction to any topic at the intersection of culture and business.</div>
+        <div class="card-select">
+          <svg viewBox="0 0 10 10" fill="currentColor"><polygon points="2,1 9,5 2,9"/></svg>
+          Select
+        </div>
+      </div>
+
+      <div class="service-card" onclick="selectService(this)" data-service="Music Review">
+        <div class="card-num">05</div>
+        <div class="card-name">Music Review</div>
+        <div class="card-desc">An honest, high-signal review of your project — analyzed through the lens of culture, resonance, and long-term positioning in the ecosystem.</div>
+        <div class="card-select">
+          <svg viewBox="0 0 10 10" fill="currentColor"><polygon points="2,1 9,5 2,9"/></svg>
+          Select
+        </div>
+      </div>
+
+      <div class="service-card" onclick="selectService(this)" data-service="Product Review">
+        <div class="card-num">06</div>
+        <div class="card-name">Product Review</div>
+        <div class="card-desc">Thoughtful review of tools, platforms, or consumer products with strategic framing and distribution to an engaged, discerning audience.</div>
+        <div class="card-select">
+          <svg viewBox="0 0 10 10" fill="currentColor"><polygon points="2,1 9,5 2,9"/></svg>
+          Select
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- BOOKING -->
+  <section id="booking">
+    <div class="booking-inner">
+
+      <div class="booking-sidebar">
+        <div class="section-label">Your Offer</div>
+        <h2 class="booking-sidebar-title">Tell me what you're building.</h2>
+        <p class="booking-sidebar-note">All engagements are reviewed individually. I accept work that aligns with the mission — not every inquiry. Name your number and make the case.</p>
+
+        <div class="booking-detail">
+          <div class="booking-detail-icon">
+            <svg viewBox="0 0 24 24" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          </div>
+          <div class="booking-detail-text">
+            <strong>Response Time</strong>
+            Reviewed within 3–5 business days
+          </div>
+        </div>
+
+        <div class="booking-detail">
+          <div class="booking-detail-icon">
+            <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0 1 12 2.944a11.955 11.955 0 0 1-8.618 3.04A12.02 12.02 0 0 0 3 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          </div>
+          <div class="booking-detail-text">
+            <strong>Selective Process</strong>
+            Not every offer is accepted. Alignment matters.
+          </div>
+        </div>
+
+        <div class="booking-detail">
+          <div class="booking-detail-icon">
+            <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M3 8l7.89 5.26a2 2 0 0 0 2.22 0L21 8M5 19h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2z"/></svg>
+          </div>
+          <div class="booking-detail-text">
+            <strong>Direct Confirmation</strong>
+            Accepted offers confirmed directly by 19Keys
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <!-- No service selected state -->
+        <div id="noSelectionState" style="padding: 48px 0; opacity: 0.4;">
+          <div style="width: 1px; height: 48px; background: var(--gold); opacity: 0.3; margin-bottom: 20px;"></div>
+          <p style="font-size: 13px; color: var(--muted); letter-spacing: 0.08em;">Select a format above to continue</p>
+        </div>
+
+        <!-- Booking Form -->
+        <div id="bookingForm">
+          <div class="form-context">
+            <div class="form-context-label">Selected Format</div>
+            <div class="form-context-service" id="selectedServiceText">—</div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-field">
+              <label class="form-label">Full Name</label>
+              <input class="form-input" id="fieldName" type="text" placeholder="Your name">
+            </div>
+            <div class="form-field">
+              <label class="form-label">Email</label>
+              <input class="form-input" id="fieldEmail" type="email" placeholder="your@email.com">
+            </div>
+            <div class="form-field">
+              <label class="form-label">Organization</label>
+              <input class="form-input" id="fieldOrg" type="text" placeholder="Brand, label, or company">
+            </div>
+            <div class="form-field">
+              <label class="form-label">Preferred Date</label>
+              <input class="form-input" id="fieldDate" type="text" placeholder="Month / Year or flexible">
+            </div>
+            <div class="form-field full">
+              <label class="form-label">Format / Delivery</label>
+              <select class="form-select" id="fieldFormat">
+                <option value="">How will this be delivered?</option>
+                <option>Virtual</option>
+                <option>In-Person</option>
+                <option>Pre-Recorded</option>
+                <option>Open to Discussion</option>
+              </select>
+            </div>
+            <div class="form-field full">
+              <label class="form-label">Tell Me About It</label>
+              <textarea class="form-textarea" id="fieldDesc" placeholder="What are you building? What's the context, goal, or vision behind this?"></textarea>
+            </div>
+          </div>
+
+          <div class="offer-row">
+            <div class="offer-label-block">
+              <div class="offer-label">Your Offer</div>
+              <div class="offer-note">Name your number. All offers are considered.</div>
+            </div>
+            <div class="offer-input-wrap">
+              <span class="offer-currency">$</span>
+              <input class="offer-input" id="fieldOffer" type="number" min="0" placeholder="0">
+            </div>
+          </div>
+
+          <button class="submit-btn" onclick="submitOffer()">Submit Offer →</button>
+        </div>
+
+        <!-- Success -->
+        <div id="successState">
+          <div class="success-icon">
+            <svg viewBox="0 0 24 24" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h3 class="success-title">Offer Received</h3>
+          <p class="success-sub">Your submission is under review. If it aligns, you'll hear directly from 19Keys within 3–5 business days.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-brand">19 Keys</div>
+    <div class="footer-note">Build with 19Keys — All engagements by offer only</div>
+  </footer>
+
+  <script>
+    let selectedService = '';
+
+    function selectService(card) {
+      document.querySelectorAll('.service-card').forEach(c => c.classList.remove('active'));
+      card.classList.add('active');
+      selectedService = card.dataset.service;
+      document.getElementById('selectedServiceText').textContent = selectedService;
+
+      const noState = document.getElementById('noSelectionState');
+      const form = document.getElementById('bookingForm');
+      const success = document.getElementById('successState');
+
+      if (noState) noState.style.display = 'none';
+      success.classList.remove('visible');
+      form.style.display = 'block';
+      requestAnimationFrame(() => {
+        form.classList.add('visible');
+      });
+
+      setTimeout(() => {
+        document.getElementById('booking').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 120);
+    }
+
+    function submitOffer() {
+      const name    = document.getElementById('fieldName').value.trim();
+      const email   = document.getElementById('fieldEmail').value.trim();
+      const org     = document.getElementById('fieldOrg').value.trim();
+      const date    = document.getElementById('fieldDate').value.trim();
+      const format  = document.getElementById('fieldFormat').value.trim();
+      const desc    = document.getElementById('fieldDesc').value.trim();
+      const offer   = document.getElementById('fieldOffer').value.trim();
+
+      if (!name || !email || !desc) {
+        const missing = [];
+        if (!name)  missing.push('Name');
+        if (!email) missing.push('Email');
+        if (!desc)  missing.push('Description');
+        alert('Please fill in: ' + missing.join(', '));
+        return;
+      }
+
+      // ── Save to localStorage (ZIION dashboard reads this) ──
+      const entry = {
+        id:        Date.now(),
+        timestamp: new Date().toISOString(),
+        service:   selectedService,
+        name, email, org, date, format, desc,
+        offer:     offer ? '$' + Number(offer).toLocaleString() : 'Not specified',
+        status:    'pending'
+      };
+      try {
+        const existing = JSON.parse(localStorage.getItem('ziion_public_offers') || '[]');
+        existing.unshift(entry);
+        localStorage.setItem('ziion_public_offers', JSON.stringify(existing));
+      } catch(e) { console.warn('localStorage unavailable', e); }
+
+      // ── Auto-email via EmailJS (no submitter click required) ──
+      // ─────────────────────────────────────────────────────────
+      // ONE-TIME SETUP (5 min):
+      //  1. Go to https://www.emailjs.com → Sign up with any email
+      //  2. Dashboard → Email Services → Add New Service (Gmail/Outlook/etc.)
+      //     → Copy the Service ID into EMAILJS_SERVICE_ID below
+      //  3. Dashboard → Email Templates → Create Template
+      //     Use these variables in the template body:
+      //       {{from_name}} {{from_email}} {{service_type}} {{organization}}
+      //       {{preferred_date}} {{delivery_format}} {{offer_amount}} {{message}} {{submitted}}
+      //     Set "To Email" = 19key@protonmail.com
+      //     → Copy the Template ID into EMAILJS_TEMPLATE_ID below
+      //  4. Dashboard → Account → Public Key
+      //     → Copy into EMAILJS_PUBLIC_KEY below
+      // ─────────────────────────────────────────────────────────
+      const EMAILJS_SERVICE_ID  = 'YOUR_SERVICE_ID';
+      const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
+      const EMAILJS_PUBLIC_KEY  = 'YOUR_PUBLIC_KEY';
+
+      const emailSubject = '[Build with 19Keys] ' + selectedService + ' — ' + name;
+      const emailBody    =
+        'NEW OFFER RECEIVED\n' +
+        '══════════════════════════════\n\n' +
+        'Format:         ' + selectedService + '\n' +
+        'Name:           ' + name + '\n' +
+        'Email:          ' + email + '\n' +
+        'Organization:   ' + (org || '—') + '\n' +
+        'Preferred Date: ' + (date || '—') + '\n' +
+        'Delivery:       ' + (format || '—') + '\n' +
+        'Offer Amount:   ' + (offer ? '$' + Number(offer).toLocaleString() : 'Not specified') + '\n\n' +
+        'DESCRIPTION\n' +
+        '──────────────────────────────\n' +
+        desc + '\n\n' +
+        '══════════════════════════════\n' +
+        'Submitted via Build with 19Keys — ' + new Date().toLocaleString();
+
+      function fallbackMailto() {
+        window.location.href = 'mailto:19key@protonmail.com' +
+          '?subject=' + encodeURIComponent(emailSubject) +
+          '&body='    + encodeURIComponent(emailBody);
+      }
+
+      if (EMAILJS_SERVICE_ID !== 'YOUR_SERVICE_ID') {
+        // ✅ EmailJS configured — fully automatic, no submitter click needed
+        emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+          to_email:        '19key@protonmail.com',
+          from_name:       name,
+          from_email:      email,
+          service_type:    selectedService,
+          organization:    org || '—',
+          preferred_date:  date || '—',
+          delivery_format: format || '—',
+          offer_amount:    offer ? '$' + Number(offer).toLocaleString() : 'Not specified',
+          message:         desc,
+          submitted:       new Date().toLocaleString()
+        }, EMAILJS_PUBLIC_KEY)
+        .then(function() {
+          console.log('[19Keys] ✅ Offer emailed automatically to 19key@protonmail.com');
+        })
+        .catch(function(err) {
+          console.warn('[19Keys] EmailJS failed, opening mailto fallback:', err);
+          fallbackMailto();
+        });
+      } else {
+        // ⚠️ Keys not set yet — fall back to mailto (submitter must click Send)
+        fallbackMailto();
+      }
+
+      // ── Transition to success state ──
+      const form    = document.getElementById('bookingForm');
+      const success = document.getElementById('successState');
+      form.classList.remove('visible');
+      setTimeout(() => {
+        form.style.display = 'none';
+        success.classList.add('visible');
+      }, 350);
+    }
+  </script>
+
+</body>
+</html>

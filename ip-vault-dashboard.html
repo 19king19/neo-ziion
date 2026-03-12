@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IP VAULT — 19Keys Sovereign Empire</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void:#050505;--s1:#0a0a0a;--s2:#111;--s3:#1a1a1a;--s4:#222;
+  --green:#00ff41;--green-dim:#00cc34;--green-glow:#33ff66;
+  --green-10:rgba(0,255,65,.1);--green-20:rgba(0,255,65,.2);--green-05:rgba(0,255,65,.05);
+  --gold:#c8b560;--gold-10:rgba(200,181,96,.1);--gold-20:rgba(200,181,96,.2);
+  --red:#ff4141;--red-10:rgba(255,65,65,.1);
+  --orange:#ff9f41;--orange-10:rgba(255,159,65,.1);
+  --yellow:#ffd541;--yellow-10:rgba(255,213,65,.1);
+  --white:#f0f0f0;--muted:#777;--border:#1a1a1a;
+  --mono:'JetBrains Mono','SF Mono',monospace;
+  --sans:'Inter',-apple-system,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{font-size:16px;-webkit-font-smoothing:antialiased}
+body{background:var(--void);color:var(--white);font-family:var(--sans);font-weight:300;overflow-x:hidden}
+#matrix-rain{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;opacity:.03;pointer-events:none}
+.app{position:relative;z-index:1;display:flex;min-height:100vh}
+
+/* Sidebar */
+.sidebar{width:300px;min-height:100vh;background:var(--s1);border-right:1px solid var(--border);position:fixed;top:0;left:0;overflow-y:auto;display:flex;flex-direction:column;z-index:10}
+.sidebar-header{padding:24px 20px 16px;border-bottom:1px solid var(--border)}
+.sidebar-header .tag{font-family:var(--mono);font-size:.625rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.sidebar-header h1{font-weight:200;font-size:1.5rem;letter-spacing:-.02em}
+.sidebar-header .sub{font-family:var(--mono);font-size:.6875rem;color:var(--muted);margin-top:4px}
+
+/* Stats bar */
+.stats-bar{padding:16px 20px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stat{padding:8px 10px;background:var(--s2);border:1px solid var(--border)}
+.stat .val{font-family:var(--mono);font-size:1.25rem;font-weight:500;color:var(--green)}
+.stat .lbl{font-family:var(--mono);font-size:.5625rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-top:2px}
+.stat.gold .val{color:var(--gold)}
+.stat.red .val{color:var(--red)}
+
+/* Filter sections */
+.filter-section{padding:12px 20px 8px;border-bottom:1px solid var(--border)}
+.filter-section .title{font-family:var(--mono);font-size:.625rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px}
+.filter-btn{display:flex;align-items:center;justify-content:space-between;width:100%;padding:6px 10px;background:transparent;border:none;color:var(--muted);font-family:var(--mono);font-size:.75rem;cursor:pointer;transition:all 100ms;text-align:left;border-left:2px solid transparent}
+.filter-btn:hover{background:var(--green-05);color:var(--white)}
+.filter-btn.active{background:var(--green-10);color:var(--green);border-left-color:var(--green)}
+.filter-btn .cnt{font-size:.6875rem;min-width:30px;text-align:right}
+.filter-btn.active .cnt{color:var(--green)}
+.filter-btn.priority-critical{border-left-color:var(--red)}
+.filter-btn.priority-critical.active{color:var(--red);background:var(--red-10)}
+.filter-btn.priority-critical.active .cnt{color:var(--red)}
+.filter-btn.priority-high.active{color:var(--orange);background:var(--orange-10);border-left-color:var(--orange)}
+.filter-btn.priority-high.active .cnt{color:var(--orange)}
+.filter-btn.priority-medium.active{color:var(--yellow);background:var(--yellow-10);border-left-color:var(--yellow)}
+.filter-btn.priority-medium.active .cnt{color:var(--yellow)}
+.filter-btn.gold-btn.active{color:var(--gold);background:var(--gold-10);border-left-color:var(--gold)}
+
+/* Main */
+.main{margin-left:300px;flex:1;padding:24px 32px;min-height:100vh}
+
+/* Top bar */
+.top-bar{display:flex;gap:16px;align-items:center;margin-bottom:20px;flex-wrap:wrap}
+.search-input{flex:1;min-width:250px;font-family:var(--mono);font-size:.8125rem;padding:10px 14px;background:var(--s1);border:1px solid var(--border);color:var(--white);outline:none;transition:border-color 120ms}
+.search-input:focus{border-color:var(--green)}
+.search-input::placeholder{color:var(--muted)}
+.sort-select{font-family:var(--mono);font-size:.75rem;padding:10px 12px;background:var(--s1);border:1px solid var(--border);color:var(--white);outline:none;cursor:pointer}
+.view-toggle{display:flex;gap:0}
+.view-btn{font-family:var(--mono);font-size:.6875rem;padding:10px 14px;background:var(--s1);border:1px solid var(--border);color:var(--muted);cursor:pointer;transition:all 100ms}
+.view-btn:first-child{border-right:none}
+.view-btn.active{background:var(--green-10);color:var(--green);border-color:var(--green)}
+
+/* Section header */
+.section-header{display:flex;align-items:baseline;gap:12px;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.section-header h2{font-weight:200;font-size:1.5rem}
+.section-header .badge{font-family:var(--mono);font-size:.625rem;letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;border:1px solid var(--green);color:var(--green)}
+
+/* Cards grid */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:12px}
+
+/* Note card */
+.note-card{background:var(--s1);border:1px solid var(--border);padding:16px;cursor:pointer;transition:border-color 120ms;display:flex;flex-direction:column;gap:10px}
+.note-card:hover{border-color:var(--green)}
+.note-card .card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.note-card .card-title{font-weight:400;font-size:.875rem;line-height:1.3;flex:1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.note-card .card-score{font-family:var(--mono);font-size:.8125rem;font-weight:500;padding:2px 8px;border:1px solid;white-space:nowrap}
+.score-critical{color:var(--red);border-color:var(--red)!important}
+.score-high{color:var(--orange);border-color:var(--orange)!important}
+.score-medium{color:var(--yellow);border-color:var(--yellow)!important}
+.score-low{color:var(--green);border-color:var(--green)!important}
+.note-card .card-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.card-cat{font-family:var(--mono);font-size:.5625rem;letter-spacing:.04em;text-transform:uppercase;padding:2px 6px;border:1px solid var(--green-20);color:var(--green-dim)}
+.card-parent{font-family:var(--mono);font-size:.5625rem;text-transform:uppercase;padding:2px 6px;border:1px solid var(--gold-20);color:var(--gold)}
+.card-date{font-family:var(--mono);font-size:.625rem;color:var(--muted);margin-left:auto}
+.note-card .card-preview{font-size:.8125rem;line-height:1.6;color:#999;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.note-card .card-tags{display:flex;flex-wrap:wrap;gap:4px}
+.card-tag{font-family:var(--mono);font-size:.5625rem;padding:1px 6px;border:1px solid var(--s3);color:var(--muted)}
+.card-tag.brand{border-color:var(--gold-20);color:var(--gold)}
+
+/* Score bars in card */
+.score-bars{display:flex;gap:6px;align-items:center}
+.score-bar-group{display:flex;flex-direction:column;align-items:center;gap:1px}
+.score-bar-label{font-family:var(--mono);font-size:.5rem;color:var(--muted);text-transform:uppercase}
+.score-bar{display:flex;gap:1px}
+.score-pip{width:6px;height:6px;background:var(--s3)}
+.score-pip.filled{background:var(--green)}
+
+/* Table view */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.8125rem}
+th{font-family:var(--mono);font-size:.625rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:left;padding:8px 10px;border-bottom:1px solid var(--border);cursor:pointer;white-space:nowrap;user-select:none}
+th:hover{color:var(--green)}
+td{padding:8px 10px;border-bottom:1px solid var(--s2);vertical-align:top;max-width:300px}
+tr{cursor:pointer;transition:background 80ms}
+tr:hover{background:var(--green-05)}
+.td-score{font-family:var(--mono);font-weight:500;text-align:center}
+.td-cat{font-family:var(--mono);font-size:.6875rem}
+.td-title{font-weight:400;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+/* Modal */
+.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(5,5,5,.9);z-index:100;align-items:center;justify-content:center;padding:32px}
+.modal-overlay.open{display:flex}
+.modal{background:var(--s1);border:1px solid var(--green);max-width:900px;width:100%;max-height:85vh;overflow-y:auto;padding:28px}
+.modal-close{float:right;background:none;border:1px solid var(--muted);color:var(--muted);font-family:var(--mono);font-size:.75rem;padding:4px 12px;cursor:pointer}
+.modal-close:hover{border-color:var(--green);color:var(--green)}
+.modal h3{font-weight:300;font-size:1.4rem;margin-bottom:6px;padding-right:80px;line-height:1.3}
+.modal .modal-date{font-family:var(--mono);font-size:.75rem;color:var(--muted);margin-bottom:16px}
+.modal .modal-classification{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.modal .modal-scores{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px}
+.modal-score-item{padding:10px;background:var(--s2);border:1px solid var(--border);text-align:center}
+.modal-score-item .sv{font-family:var(--mono);font-size:1.5rem;font-weight:500;color:var(--green)}
+.modal-score-item .sl{font-family:var(--mono);font-size:.5625rem;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.modal .modal-composite{padding:12px;border:1px solid;text-align:center;margin-bottom:16px;font-family:var(--mono)}
+.modal .modal-composite .cv{font-size:2rem;font-weight:700}
+.modal .modal-composite .cl{font-size:.75rem;margin-top:4px}
+.modal .modal-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.modal .modal-assessment{padding:16px;background:var(--s2);border-left:2px solid var(--gold);margin-bottom:16px;font-size:.875rem;line-height:1.6;color:#ccc}
+.modal .modal-body{font-size:.9375rem;line-height:1.8;color:#bbb;white-space:pre-wrap;word-wrap:break-word}
+.modal .kw-list{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.kw-tag{font-family:var(--mono);font-size:.625rem;padding:2px 8px;background:var(--green-10);border:1px solid var(--green-20);color:var(--green)}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--void)}::-webkit-scrollbar-thumb{background:var(--s3)}
+</style>
+</head>
+<body>
+<canvas id="matrix-rain"></canvas>
+<div class="app">
+
+<!-- Sidebar -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="tag">19Keys // Chairman's Protocol</div>
+    <h1>IP Vault v2</h1>
+    <div class="sub">Sovereign Reclassification</div>
+  </div>
+
+  <div class="stats-bar" id="stats-bar"></div>
+
+  <!-- Priority filter -->
+  <div class="filter-section" id="priority-filters">
+    <div class="title">Priority</div>
+  </div>
+
+  <!-- Category filter -->
+  <div class="filter-section" id="category-filters">
+    <div class="title">IP Category</div>
+  </div>
+
+  <!-- Brand filter -->
+  <div class="filter-section" id="brand-filters">
+    <div class="title">Brand</div>
+  </div>
+
+  <!-- Topic filter -->
+  <div class="filter-section" id="topic-filters">
+    <div class="title">Topic</div>
+  </div>
+</nav>
+
+<!-- Main -->
+<main class="main">
+  <div class="top-bar">
+    <input class="search-input" id="search" placeholder="search IP vault..." />
+    <select class="sort-select" id="sort-select">
+      <option value="score-desc">Score: High → Low</option>
+      <option value="score-asc">Score: Low → High</option>
+      <option value="originality">Originality</option>
+      <option value="commercial">Commercial Potential</option>
+      <option value="cultural">Cultural Impact</option>
+      <option value="dev">Development Stage</option>
+      <option value="alignment">Strategic Alignment</option>
+    </select>
+    <div class="view-toggle">
+      <button class="view-btn active" data-view="grid">GRID</button>
+      <button class="view-btn" data-view="table">TABLE</button>
+    </div>
+  </div>
+
+  <div class="section-header">
+    <h2 id="section-title">All IP Assets</h2>
+    <span class="badge" id="section-badge">—</span>
+  </div>
+
+  <div id="content"></div>
+</main>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" id="modal"></div>
+</div>
+
+<script>
+// Matrix Rain (minimal)
+!function(){const c=document.getElementById('matrix-rain'),x=c.getContext('2d');function r(){c.width=innerWidth;c.height=innerHeight}r();addEventListener('resize',r);const f=14,ch='アイウエオカキクケコ0123456789ABCDEF';let cols=Math.floor(c.width/f),d=new Array(cols).fill(1);addEventListener('resize',()=>{cols=Math.floor(c.width/f);d=new Array(cols).fill(1)});setInterval(()=>{x.fillStyle='rgba(5,5,5,0.05)';x.fillRect(0,0,c.width,c.height);x.fillStyle='#00ff41';x.font=f+'px monospace';for(let i=0;i<d.length;i++){x.fillText(ch[Math.floor(Math.random()*ch.length)],i*f,d[i]*f);if(d[i]*f>c.height&&Math.random()>.975)d[i]=0;d[i]++}},50)}();
+
+const state = {vault:[], filtered:[], view:'grid', filters:{priority:null, category:null, brand:null, topic:null}, search:'', sort:'score-desc'};
+
+const PRIORITY_COLORS = {CRITICAL:'red',HIGH:'orange',MEDIUM:'yellow',LOW:'green',ARCHIVE:'white'};
+const PRIORITY_ORDER = {CRITICAL:5,HIGH:4,MEDIUM:3,LOW:2,ARCHIVE:1};
+
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+
+function scorePips(val){
+  let h='';for(let i=1;i<=5;i++)h+=`<div class="score-pip ${i<=val?'filled':''}"></div>`;
+  return h;
+}
+
+function renderStats(stats){
+  const avgScore = stats.avg_score || '—';
+  document.getElementById('stats-bar').innerHTML=`
+    <div class="stat"><div class="val">${stats.total.toLocaleString()}</div><div class="lbl">Total Notes</div></div>
+    <div class="stat gold"><div class="val">${stats.hard_ip_count||0}</div><div class="lbl">Hard IP (${stats.hard_ip_pct||0}%)</div></div>
+    <div class="stat red"><div class="val">${stats.noise_count||0}</div><div class="lbl">Noise Filtered</div></div>
+    <div class="stat"><div class="val">${avgScore}</div><div class="lbl">Avg Score /25</div></div>`;
+}
+
+function renderFilters(stats){
+  // Priority
+  const pf=document.getElementById('priority-filters');
+  let ph=pf.querySelector('.title').outerHTML;
+  ph+=`<button class="filter-btn ${!state.filters.priority?'active':''}" data-ftype="priority" data-fval="">ALL</button>`;
+  for(const p of ['CRITICAL','HIGH','MEDIUM','LOW']){
+    const cnt=stats.by_priority[p]||0;
+    const cls=state.filters.priority===p?'active':'';
+    ph+=`<button class="filter-btn priority-${p.toLowerCase()} ${cls}" data-ftype="priority" data-fval="${p}">
+      <span>${p}</span><span class="cnt">${cnt}</span></button>`;
+  }
+  pf.innerHTML=ph;
+
+  // Category (parent)
+  const cf=document.getElementById('category-filters');
+  let ch2=cf.querySelector('.title').outerHTML;
+  ch2+=`<button class="filter-btn ${!state.filters.category?'active':''}" data-ftype="category" data-fval="">ALL</button>`;
+  const parents=Object.entries(stats.by_parent).sort((a,b)=>b[1]-a[1]);
+  for(const[cat,cnt] of parents){
+    const cls=state.filters.category===cat?'active':'';
+    ch2+=`<button class="filter-btn ${cls}" data-ftype="category" data-fval="${cat}">
+      <span>${cat}</span><span class="cnt">${cnt}</span></button>`;
+  }
+  cf.innerHTML=ch2;
+
+  // Brand
+  const bf=document.getElementById('brand-filters');
+  let bh=bf.querySelector('.title').outerHTML;
+  bh+=`<button class="filter-btn ${!state.filters.brand?'active':''}" data-ftype="brand" data-fval="">ALL</button>`;
+  const brands=Object.entries(stats.by_brand).sort((a,b)=>b[1]-a[1]);
+  for(const[tag,cnt] of brands){
+    const cls=state.filters.brand===tag?'active':'';
+    bh+=`<button class="filter-btn gold-btn ${cls}" data-ftype="brand" data-fval="${tag}">
+      <span>${tag.replace('#','')}</span><span class="cnt">${cnt}</span></button>`;
+  }
+  bf.innerHTML=bh;
+
+  // Topic
+  const tf=document.getElementById('topic-filters');
+  let th=tf.querySelector('.title').outerHTML;
+  th+=`<button class="filter-btn ${!state.filters.topic?'active':''}" data-ftype="topic" data-fval="">ALL</button>`;
+  const topics=Object.entries(stats.by_topic).sort((a,b)=>b[1]-a[1]);
+  for(const[tag,cnt] of topics){
+    const cls=state.filters.topic===tag?'active':'';
+    th+=`<button class="filter-btn ${cls}" data-ftype="topic" data-fval="${tag}">
+      <span>${tag.replace('#','')}</span><span class="cnt">${cnt}</span></button>`;
+  }
+  tf.innerHTML=th;
+
+  // Event listeners
+  document.querySelectorAll('.filter-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const ft=btn.dataset.ftype, fv=btn.dataset.fval;
+      state.filters[ft]=fv||null;
+      render();
+    });
+  });
+}
+
+function applyFilters(){
+  let notes=state.vault;
+  const f=state.filters;
+  if(f.priority) notes=notes.filter(n=>n.priority.label===f.priority);
+  if(f.category) notes=notes.filter(n=>n.classification.parent===f.category);
+  if(f.brand) notes=notes.filter(n=>n.tags.brand.includes(f.brand));
+  if(f.topic) notes=notes.filter(n=>n.tags.topic.includes(f.topic));
+  if(state.search){
+    const q=state.search.toLowerCase();
+    notes=notes.filter(n=>n.name.toLowerCase().includes(q)||n.preview.toLowerCase().includes(q)||
+      n.classification.primary.toLowerCase().includes(q)||n.ip_assessment.toLowerCase().includes(q));
+  }
+  // Sort
+  const s=state.sort;
+  if(s==='score-desc') notes.sort((a,b)=>b.scores.composite-a.scores.composite);
+  else if(s==='score-asc') notes.sort((a,b)=>a.scores.composite-b.scores.composite);
+  else if(s==='originality') notes.sort((a,b)=>b.scores.originality-a.scores.originality);
+  else if(s==='commercial') notes.sort((a,b)=>b.scores.commercial-a.scores.commercial);
+  else if(s==='cultural') notes.sort((a,b)=>b.scores.cultural_impact-a.scores.cultural_impact);
+  else if(s==='dev') notes.sort((a,b)=>b.scores.dev_stage-a.scores.dev_stage);
+  else if(s==='alignment') notes.sort((a,b)=>b.scores.strategic_alignment-a.scores.strategic_alignment);
+  state.filtered=notes;
+}
+
+function renderGrid(notes){
+  if(!notes.length) return '<div style="text-align:center;padding:60px;color:var(--muted);font-family:var(--mono)">No notes match filters.</div>';
+  let h='<div class="cards-grid">';
+  for(const n of notes){
+    const sc=n.priority.label==='CRITICAL'?'score-critical':n.priority.label==='HIGH'?'score-high':n.priority.label==='MEDIUM'?'score-medium':'score-low';
+    const brandTags=n.tags.brand.map(t=>`<span class="card-tag brand">${t}</span>`).join('');
+    const topicTags=n.tags.topic.slice(0,3).map(t=>`<span class="card-tag">${t}</span>`).join('');
+    h+=`<div class="note-card" data-id="${n.id}">
+      <div class="card-top">
+        <div class="card-title">${esc(n.name)}</div>
+        <div class="card-score ${sc}">${n.scores.composite}/25</div>
+      </div>
+      <div class="card-meta">
+        <span class="card-parent">${n.classification.parent}</span>
+        <span class="card-cat">${n.classification.primary}</span>
+        <span class="card-date">${n.date.split(' at ')[0].replace(/day,?\s*/,'').trim()}</span>
+      </div>
+      <div class="card-preview">${esc(n.preview)}</div>
+      <div class="score-bars">
+        <div class="score-bar-group"><div class="score-bar">${scorePips(n.scores.originality)}</div><div class="score-bar-label">orig</div></div>
+        <div class="score-bar-group"><div class="score-bar">${scorePips(n.scores.commercial)}</div><div class="score-bar-label">comm</div></div>
+        <div class="score-bar-group"><div class="score-bar">${scorePips(n.scores.cultural_impact)}</div><div class="score-bar-label">cult</div></div>
+        <div class="score-bar-group"><div class="score-bar">${scorePips(n.scores.dev_stage)}</div><div class="score-bar-label">dev</div></div>
+        <div class="score-bar-group"><div class="score-bar">${scorePips(n.scores.strategic_alignment)}</div><div class="score-bar-label">align</div></div>
+      </div>
+      <div class="card-tags">${brandTags}${topicTags}</div>
+    </div>`;
+  }
+  return h+'</div>';
+}
+
+function renderTable(notes){
+  if(!notes.length) return '<div style="text-align:center;padding:60px;color:var(--muted);font-family:var(--mono)">No notes match filters.</div>';
+  let h=`<div class="table-wrap"><table>
+    <thead><tr><th>Score</th><th>Priority</th><th>Title</th><th>Category</th><th>Type</th><th>Orig</th><th>Comm</th><th>Cult</th><th>Dev</th><th>Align</th></tr></thead><tbody>`;
+  for(const n of notes){
+    const sc=n.priority.label==='CRITICAL'?'score-critical':n.priority.label==='HIGH'?'score-high':n.priority.label==='MEDIUM'?'score-medium':'score-low';
+    h+=`<tr data-id="${n.id}">
+      <td class="td-score ${sc}">${n.scores.composite}</td>
+      <td class="td-cat ${sc}">${n.priority.label}</td>
+      <td class="td-title">${esc(n.name)}</td>
+      <td class="td-cat">${n.classification.parent}</td>
+      <td class="td-cat">${n.classification.primary}</td>
+      <td class="td-score">${n.scores.originality}</td>
+      <td class="td-score">${n.scores.commercial}</td>
+      <td class="td-score">${n.scores.cultural_impact}</td>
+      <td class="td-score">${n.scores.dev_stage}</td>
+      <td class="td-score">${n.scores.strategic_alignment}</td>
+    </tr>`;
+  }
+  return h+'</tbody></table></div>';
+}
+
+function openModal(id){
+  const n=state.vault.find(x=>x.id===id);if(!n) return;
+  const sc=n.priority.label==='CRITICAL'?'score-critical':n.priority.label==='HIGH'?'score-high':n.priority.label==='MEDIUM'?'score-medium':'score-low';
+  const allTags=[...n.tags.brand,...n.tags.topic,...n.tags.format,...n.tags.special];
+
+  const valLine = n.valuation_tier ? `<div style="display:flex;gap:8px;margin-bottom:16px">
+      <div style="padding:8px 16px;border:1px solid var(--gold);font-family:var(--mono);font-size:.75rem;color:var(--gold)">${n.valuation_tier}</div>
+      <div style="padding:8px 16px;border:1px solid var(--gold);font-family:var(--mono);font-size:.75rem;color:var(--gold)">${n.estimated_value||''}</div>
+    </div>` : '';
+  const flagsLine = (n.flags||[]).map(f=>`<span style="font-family:var(--mono);font-size:.625rem;padding:2px 8px;border:1px solid ${f==='LEGAL_ACTION'?'var(--red)':f==='NEEDS_CLEANUP'?'var(--orange)':f==='NEEDS_DEVELOPMENT'?'var(--yellow)':'var(--muted)'};color:${f==='LEGAL_ACTION'?'var(--red)':f==='NEEDS_CLEANUP'?'var(--orange)':f==='NEEDS_DEVELOPMENT'?'var(--yellow)':'var(--muted)'}">${f}</span>`).join(' ');
+  const tierBadge = `<span style="font-family:var(--mono);font-size:.6875rem;padding:3px 10px;border:1px solid var(--green);color:var(--green)">TIER ${n.tier}</span>`;
+  document.getElementById('modal').innerHTML=`
+    <button class="modal-close" onclick="closeModal()">ESC</button>
+    <h3>${esc(n.name)}</h3>
+    <div class="modal-date">${n.date} — Note #${n.id}</div>
+    <div class="kw-list">${(n.matched_keywords||[]).map(k=>`<span class="kw-tag">${k}</span>`).join('')}</div>
+    <div class="modal-classification">
+      ${tierBadge}
+      <span class="card-parent">${n.classification.parent}</span>
+      <span class="card-cat">${n.classification.primary}</span>
+    </div>
+    <div style="margin:12px 0">${flagsLine}</div>
+    ${valLine}
+    <div class="modal-scores">
+      <div class="modal-score-item"><div class="sv">${n.scores.originality}</div><div class="sl">Originality</div></div>
+      <div class="modal-score-item"><div class="sv">${n.scores.commercial}</div><div class="sl">Commercial</div></div>
+      <div class="modal-score-item"><div class="sv">${n.scores.cultural_impact}</div><div class="sl">Cultural</div></div>
+      <div class="modal-score-item"><div class="sv">${n.scores.dev_stage}</div><div class="sl">Dev Stage</div></div>
+      <div class="modal-score-item"><div class="sv">${n.scores.strategic_alignment}</div><div class="sl">Alignment</div></div>
+    </div>
+    <div class="modal-composite ${sc}" style="border-color:${n.priority.label==='CRITICAL'?'var(--red)':n.priority.label==='HIGH'?'var(--orange)':n.priority.label==='MEDIUM'?'var(--yellow)':'var(--green)'}">
+      <div class="cv ${sc}">${n.scores.composite}/25</div>
+      <div class="cl">${n.priority.emoji} ${n.priority.label} PRIORITY</div>
+    </div>
+    <div class="modal-assessment">
+      <div style="font-family:var(--mono);font-size:.625rem;text-transform:uppercase;color:var(--gold);margin-bottom:6px;letter-spacing:.06em">IP Assessment</div>
+      ${esc(n.ip_assessment)}
+    </div>
+    <div class="modal-tags">${allTags.map(t=>`<span class="card-tag">${t}</span>`).join('')}</div>
+    <div style="font-family:var(--mono);font-size:.625rem;text-transform:uppercase;color:var(--muted);margin-bottom:8px;letter-spacing:.06em;margin-top:16px">Full Preview</div>
+    <div class="modal-body">${esc(n.preview)}</div>`;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function closeModal(){document.getElementById('modal-overlay').classList.remove('open')}
+
+function render(){
+  applyFilters();
+  const notes=state.filtered;
+  document.getElementById('section-badge').textContent=notes.length+' assets';
+
+  // Active filter label
+  const activeFilters=Object.entries(state.filters).filter(([k,v])=>v).map(([k,v])=>v);
+  document.getElementById('section-title').textContent=activeFilters.length?activeFilters.join(' / '):'All IP Assets';
+
+  const content=document.getElementById('content');
+  content.innerHTML=state.view==='grid'?renderGrid(notes):renderTable(notes);
+
+  // Card click listeners
+  content.querySelectorAll('[data-id]').forEach(el=>{
+    el.addEventListener('click',()=>openModal(parseInt(el.dataset.id)));
+  });
+
+  renderFilters(window._stats);
+}
+
+// Events
+document.getElementById('search').addEventListener('input',e=>{state.search=e.target.value;render()});
+document.getElementById('sort-select').addEventListener('change',e=>{state.sort=e.target.value;render()});
+document.querySelectorAll('.view-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.view-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    state.view=btn.dataset.view;
+    render();
+  });
+});
+document.getElementById('modal-overlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+
+// Load data — V2 reclassified vault
+fetch('ip-vault-v2.json?t='+Date.now()).then(r=>r.json()).then(data=>{
+  // Adapt V2 structure to dashboard expectations
+  data.vault.forEach(n=>{
+    n.classification = {primary: n.category, parent: n.tier_label, secondary: []};
+    n.priority = {label: n.priority, emoji: n.priority==='CRITICAL'?'🔴':n.priority==='HIGH'?'🟠':n.priority==='MEDIUM'?'🟡':n.priority==='LOW'?'🟢':'⚪', level: n.priority==='CRITICAL'?5:n.priority==='HIGH'?4:n.priority==='MEDIUM'?3:n.priority==='LOW'?2:1};
+    n.scores.composite = n.scores.composite || (n.scores.originality+n.scores.commercial_value+n.scores.cultural_weight+n.scores.development_stage+n.scores.brand_alignment);
+    // Map V2 score keys to V1 display keys
+    n.scores.commercial = n.scores.commercial_value || 0;
+    n.scores.cultural_impact = n.scores.cultural_weight || 0;
+    n.scores.dev_stage = n.scores.development_stage || 0;
+    n.scores.strategic_alignment = n.scores.brand_alignment || 0;
+    if(!n.tags) n.tags={brand:[],topic:[]};
+    if(!n.tags.format) n.tags.format=[];
+    if(!n.tags.special) n.tags.special=n.flags||[];
+    // Add valuation to tags
+    if(n.valuation_tier) n.tags.special.push('$'+n.valuation_tier);
+    if(n.estimated_value) n.tags.special.push(n.estimated_value);
+  });
+  // Rebuild stats for sidebar
+  const stats = data.stats;
+  stats.by_parent = stats.by_tier ? {
+    'HARD IP': stats.by_tier['1_hard_ip']||0,
+    'EXECUTABLE IP': stats.by_tier['2_executable']||0,
+    'STRATEGIC INTELLIGENCE': stats.by_tier['3_strategic']||0,
+    'CREATIVE ASSETS': stats.by_tier['4_creative']||0,
+    'RAW MATERIAL': stats.by_tier['5_raw_material']||0,
+    'NOISE': stats.by_tier['6_noise']||0
+  } : stats.by_parent;
+  state.vault=data.vault;
+  window._stats=stats;
+  renderStats(stats);
+  render();
+}).catch(e=>{
+  document.getElementById('content').innerHTML='<div style="color:var(--red);padding:40px;font-family:var(--mono)">Error loading IP Vault data: '+e.message+'</div>';
+});
+</script>
+</body>
+</html>

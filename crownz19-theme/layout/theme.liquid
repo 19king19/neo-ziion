@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="{{ settings.color_primary }}">
+
+  <title>
+    {%- if page_title -%}{{ page_title }} – {{ shop.name }}{%- else -%}{{ shop.name }}{%- endif -%}
+  </title>
+
+  {%- if page_description -%}
+    <meta name="description" content="{{ page_description | escape }}">
+  {%- endif -%}
+
+  <link rel="canonical" href="{{ canonical_url }}">
+
+  {%- if settings.favicon != blank -%}
+    <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32 }}">
+  {%- endif -%}
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Base Styles -->
+  {{ 'crownz19-base.css' | asset_url | stylesheet_tag }}
+  {{ 'crownz19-header.css' | asset_url | stylesheet_tag }}
+  {{ 'crownz19-footer.css' | asset_url | stylesheet_tag }}
+  {{ 'crownz19-animations.css' | asset_url | stylesheet_tag }}
+  {{ 'crownz19-responsive.css' | asset_url | stylesheet_tag }}
+
+  {{ content_for_header }}
+
+  <style>
+    :root {
+      --color-primary: {{ settings.color_primary }};
+      --color-dark: {{ settings.color_dark }};
+      --color-text: {{ settings.color_text }};
+      --color-text-light: {{ settings.color_text_light }};
+      --color-accent: {{ settings.color_accent }};
+    }
+  </style>
+
+  <script>
+    window.CROWNZ19 = {
+      routes: {
+        cart_url: '{{ routes.cart_url }}',
+        cart_add_url: '{{ routes.cart_add_url }}.js',
+        cart_change_url: '{{ routes.cart_change_url }}.js',
+        cart_update_url: '{{ routes.cart_update_url }}.js',
+        search_url: '{{ routes.search_url }}'
+      },
+      money_format: {{ shop.money_format | json }},
+      cart_type: {{ settings.cart_type | json }},
+      free_shipping_threshold: {{ settings.free_shipping_threshold | default: '100' | json }},
+      formatMoney: function(cents) {
+        var fmt = this.money_format || '${{amount}}';
+        var amount = (cents / 100).toFixed(2);
+        return fmt.replace(/\{\{amount\}\}/, amount)
+                  .replace(/\{\{amount_no_decimals\}\}/, Math.round(cents / 100))
+                  .replace(/\{\{amount_with_comma_separator\}\}/, amount.replace('.', ','));
+      }
+    };
+  </script>
+</head>
+
+<body class="template-{{ template.name | handleize }}{% if template.suffix %} template-{{ template.suffix | handleize }}{% endif %}">
+
+  <a href="#main-content" class="sr-only">{{ 'general.skip_to_content' | t }}</a>
+
+  {% section 'announcement-bar' %}
+  {% section 'header' %}
+
+  <main id="main-content" class="page-transition">
+    {{ content_for_layout }}
+  </main>
+
+  {% section 'footer' %}
+
+  {% if settings.cart_type == 'drawer' %}
+    {% section 'cart-drawer' %}
+  {% endif %}
+
+  <!-- Overlay -->
+  <div class="overlay" data-overlay></div>
+
+  <!-- Main JS -->
+  <script src="{{ 'crownz19-main.js' | asset_url }}" defer></script>
+  <script src="{{ 'crownz19-cart.js' | asset_url }}" defer></script>
+</body>
+</html>

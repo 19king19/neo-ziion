@@ -1,0 +1,10 @@
+{
+  "sections": {
+    "timeline": {
+      "type": "manifest-timeline",
+      "settings": {},
+      "blocks": {}
+    }
+  },
+  "order": ["timeline"]
+}

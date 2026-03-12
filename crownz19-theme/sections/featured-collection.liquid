@@ -1,0 +1,123 @@
+{%- liquid
+  assign collection = section.settings.collection
+  assign heading = section.settings.heading
+  assign limit = section.settings.limit | default: 4
+-%}
+
+<section class="featured-collection">
+  <div class="featured-collection__inner">
+    <div class="featured-collection__header">
+      {%- if heading != blank -%}
+        <h2 class="featured-collection__heading">{{ heading }}</h2>
+      {%- endif -%}
+      {%- if collection != blank -%}
+        <a href="{{ collection.url }}" class="featured-collection__link">View All</a>
+      {%- endif -%}
+    </div>
+
+    <div class="featured-collection__grid">
+      {%- if collection != blank -%}
+        {%- for product in collection.products limit: limit -%}
+          <div class="featured-collection__item reveal">
+            {%- render 'product-card', product: product -%}
+          </div>
+        {%- endfor -%}
+      {%- else -%}
+        {%- for i in (1..limit) -%}
+          <div class="featured-collection__item featured-collection__placeholder">
+            <div class="featured-collection__placeholder-img"></div>
+            <p class="featured-collection__placeholder-text">Product {{ i }}</p>
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .featured-collection {
+    padding: var(--spacing-3xl) 0;
+    background: var(--crownz-white);
+  }
+  .featured-collection__inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--spacing-lg);
+  }
+  .featured-collection__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: var(--spacing-xl);
+  }
+  .featured-collection__heading {
+    font-size: 1.4rem;
+    font-weight: 300;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin: 0;
+    color: var(--crownz-black);
+  }
+  .featured-collection__link {
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(10,10,10,0.5);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  .featured-collection__link:hover { color: var(--crownz-black); }
+  .featured-collection__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-lg);
+  }
+  .featured-collection__placeholder-img {
+    aspect-ratio: 1;
+    background: var(--crownz-cream, #E8E4DC);
+    border-radius: 4px;
+    margin-bottom: var(--spacing-sm);
+  }
+  .featured-collection__placeholder-text {
+    font-size: 0.85rem;
+    color: rgba(10,10,10,0.3);
+    margin: 0;
+  }
+  @media (max-width: 768px) {
+    .featured-collection__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Featured Collection",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Featured"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "limit",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "label": "Products to show",
+      "default": 4
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Collection"
+    }
+  ]
+}
+{% endschema %}

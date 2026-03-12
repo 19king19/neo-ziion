@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="light-theme.css">
+  <link rel="stylesheet" href="mobile.css">
   <style>
     /* ── Password Gate — Muted Construction Aesthetic ── */
     .gate-overlay {
@@ -1026,131 +1027,6 @@
       0%, 100% { opacity: 0.4; }
       50% { opacity: 1; }
     }
-    /* ── Social Growth Delta ── */
-    .social-growth {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.03em;
-      margin-top: 3px;
-    }
-    .social-growth.positive { color: #4ade80; }
-    .social-growth.negative { color: #f87171; }
-    .social-growth.neutral  { color: rgba(255,255,255,0.25); }
-
-    /* ── Nation Value Strip ── */
-    .nation-value-strip {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0;
-      margin: 0 24px 20px;
-      background: rgba(255,255,255,0.02);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 16px;
-      overflow: hidden;
-    }
-
-    .nv-item {
-      flex: 1 1 180px;
-      padding: 18px 22px;
-      border-right: 1px solid rgba(255,255,255,0.05);
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-
-    .nv-item:last-child { border-right: none; }
-
-    .nv-item.primary {
-      background: rgba(213,255,90,0.03);
-      border-right: 1px solid rgba(213,255,90,0.1);
-    }
-
-    .nv-label {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      color: rgba(255,255,255,0.35);
-      text-transform: uppercase;
-    }
-
-    .nv-value {
-      font-size: 26px;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      color: #fff;
-      line-height: 1.1;
-    }
-
-    .nv-value.accent { color: #D5FF5A; }
-
-    .nv-sub {
-      font-size: 11px;
-      color: rgba(255,255,255,0.3);
-      font-weight: 500;
-    }
-
-    .nv-sub .green { color: #4ade80; }
-    .nv-sub .yellow { color: #D5FF5A; }
-
-    /* ── Conversion Panel ── */
-    .conversion-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .conv-card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 12px;
-      padding: 16px 18px;
-    }
-
-    .conv-label {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      color: rgba(255,255,255,0.35);
-      text-transform: uppercase;
-      margin-bottom: 8px;
-    }
-
-    .conv-value {
-      font-size: 28px;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      color: #fff;
-    }
-
-    .conv-sub {
-      font-size: 11px;
-      color: rgba(255,255,255,0.3);
-      margin-top: 4px;
-    }
-
-    .conv-bar-wrap {
-      margin-top: 10px;
-      height: 4px;
-      background: rgba(255,255,255,0.06);
-      border-radius: 2px;
-      overflow: hidden;
-    }
-
-    .conv-bar-fill {
-      height: 100%;
-      border-radius: 2px;
-      background: linear-gradient(90deg, #D5FF5A, #4ade80);
-      transition: width 1s ease;
-    }
-
-    /* ── Stats bar IDs ── */
-    #statTotalNation {
-      font-weight: 800;
-      color: #D5FF5A;
-    }
-
-
 
     /* ── Data Dashboard ── */
     .dash-data {
@@ -1691,28 +1567,6 @@
         </div>
       </div>
 
-
-      <!-- Neo Status Strip -->
-      <div id="neo-status-strip" style="
-        display:flex; align-items:center; justify-content:space-between;
-        padding:10px 20px; margin-bottom:12px;
-        background:rgba(255,255,255,0.025);
-        border:1px solid rgba(255,255,255,0.06);
-        border-radius:10px;
-        font-family:'Inter',sans-serif;
-      ">
-        <div style="display:flex;align-items:center;gap:8px;">
-          <span style="width:6px;height:6px;background:#4ade80;border-radius:50%;box-shadow:0 0 6px #4ade80;flex-shrink:0;"></span>
-          <span style="font-size:11px;font-weight:600;letter-spacing:2px;color:rgba(255,255,255,0.7);">NEO</span>
-          <span style="font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:1px;">CHIEF OF STAFF</span>
-        </div>
-        <div style="font-size:10px;color:rgba(255,255,255,0.25);" id="neo-last-updated">Connecting...</div>
-        <div style="display:flex;gap:16px;">
-          <a href="book-19keys.html" style="font-size:10px;color:rgba(213,255,90,0.7);text-decoration:none;letter-spacing:1px;">12 OFFERS ↗</a>
-          <span style="font-size:10px;color:rgba(255,255,255,0.2);">IP VAULT: 1,499</span>
-        </div>
-      </div>
-
       <!-- Economy Banner — Creator GDP -->
       <div class="economy-banner">
         <div class="econ-item primary">
@@ -1765,15 +1619,7 @@
         </div>
         <div class="stat-item stat-growth">
           <div class="stat-label">Growth</div>
-          <div class="stat-value green" id="statGrowthRate">+25.4%</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-label">Nation Total</div>
-          <div class="stat-value" id="statNationTotal" style="color:#D5FF5A;font-weight:800;">1.68M+</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-label">Daily Growth</div>
-          <div class="stat-value green" id="statDailyGrowth">+4,280</div>
+          <div class="stat-value green">+25.4%</div>
         </div>
         <div class="stat-item stat-moon-item">
           <canvas class="moon-canvas" id="moonCanvas" width="160" height="160"></canvas>
@@ -1794,7 +1640,6 @@
             <div class="social-count" id="igCount">983,852</div>
             <div class="social-label">Followers</div>
             <div class="social-handle">@19_keys</div>
-            <div class="social-growth positive" id="igGrowth">+2,340 today</div>
           </div>
           <div class="social-live"></div>
         </a>
@@ -1806,7 +1651,6 @@
             <div class="social-count" id="ytCount">232K</div>
             <div class="social-label">Subscribers</div>
             <div class="social-handle">@19KEYS</div>
-            <div class="social-growth positive" id="ytGrowth">+820 today</div>
           </div>
           <div class="social-live"></div>
         </a>
@@ -1818,7 +1662,6 @@
             <div class="social-count" id="xCount">123,040</div>
             <div class="social-label">Followers</div>
             <div class="social-handle">@19keys_</div>
-            <div class="social-growth positive" id="xGrowth">+430 today</div>
           </div>
           <div class="social-live"></div>
         </a>
@@ -1830,7 +1673,6 @@
             <div class="social-count" id="threadsCount">224.2K</div>
             <div class="social-label">Followers</div>
             <div class="social-handle">@19_keys</div>
-            <div class="social-growth positive" id="threadsGrowth">+510 today</div>
           </div>
           <div class="social-live"></div>
         </a>
@@ -1842,39 +1684,9 @@
             <div class="social-count" id="tiktokCount">114.7K</div>
             <div class="social-label">Followers</div>
             <div class="social-handle">@19keys</div>
-            <div class="social-growth positive" id="tiktokGrowth">+180 today</div>
           </div>
           <div class="social-live"></div>
         </a>
-      </div>
-
-      <!-- Nation Value Strip — Revenue Engine -->
-      <div class="nation-value-strip">
-        <div class="nv-item">
-          <div class="nv-label">Nation Total Citizens</div>
-          <div class="nv-value" id="nvTotalCitizens">1.68M+</div>
-          <div class="nv-sub"><span class="green" id="nvDailyGrowthSub">+4,280 today</span> · across all platforms</div>
-        </div>
-        <div class="nv-item">
-          <div class="nv-label">Revenue Potential</div>
-          <div class="nv-value" id="nvRevPotential">$55K–$80K</div>
-          <div class="nv-sub"><span id="nvRevSub">per month · sponsorships + course + speaking</span></div>
-        </div>
-        <div class="nv-item">
-          <div class="nv-label">Sponsorship Rate</div>
-          <div class="nv-value" id="nvSponsorRate">$15K–$40K</div>
-          <div class="nv-sub">per post · 1M+ reach tier</div>
-        </div>
-        <div class="nv-item">
-          <div class="nv-label">Course Pipeline</div>
-          <div class="nv-value" id="nvCoursePipeline">$394K</div>
-          <div class="nv-sub">Cognition Key · 2K students × $197</div>
-        </div>
-        <div class="nv-item primary">
-          <div class="nv-label">Nation Total Value</div>
-          <div class="nv-value accent" id="nvNationValue">$8.4M</div>
-          <div class="nv-sub"><span class="yellow" id="nvValueGrade">A-Tier</span> · audience equity + IP + brand</div>
-        </div>
       </div>
 
       <!-- Data Dashboard -->
@@ -1886,7 +1698,6 @@
           <button class="dash-tab" data-panel="offers">Offers</button>
           <button class="dash-tab" data-panel="assets">Assets Owned</button>
           <button class="dash-tab" data-panel="agents">Agents Team</button>
-          <button class="dash-tab" data-panel="conversion">Conversion</button>
         </div>
 
         <!-- My Posts Panel -->
@@ -1951,12 +1762,28 @@
 
         <!-- Offers Panel -->
         <div class="dash-panel" id="panel-offers">
-          <!-- Live public offers from public-book.html -->
-          <div id="public-offers-list"></div>
-          <div class="data-empty-note" id="offers-empty-note" style="display:none;">No incoming offers yet. Offers submitted via <strong>Build with 19Keys</strong> appear here.</div>
-          <div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.05);">
-            <a href="book-19keys.html" style="font-size:10px;color:rgba(213,255,90,0.5);text-decoration:none;letter-spacing:1px;">MANAGE IN BOOK 19KEYS ↗</a>
+          <div class="data-card">
+            <div class="data-row">
+              <div class="data-title">1-on-1 Mentorship Session</div>
+              <div class="data-offer-badge accepted">Accepted</div>
+            </div>
+            <div class="data-meta">From Eamber Wood · $500 · Mar 8, 2026</div>
           </div>
+          <div class="data-card">
+            <div class="data-row">
+              <div class="data-title">Speaking Engagement - Tech Summit</div>
+              <div class="data-offer-badge pending">Pending</div>
+            </div>
+            <div class="data-meta">From Cameron Elling · $2,500 · Mar 15, 2026</div>
+          </div>
+          <div class="data-card">
+            <div class="data-row">
+              <div class="data-title">Consulting Call</div>
+              <div class="data-offer-badge declined">Declined</div>
+            </div>
+            <div class="data-meta">From Marlon Miller · $200 · Mar 1, 2026</div>
+          </div>
+          <div class="data-empty-note">Manage bookings in <a href="book-19keys.html">Book 19Keys</a></div>
         </div>
 
         <!-- Assets Owned Panel -->
@@ -2179,66 +2006,6 @@
             </div>
 
           </div>
-        </div>
-      </div>
-    </div>
-
-
-        <!-- Conversion Stats Panel -->
-        <div class="dash-panel" id="panel-conversion">
-          <div class="conversion-grid">
-            <div class="conv-card">
-              <div class="conv-label">Link-in-Bio CTR</div>
-              <div class="conv-value" id="convLinkCTR">3.2%</div>
-              <div class="conv-sub" id="convLinkSub">of profile visitors click your link</div>
-              <div class="conv-bar-wrap"><div class="conv-bar-fill" id="convLinkBar" style="width:32%"></div></div>
-            </div>
-            <div class="conv-card">
-              <div class="conv-label">Profile → Follow</div>
-              <div class="conv-value" id="convProfileFollow">8.7%</div>
-              <div class="conv-sub" id="convProfileSub">visitors that convert to followers</div>
-              <div class="conv-bar-wrap"><div class="conv-bar-fill" id="convProfileBar" style="width:8.7%"></div></div>
-            </div>
-            <div class="conv-card">
-              <div class="conv-label">Booking Conversion</div>
-              <div class="conv-value" id="convBooking">12.4%</div>
-              <div class="conv-sub" id="convBookingSub">inquiries that become paid bookings</div>
-              <div class="conv-bar-wrap"><div class="conv-bar-fill" id="convBookingBar" style="width:12.4%"></div></div>
-            </div>
-            <div class="conv-card">
-              <div class="conv-label">Content Engagement</div>
-              <div class="conv-value" id="convEngagement">4.1%</div>
-              <div class="conv-sub" id="convEngagementSub">avg across all platforms</div>
-              <div class="conv-bar-wrap"><div class="conv-bar-fill" id="convEngagementBar" style="width:41%"></div></div>
-            </div>
-            <div class="conv-card">
-              <div class="conv-label">Offer Acceptance</div>
-              <div class="conv-value" id="convOfferAccept">68%</div>
-              <div class="conv-sub" id="convOfferSub">of incoming offers you've accepted</div>
-              <div class="conv-bar-wrap"><div class="conv-bar-fill" id="convOfferBar" style="width:68%"></div></div>
-            </div>
-            <div class="conv-card">
-              <div class="conv-label">Monthly Active Reach</div>
-              <div class="conv-value" id="convMonthlyReach">847K</div>
-              <div class="conv-sub" id="convReachSub">unique eyes on your content</div>
-              <div class="conv-bar-wrap"><div class="conv-bar-fill" id="convReachBar" style="width:50%"></div></div>
-            </div>
-          </div>
-          <div class="data-empty-note">Neo updates conversion data daily · <span style="color:rgba(255,255,255,0.4)">Last synced: <span id="convLastSync">—</span></span></div>
-        </div>
-
-    <!-- Neo Activity Log — populated by neo-bridge.js -->
-    <div style="padding: 0 20px 16px 20px;">
-      <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 14px 18px;">
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 10px;">
-          <div style="display:flex; align-items:center; gap:8px;">
-            <span style="width:5px;height:5px;background:#4ade80;border-radius:50%;box-shadow:0 0 5px #4ade80;"></span>
-            <span style="font-size:10px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.5);">NEO ACTIVITY LOG</span>
-          </div>
-          <span style="font-size:9px;color:rgba(255,255,255,0.2);letter-spacing:1px;">LIVE · AUTO-REFRESH 30s</span>
-        </div>
-        <div id="neo-activity-log" style="display:flex; flex-direction:column; gap:6px;">
-          <div style="font-size:11px;color:rgba(255,255,255,0.2);font-style:italic;">Connecting to Neo...</div>
         </div>
       </div>
     </div>
@@ -2938,14 +2705,9 @@
   <script>
   (function() {
     // ── Constants ──
-    const AVG_YEARLY_INCOME = 60000; // Black American wealth-seeking cohort (calibrated from CRM + RPM $9.18)
+    const AVG_YEARLY_INCOME = 63000; // US median household income (generic placeholder)
     const OVERLAP_FACTOR = 0.35;     // estimated 35% audience overlap across platforms
     const CREATOR_MULTIPLIER = 0.013; // creator value = ~1.3% of total spending power (IP + trust + reach)
-    // Owned Channel Assets (zero-algorithm dependency)
-    const EMAIL_LIST_SIZE = 100000;        // confirmed email subscribers
-    const EMAIL_VALUE_PER_SUB = 30;        // industry rate: $30/email sub
-    const SUPERPHONE_SIZE = 47000;         // SuperPhone SMS subscribers (98% open rate)
-    const SUPERPHONE_VALUE_PER_SUB = 50;   // premium SMS channel rate: $50/sub
 
     // ── Parse follower count from text ──
     function parseCount(text) {
@@ -3058,7 +2820,7 @@
       if (gdpSub) gdpSub.innerHTML = '<span class="green-accent">live</span> · based on audience × income';
 
       const spendSub = spendEl?.parentElement?.querySelector('.econ-sub');
-      if (spendSub) spendSub.textContent = formatNum(uniqueAudience) + ' unique citizens × $60K avg';
+      if (spendSub) spendSub.textContent = formatNum(uniqueAudience) + ' unique citizens × $63K avg';
 
       const creatorSub = creatorEl?.parentElement?.querySelector('.econ-sub');
       if (creatorSub) creatorSub.textContent = 'IP + trust + reach value';
@@ -3073,143 +2835,8 @@
 
     // Recalculate every 60 seconds (for when real-time data is connected)
     setInterval(calculateAudienceGDP, 60000);
-
-    // ── Nation Total Value + Revenue Engine ──
-    function updateNationValueStrip() {
-      const ig = parseCount(document.getElementById('igCount')?.textContent);
-      const yt = parseCount(document.getElementById('ytCount')?.textContent);
-      const x = parseCount(document.getElementById('xCount')?.textContent);
-      const threads = parseCount(document.getElementById('threadsCount')?.textContent);
-      const tiktok = parseCount(document.getElementById('tiktokCount')?.textContent);
-      const totalRaw = ig + yt + x + threads + tiktok;
-
-      // Format total
-      function fmtTotal(n) {
-        if (n >= 1e6) return (n / 1e6).toFixed(2).replace(/\.?0+$/, '') + 'M+';
-        if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K+';
-        return n.toLocaleString();
-      }
-
-      // Nation Total Value calculation
-      // Audience asset: unique followers × $3 per engaged follower (A-tier creator premium)
-      const uniqueAud = Math.round(totalRaw * 0.65);
-      const audienceValue = uniqueAud * 3;
-      // IP vault: 1499 assets × $200 avg
-      const ownedMediaValue = (EMAIL_LIST_SIZE * EMAIL_VALUE_PER_SUB) + (SUPERPHONE_SIZE * SUPERPHONE_VALUE_PER_SUB);
-      const ipValue = 1499 * 200;
-      // Brand equity multiplier: 3x for thought leader + media brand
-      const brandEquity = (audienceValue + ownedMediaValue + ipValue) * 3;
-      // Course pipeline (Cognition Key)
-      const courseValue = 2000 * 197;
-
-      const nationTotalValue = brandEquity + courseValue;
-
-      function fmtMoney(n) {
-        if (n >= 1e6) return '$' + (n / 1e6).toFixed(1) + 'M';
-        if (n >= 1e3) return '$' + (n / 1e3).toFixed(0) + 'K';
-        return '$' + n.toFixed(0);
-      }
-
-      // Value grade
-      function getValueGrade(v) {
-        if (v >= 50e6) return 'S-Tier';
-        if (v >= 20e6) return 'A+-Tier';
-        if (v >= 8e6) return 'A-Tier';
-        if (v >= 3e6) return 'B+-Tier';
-        return 'B-Tier';
-      }
-
-      // Update Nation Value Strip
-      const nvTotal = document.getElementById('nvTotalCitizens');
-      const nvNationVal = document.getElementById('nvNationValue');
-      const nvGrade = document.getElementById('nvValueGrade');
-      const statNationTotal = document.getElementById('statNationTotal');
-
-      if (nvTotal) nvTotal.textContent = fmtTotal(totalRaw);
-      if (statNationTotal) statNationTotal.textContent = fmtTotal(totalRaw);
-      if (nvNationVal) nvNationVal.textContent = fmtMoney(nationTotalValue);
-      if (nvGrade) nvGrade.textContent = getValueGrade(nationTotalValue);
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', updateNationValueStrip);
-    } else {
-      updateNationValueStrip();
-    }
-    setInterval(updateNationValueStrip, 60000);
   })();
   </script>
-  <script src="neo-bridge.js"></script>
-
-  <!-- ── Public Offers Feed (reads from localStorage) ── -->
-  <script>
-  (function renderPublicOffers() {
-    const STATUS_COLORS = {
-      pending:  { bg: 'rgba(251,191,36,0.12)', color: '#fbbf24', label: 'Pending' },
-      accepted: { bg: 'rgba(74,222,128,0.12)', color: '#4ade80', label: 'Accepted' },
-      declined: { bg: 'rgba(248,113,113,0.12)', color: '#f87171', label: 'Declined' }
-    };
-
-    function fmt(isoStr) {
-      try {
-        return new Date(isoStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-      } catch(e) { return isoStr; }
-    }
-
-    function renderOffers() {
-      const list  = document.getElementById('public-offers-list');
-      const empty = document.getElementById('offers-empty-note');
-      if (!list) return;
-
-      let offers = [];
-      try { offers = JSON.parse(localStorage.getItem('ziion_public_offers') || '[]'); } catch(e) {}
-
-      if (!offers.length) {
-        list.innerHTML = '';
-        if (empty) empty.style.display = 'block';
-        return;
-      }
-      if (empty) empty.style.display = 'none';
-
-      list.innerHTML = offers.map(function(o) {
-        const s   = STATUS_COLORS[o.status] || STATUS_COLORS.pending;
-        const desc = o.desc ? o.desc.substring(0, 90) + (o.desc.length > 90 ? '…' : '') : '';
-        return `<div class="data-card" style="position:relative;">
-          <div class="data-row">
-            <div class="data-title">${o.service || 'Offer'}</div>
-            <div class="data-offer-badge" style="background:${s.bg};color:${s.color};border:1px solid ${s.color}33;padding:3px 10px;border-radius:3px;font-size:9px;letter-spacing:1px;font-weight:600;text-transform:uppercase;">${s.label}</div>
-          </div>
-          <div class="data-meta" style="margin-bottom:4px;">From ${o.name || '—'} · ${o.offer || '—'} · ${fmt(o.timestamp)}</div>
-          ${o.email ? `<div class="data-meta" style="opacity:0.5;">${o.email}${o.org ? ' · ' + o.org : ''}</div>` : ''}
-          ${desc ? `<div class="data-meta" style="margin-top:6px;opacity:0.65;font-style:italic;">"${desc}"</div>` : ''}
-          <div style="display:flex;gap:8px;margin-top:10px;">
-            <button onclick="setOfferStatus(${o.id},'accepted')" style="font-size:9px;letter-spacing:1px;padding:4px 12px;background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.3);color:#4ade80;cursor:pointer;">ACCEPT</button>
-            <button onclick="setOfferStatus(${o.id},'declined')" style="font-size:9px;letter-spacing:1px;padding:4px 12px;background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.3);color:#f87171;cursor:pointer;">DECLINE</button>
-            <a href="mailto:${o.email}?subject=Re: ${encodeURIComponent(o.service || 'Your Offer')} — Build with 19Keys" style="font-size:9px;letter-spacing:1px;padding:4px 12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.5);text-decoration:none;">REPLY</a>
-          </div>
-        </div>`;
-      }).join('');
-    }
-
-    window.setOfferStatus = function(id, status) {
-      try {
-        const offers = JSON.parse(localStorage.getItem('ziion_public_offers') || '[]');
-        const updated = offers.map(function(o) {
-          return o.id === id ? Object.assign({}, o, { status: status }) : o;
-        });
-        localStorage.setItem('ziion_public_offers', JSON.stringify(updated));
-        renderOffers();
-      } catch(e) {}
-    };
-
-    // Initial render + re-render whenever the Offers tab is clicked
-    document.addEventListener('DOMContentLoaded', function() {
-      renderOffers();
-      document.querySelectorAll('[data-panel="offers"]').forEach(function(btn) {
-        btn.addEventListener('click', renderOffers);
-      });
-    });
-  })();
-  </script>
+  <script src="mobile-nav.js"></script>
 </body>
 </html>

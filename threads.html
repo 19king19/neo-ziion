@@ -6,528 +6,923 @@
   <title>ZIION — Threads</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="light-theme.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Oswald:wght@400;500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="light-theme.css?v=2">
   <link rel="stylesheet" href="mobile.css">
   <style>
-    /* ── Password Gate — Muted Construction Aesthetic ── */
-    .gate-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 99999;
-      background: #0a0a0a;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .gate-overlay.unlocked {
-      opacity: 0;
-      transform: scale(1.02);
-      pointer-events: none;
-    }
-    .gate-vignette {
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.6) 100%);
-      pointer-events: none;
-    }
-    .gate-content {
-      position: relative;
-      z-index: 2;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0;
-    }
-    .gate-logo {
-      font-family: 'Inter', sans-serif;
-      font-size: 28px;
-      font-weight: 200;
-      letter-spacing: 16px;
-      color: rgba(255,255,255,0.12);
-      margin-bottom: 60px;
-      text-indent: 16px;
-      text-transform: uppercase;
-    }
-    .gate-divider {
-      width: 40px;
-      height: 1px;
-      background: rgba(255,255,255,0.06);
-      margin-bottom: 32px;
-    }
-    .gate-input-wrap {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
-    }
-    .gate-label {
-      font-size: 8px;
-      font-weight: 400;
-      text-transform: uppercase;
-      letter-spacing: 4px;
-      color: rgba(255,255,255,0.08);
-    }
-    .gate-input {
-      background: transparent;
-      border: none;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      border-radius: 0;
-      padding: 12px 20px;
-      font-family: 'Inter', sans-serif;
-      font-size: 20px;
-      font-weight: 200;
-      color: rgba(255,255,255,0.3);
-      text-align: center;
-      letter-spacing: 12px;
-      width: 140px;
-      outline: none;
-      transition: border-color 0.5s ease, color 0.5s ease;
-      -webkit-text-security: disc;
-    }
-    .gate-input:focus {
-      border-bottom-color: rgba(255,255,255,0.12);
-      color: rgba(255,255,255,0.5);
-    }
-    .gate-input.shake {
-      animation: gateShake 0.4s ease;
-      border-bottom-color: rgba(255,60,60,0.2);
-    }
-    .gate-hint {
-      font-size: 8px;
-      font-weight: 300;
-      color: rgba(255,255,255,0.04);
-      margin-top: 48px;
-      letter-spacing: 3px;
-      text-transform: lowercase;
-    }
-    @keyframes gateShake {
-      0%, 100% { transform: translateX(0); }
-      20% { transform: translateX(-6px); }
-      40% { transform: translateX(6px); }
-      60% { transform: translateX(-4px); }
-      80% { transform: translateX(4px); }
-    }
+    /* ── Password Gate ── */
+    .gate-overlay { position:fixed; inset:0; z-index:99999; background:#0a0a0a; display:flex; flex-direction:column; align-items:center; justify-content:center; transition: opacity 0.8s cubic-bezier(0.4,0,0.2,1), transform 0.8s cubic-bezier(0.4,0,0.2,1); }
+    .gate-overlay.unlocked { opacity:0; transform:scale(1.02); pointer-events:none; }
+    .gate-vignette { position:absolute; inset:0; background:radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.6) 100%); pointer-events:none; }
+    .gate-content { position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; }
+    .gate-logo { font-family:'Inter',sans-serif; font-size:28px; font-weight:200; letter-spacing:16px; color:rgba(255,255,255,0.12); margin-bottom:60px; text-indent:16px; text-transform:uppercase; }
+    .gate-divider { width:40px; height:1px; background:rgba(255,255,255,0.06); margin-bottom:32px; }
+    .gate-input-wrap { display:flex; flex-direction:column; align-items:center; gap:16px; }
+    .gate-label { font-size:8px; font-weight:400; text-transform:uppercase; letter-spacing:4px; color:rgba(255,255,255,0.08); }
+    .gate-input { background:transparent; border:none; border-bottom:1px solid rgba(255,255,255,0.06); border-radius:0; padding:12px 20px; font-family:'Inter',sans-serif; font-size:20px; font-weight:200; color:rgba(255,255,255,0.3); text-align:center; letter-spacing:12px; width:140px; outline:none; transition:border-color 0.5s ease, color 0.5s ease; -webkit-text-security:disc; }
+    .gate-input:focus { border-bottom-color:rgba(255,255,255,0.12); color:rgba(255,255,255,0.5); }
+    .gate-input.shake { animation:gateShake 0.4s ease; border-bottom-color:rgba(255,60,60,0.2); }
+    .gate-hint { font-size:8px; font-weight:300; color:rgba(255,255,255,0.04); margin-top:48px; letter-spacing:3px; text-transform:lowercase; }
+    @keyframes gateShake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin:0; padding:0; box-sizing:border-box; }
 
     body {
-      background: #0F0E12;
-      color: #fff;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      font-weight: 500;
-      letter-spacing: 0.01em;
-      overflow-x: hidden;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
+      background: #0F0E12; color: #fff;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-weight: 500; letter-spacing: 0.01em; overflow-x: hidden;
+      height: 100vh; display: flex; flex-direction: column;
       -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
     }
 
-    /* ── Sticky Header ── */
-    .header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(15, 14, 18, 0.85);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      padding: 0 24px;
-      height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-shrink: 0;
-    }
+    /* ── Header ── */
+    .header { position:sticky; top:0; z-index:100; background:rgba(15,14,18,0.85); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border-bottom:1px solid rgba(255,255,255,0.06); padding:0 24px; height:64px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+    .header-left { display:flex; align-items:center; gap:16px; }
+    .logo-text { font-size:18px; font-weight:800; letter-spacing:6px; text-transform:uppercase; color:#fff; }
+    .search-bar { flex:0 1 420px; height:40px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08); border-radius:10px; display:flex; align-items:center; padding:0 14px; gap:10px; transition:border-color 0.2s, background 0.2s; }
+    .search-bar:focus-within { border-color:rgba(255,255,255,0.2); background:rgba(255,255,255,0.08); }
+    .search-icon { opacity:0.4; flex-shrink:0; }
+    .search-bar input { flex:1; background:none; border:none; outline:none; color:rgba(255,255,255,0.6); font-size:14px; font-family:inherit; }
+    .search-bar input::placeholder { color:rgba(255,255,255,0.3); }
+    .header-right { display:flex; align-items:center; gap:12px; }
+    .header-icon { width:36px; height:36px; display:flex; align-items:center; justify-content:center; border-radius:8px; cursor:pointer; transition:background 0.15s; color:rgba(255,255,255,0.5); }
+    .header-icon:hover { background:rgba(255,255,255,0.08); color:#fff; }
+    .avatar { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg, #4D4D4D, #322D2A); cursor:pointer; }
 
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .logo-text {
-      font-size: 18px;
-      font-weight: 800;
-      letter-spacing: 6px;
-      text-transform: uppercase;
-      color: #fff;
-    }
-
-    /* ── Search Bar ── */
-    .search-bar {
-      flex: 0 1 420px;
-      height: 40px;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      padding: 0 14px;
-      gap: 10px;
-      transition: border-color 0.2s, background 0.2s;
-    }
-
-    .search-bar:focus-within {
-      border-color: rgba(255, 255, 255, 0.2);
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    .search-icon { opacity: 0.4; flex-shrink: 0; }
-
-    .search-bar input {
-      flex: 1;
-      background: none;
-      border: none;
-      outline: none;
-      color: rgba(255, 255, 255, 0.6);
-      font-size: 14px;
-      font-family: inherit;
-    }
-
-    .search-bar input::placeholder { color: rgba(255, 255, 255, 0.3); }
-
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .header-icon {
-      width: 36px;
-      height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.15s;
-      color: rgba(255,255,255,0.5);
-    }
-
-    .header-icon:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
-
-    .avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #4D4D4D, #322D2A);
-      cursor: pointer;
-    }
-
-    /* ── Main Layout: Sidebar + Content ── */
-    .main-layout {
-      display: flex;
-      flex: 1;
-      overflow: hidden;
-    }
-
-    /* ── Left Sidebar ── */
-    .sidebar {
-      width: 220px;
-      flex-shrink: 0;
-      border-right: 1px solid rgba(255,255,255,0.06);
-      padding: 20px 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      overflow-y: auto;
-    }
-
-    .sidebar-create {
-      width: 100%;
-      height: 40px;
-      background: #fff;
-      color: #0F0E12;
-      border: none;
-      border-radius: 10px;
-      font-size: 13px;
-      font-weight: 500;
-      letter-spacing: 0.05em;
-      cursor: pointer;
-      transition: opacity 0.15s;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      font-family: inherit;
-    }
-
-    .sidebar-create:hover { opacity: 0.85; }
-
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 10px 12px;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background 0.15s, color 0.15s;
-      color: rgba(255,255,255,0.4);
-      font-size: 13px;
-      font-weight: 500;
-      letter-spacing: 0.02em;
-      text-decoration: none;
-    }
-
-    .nav-item:hover { background: rgba(255,255,255,0.06); color: #fff; }
-    .nav-item.active { background: rgba(255,255,255,0.08); color: #fff; }
-
-    .nav-item svg { width: 18px; height: 18px; opacity: 0.6; flex-shrink: 0; }
-    .nav-item.active svg { opacity: 1; }
-
-    .sidebar-divider {
-      height: 1px;
-      background: rgba(255,255,255,0.06);
-      margin: 8px 0;
-    }
-
-    /* ── Center Content ── */
-    .center-content {
-      flex: 1;
-      overflow-y: auto;
-      padding: 0;
-    }
+    /* ── Layout ── */
+    .main-layout { display:flex; flex:1; overflow:hidden; }
+    .sidebar { width:220px; flex-shrink:0; border-right:1px solid rgba(255,255,255,0.06); padding:20px 12px; display:flex; flex-direction:column; gap:4px; overflow-y:auto; }
+    .sidebar-create { width:100%; height:40px; background:#fff; color:#0F0E12; border:none; border-radius:10px; font-size:13px; font-weight:500; letter-spacing:0.05em; cursor:pointer; transition:opacity 0.15s; margin-bottom:12px; display:flex; align-items:center; justify-content:center; gap:8px; font-family:inherit; }
+    .sidebar-create:hover { opacity:0.85; }
+    .nav-item { display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:10px; cursor:pointer; transition:background 0.15s, color 0.15s; color:rgba(255,255,255,0.4); font-size:13px; font-weight:500; letter-spacing:0.02em; text-decoration:none; }
+    .nav-item:hover { background:rgba(255,255,255,0.06); color:#fff; }
+    .nav-item.active { background:rgba(255,255,255,0.08); color:#fff; }
+    .nav-item svg { width:18px; height:18px; opacity:0.6; flex-shrink:0; }
+    .nav-item.active svg { opacity:1; }
+    .sidebar-divider { height:1px; background:rgba(255,255,255,0.06); margin:8px 0; }
+    .center-content { flex:1; overflow-y:auto; padding:0; }
 
     /* ── Page Header ── */
-    .page-header {
-      padding: 32px 32px 24px;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
+    .page-header { padding:32px 32px 24px; border-bottom:1px solid rgba(255,255,255,0.06); }
+    .page-title { font-size:28px; font-weight:800; letter-spacing:-0.02em; margin-bottom:6px; }
+    .page-subtitle { font-size:14px; font-weight:400; color:rgba(255,255,255,0.35); letter-spacing:0.02em; }
 
-    .page-title {
-      font-size: 28px;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      margin-bottom: 6px;
-    }
+    /* ════════════════════════════════════════════════
+       ══  POST COMPOSER — 5 POST TYPES + FONTS  ══
+       ════════════════════════════════════════════════ */
 
-    .page-subtitle {
-      font-size: 14px;
-      font-weight: 400;
-      color: rgba(255,255,255,0.35);
-      letter-spacing: 0.02em;
-    }
-
-    /* ── Post Composer ── */
     .composer {
       padding: 20px 24px;
       border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .composer-top {
       display: flex;
       align-items: center;
       gap: 14px;
+      margin-bottom: 0;
+      transition: margin 0.3s;
     }
 
+    .composer-top.expanded { margin-bottom: 16px; }
+
     .composer-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
+      width: 40px; height: 40px; border-radius: 50%;
       background: linear-gradient(135deg, #4D4D4D, #322D2A);
       flex-shrink: 0;
     }
 
-    .composer-input {
-      flex: 1;
-      height: 42px;
+    .composer-trigger {
+      flex: 1; height: 42px;
       background: rgba(255,255,255,0.06);
       border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 12px;
-      padding: 0 16px;
-      color: rgba(255,255,255,0.4);
-      font-size: 14px;
-      font-family: inherit;
-      outline: none;
+      border-radius: 12px; padding: 0 16px;
+      color: rgba(255,255,255,0.4); font-size: 14px;
+      font-family: inherit; cursor: pointer;
+      display: flex; align-items: center;
       transition: border-color 0.2s;
     }
 
-    .composer-input:focus {
-      border-color: rgba(255,255,255,0.2);
-      color: #fff;
+    .composer-trigger:hover { border-color: rgba(255,255,255,0.15); }
+
+    .composer-btn-sm {
+      height: 42px; padding: 0 24px;
+      background: #fff; color: #0F0E12; border: none;
+      border-radius: 10px; font-size: 13px; font-weight: 500;
+      letter-spacing: 0.04em; cursor: pointer;
+      font-family: inherit; transition: opacity 0.15s;
     }
 
-    .composer-btn {
-      height: 42px;
-      padding: 0 24px;
-      background: #fff;
-      color: #0F0E12;
-      border: none;
-      border-radius: 10px;
-      font-size: 13px;
-      font-weight: 500;
-      letter-spacing: 0.04em;
-      cursor: pointer;
-      transition: opacity 0.15s;
-      font-family: inherit;
-    }
+    .composer-btn-sm:hover { opacity: 0.85; }
 
-    .composer-btn:hover { opacity: 0.85; }
-
-    /* ── Feed Tabs ── */
-    .feed-tabs {
-      display: flex;
-      align-items: center;
-      gap: 0;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      padding: 0 24px;
-    }
-
-    .feed-tab {
-      padding: 14px 20px;
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      color: rgba(255,255,255,0.3);
-      cursor: pointer;
-      border-bottom: 1px solid transparent;
-      transition: color 0.2s, border-color 0.2s;
-    }
-
-    .feed-tab:hover { color: rgba(255,255,255,0.6); }
-    .feed-tab.active { color: rgba(255,255,255,0.9); border-bottom-color: rgba(255,255,255,0.5); }
-
-    /* ── Topic Filters ── */
-    .topic-filters {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 16px 24px;
-      overflow-x: auto;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
-
-    .topic-pill {
-      padding: 6px 16px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 500;
-      letter-spacing: 0.04em;
-      white-space: nowrap;
-      cursor: pointer;
-      transition: background 0.2s, color 0.2s, border-color 0.2s;
-      background: transparent;
-      color: rgba(255,255,255,0.35);
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .topic-pill:hover { border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); }
-    .topic-pill.active { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.9); border-color: rgba(255,255,255,0.15); }
-
-    /* ── Thread Cards ── */
-    .feed-list {
-      padding: 16px 20px;
-      display: flex;
+    /* ── Expanded Composer Panel ── */
+    .composer-expanded {
+      display: none;
       flex-direction: column;
-      gap: 36px;
+      gap: 16px;
     }
 
+    .composer-expanded.active { display: flex; }
+
+    /* ── Post Type Selector ── */
+    .post-type-selector {
+      display: flex; gap: 6px;
+      padding: 4px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 12px;
+    }
+
+    .post-type-btn {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; gap: 4px;
+      padding: 10px 8px;
+      background: transparent; border: 1px solid transparent;
+      border-radius: 10px; cursor: pointer;
+      color: rgba(255,255,255,0.35);
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .post-type-btn:hover { color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.04); }
+
+    .post-type-btn.active {
+      color: #fff;
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.12);
+    }
+
+    .post-type-btn svg { width: 20px; height: 20px; }
+
+    /* ── Font Selector ── */
+    .font-selector {
+      display: flex; gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+
+    .font-option {
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: transparent;
+      color: rgba(255,255,255,0.4);
+      font-size: 13px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .font-option:hover { color: rgba(255,255,255,0.7); border-color: rgba(255,255,255,0.15); }
+
+    .font-option.active {
+      color: #fff;
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.2);
+    }
+
+    .font-option[data-font="inter"] { font-family: 'Inter', sans-serif; font-weight: 700; }
+    .font-option[data-font="playfair"] { font-family: 'Playfair Display', serif; font-weight: 700; font-style: italic; }
+    .font-option[data-font="oswald"] { font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; }
+    .font-option[data-font="garamond"] { font-family: 'EB Garamond', serif; font-weight: 500; }
+    .font-option[data-font="mono"] { font-family: 'JetBrains Mono', monospace; font-weight: 500; }
+
+    /* ── Composer Text Area ── */
+    .composer-textarea {
+      width: 100%;
+      min-height: 100px;
+      max-height: 300px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 16px;
+      color: #fff;
+      font-size: 16px;
+      line-height: 1.7;
+      font-family: 'Inter', sans-serif;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.2s, font-family 0.3s;
+    }
+
+    .composer-textarea:focus { border-color: rgba(255,255,255,0.2); }
+    .composer-textarea::placeholder { color: rgba(255,255,255,0.25); }
+
+    /* Font classes for textarea */
+    .composer-textarea.font-inter { font-family: 'Inter', sans-serif; }
+    .composer-textarea.font-playfair { font-family: 'Playfair Display', serif; font-size: 20px; }
+    .composer-textarea.font-oswald { font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: 0.02em; }
+    .composer-textarea.font-garamond { font-family: 'EB Garamond', serif; font-size: 18px; }
+    .composer-textarea.font-mono { font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #4ADE80; }
+
+    /* ── Photo Upload Area ── */
+    .photo-upload-area {
+      display: none;
+      position: relative;
+      width: 100%;
+      min-height: 200px;
+      background: rgba(255,255,255,0.03);
+      border: 2px dashed rgba(255,255,255,0.1);
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .photo-upload-area.active { display: block; }
+    .photo-upload-area:hover { border-color: rgba(255,255,255,0.2); }
+    .photo-upload-area.has-image { border: none; min-height: 300px; }
+
+    .photo-upload-placeholder {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 12px;
+      height: 200px;
+      color: rgba(255,255,255,0.25);
+    }
+
+    .photo-upload-placeholder svg { width: 40px; height: 40px; opacity: 0.4; }
+
+    .photo-upload-placeholder span {
+      font-size: 13px; font-weight: 500;
+      letter-spacing: 0.03em;
+    }
+
+    .photo-preview {
+      display: none;
+      width: 100%; height: 100%;
+      position: relative;
+    }
+
+    .photo-preview img {
+      width: 100%; height: 300px;
+      object-fit: cover; display: block;
+    }
+
+    /* Auto gradient shadow at bottom of photo */
+    .photo-preview::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 60%;
+      background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 40%, transparent 100%);
+      pointer-events: none;
+    }
+
+    .photo-overlay-text {
+      position: absolute;
+      bottom: 20px; left: 20px; right: 20px;
+      z-index: 2;
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1.3;
+      color: #fff;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    }
+
+    .photo-upload-input { display: none; }
+
+    /* ── Composer Bottom Bar ── */
+    .composer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .composer-tools {
+      display: flex; gap: 8px;
+    }
+
+    .composer-tool {
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 8px; border: none;
+      background: transparent; color: rgba(255,255,255,0.35);
+      cursor: pointer; transition: all 0.15s;
+    }
+
+    .composer-tool:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.7); }
+    .composer-tool svg { width: 18px; height: 18px; }
+
+    .composer-post-btn {
+      height: 40px; padding: 0 28px;
+      background: #D5FF5A; color: #0F0E12;
+      border: none; border-radius: 10px;
+      font-size: 13px; font-weight: 600;
+      letter-spacing: 0.05em;
+      cursor: pointer; font-family: inherit;
+      transition: opacity 0.15s, transform 0.15s;
+    }
+
+    .composer-post-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+    /* ════════════════════════════════════════
+       ══  FEED TABS + TOPIC FILTERS  ══
+       ════════════════════════════════════════ */
+
+    .feed-tabs { display:flex; align-items:center; gap:0; border-bottom:1px solid rgba(255,255,255,0.06); padding:0 24px; }
+    .feed-tab { padding:14px 20px; font-size:13px; font-weight:600; letter-spacing:0.05em; color:rgba(255,255,255,0.3); cursor:pointer; border-bottom:1px solid transparent; transition:color 0.2s, border-color 0.2s; }
+    .feed-tab:hover { color:rgba(255,255,255,0.6); }
+    .feed-tab.active { color:rgba(255,255,255,0.9); border-bottom-color:rgba(255,255,255,0.5); }
+
+    .topic-filters { display:flex; align-items:center; gap:8px; padding:16px 24px; overflow-x:auto; border-bottom:1px solid rgba(255,255,255,0.06); }
+    .topic-pill { padding:6px 16px; border-radius:20px; font-size:12px; font-weight:500; letter-spacing:0.04em; white-space:nowrap; cursor:pointer; transition:background 0.2s, color 0.2s; background:transparent; color:rgba(255,255,255,0.35); border:1px solid rgba(255,255,255,0.08); }
+    .topic-pill:hover { border-color:rgba(255,255,255,0.2); color:rgba(255,255,255,0.7); }
+    .topic-pill.active { background:rgba(255,255,255,0.08); color:rgba(255,255,255,0.9); border-color:rgba(255,255,255,0.15); }
+
+    /* ════════════════════════════════════════
+       ══  THREAD CARDS — 5 VARIANTS  ══
+       ════════════════════════════════════════ */
+
+    .feed-list { padding:16px 20px; display:flex; flex-direction:column; gap:24px; }
+
+    /* ── Base Thread Card ── */
     .thread-card {
       padding: 24px 28px;
       background: rgba(255,255,255,0.03);
       backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
       border: 1px solid rgba(255,255,255,0.06);
       border-radius: 16px;
-      transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+      transition: background 0.3s, border-color 0.3s, transform 0.3s;
       cursor: pointer;
     }
 
-    .thread-card:hover {
-      background: rgba(255,255,255,0.05);
-      border-color: rgba(255,255,255,0.1);
-      transform: translateY(-2px);
+    .thread-card:hover { background:rgba(255,255,255,0.05); border-color:rgba(255,255,255,0.1); transform:translateY(-2px); }
+
+    .thread-header { display:flex; align-items:center; gap:12px; margin-bottom:6px; }
+    .thread-avatar { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg, #4D4D4D, #322D2A); flex-shrink:0; }
+    .thread-title { font-size:17px; font-weight:700; line-height:1.4; letter-spacing:-0.01em; }
+    .thread-author { font-size:13px; font-weight:500; color:rgba(255,255,255,0.4); letter-spacing:0.02em; margin-bottom:12px; }
+    .thread-body { font-size:14px; font-weight:400; line-height:1.75; color:rgba(255,255,255,0.55); margin-bottom:20px; }
+
+    .thread-actions { display:flex; align-items:center; gap:16px; }
+    .thread-action { display:flex; align-items:center; justify-content:center; width:32px; height:32px; border:none; background:transparent; color:rgba(255,255,255,0.25); font-size:18px; font-weight:600; cursor:pointer; border-radius:8px; transition:color 0.2s, background 0.2s; font-family:'Inter',sans-serif; line-height:1; }
+    .thread-action:hover { color:rgba(255,255,255,0.7); background:rgba(255,255,255,0.06); }
+    .thread-action svg { width:18px; height:18px; }
+
+    .thread-meta { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+    .thread-meta-tag { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; padding:3px 10px; border-radius:4px; }
+
+    /* ── 1. TEXT POST ── */
+    .thread-card.type-text .thread-body {
+      font-size: 15px;
+      line-height: 1.8;
     }
 
-    .thread-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 6px;
+    /* ── 2. PHOTO POST ── */
+    .thread-card.type-photo {
+      padding: 0;
+      overflow: hidden;
+      position: relative;
     }
 
-    .thread-avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #4D4D4D, #322D2A);
-      flex-shrink: 0;
+    .thread-photo-wrap {
+      position: relative;
+      width: 100%;
     }
 
-    .thread-title {
-      font-size: 17px;
+    .thread-photo-wrap img {
+      width: 100%;
+      height: 380px;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Auto gradient shadow at bottom */
+    .thread-photo-wrap::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 65%;
+      background: linear-gradient(to top,
+        rgba(0,0,0,0.9) 0%,
+        rgba(0,0,0,0.5) 35%,
+        rgba(0,0,0,0.15) 60%,
+        transparent 100%);
+      pointer-events: none;
+    }
+
+    .thread-photo-content {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 24px 28px;
+      z-index: 2;
+    }
+
+    .thread-card.type-photo .thread-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
       font-weight: 700;
-      line-height: 1.4;
-      letter-spacing: -0.01em;
+      line-height: 1.25;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.4);
+      margin-bottom: 4px;
     }
 
-    .thread-author {
+    .thread-card.type-photo .thread-author {
+      color: rgba(255,255,255,0.6);
+      text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+      margin-bottom: 4px;
+    }
+
+    .thread-card.type-photo .thread-body {
+      color: rgba(255,255,255,0.7);
       font-size: 13px;
-      font-weight: 500;
-      color: rgba(255,255,255,0.4);
-      letter-spacing: 0.02em;
-      margin-bottom: 12px;
+      line-height: 1.6;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+      margin-bottom: 14px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
-    .thread-body {
-      font-size: 14px;
-      font-weight: 400;
-      line-height: 1.75;
-      color: rgba(255,255,255,0.55);
-      margin-bottom: 20px;
+    .thread-card.type-photo .thread-actions { gap: 12px; }
+    .thread-card.type-photo .thread-action { color: rgba(255,255,255,0.5); }
+    .thread-card.type-photo .thread-action:hover { color: #fff; background: rgba(255,255,255,0.15); }
+
+    /* ── 3. QUOTE POST ── */
+    .thread-card.type-quote {
+      background: #FAFAF5;
+      border-color: rgba(0,0,0,0.06);
+      padding: 40px 36px;
+      text-align: center;
+      position: relative;
+    }
+
+    .thread-card.type-quote::before {
+      content: '\201C';
+      position: absolute;
+      top: 16px; left: 24px;
+      font-family: 'Playfair Display', serif;
+      font-size: 72px;
+      color: rgba(0,0,0,0.06);
+      line-height: 1;
+    }
+
+    .thread-card.type-quote .thread-header { justify-content: center; margin-bottom: 8px; }
+
+    .thread-card.type-quote .thread-title {
+      font-family: 'EB Garamond', serif;
+      font-size: 24px;
+      font-weight: 500;
+      font-style: italic;
+      line-height: 1.6;
+      color: #1a1a1a;
       letter-spacing: 0.01em;
     }
 
-    .thread-actions {
+    .thread-card.type-quote .thread-author {
+      color: rgba(0,0,0,0.35);
+      margin-top: 16px;
+      margin-bottom: 16px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+
+    .thread-card.type-quote .thread-body { display: none; }
+
+    .thread-card.type-quote .thread-actions { justify-content: center; }
+    .thread-card.type-quote .thread-action { color: rgba(0,0,0,0.25); }
+    .thread-card.type-quote .thread-action:hover { color: rgba(0,0,0,0.6); background: rgba(0,0,0,0.04); }
+    .thread-card.type-quote:hover { background: #F5F5F0; border-color: rgba(0,0,0,0.1); }
+
+    /* ── 4. ARTICLE POST ── */
+    .thread-card.type-article {
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .article-hero {
+      width: 100%;
+      height: 180px;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      padding: 24px;
+    }
+
+    .article-hero-tag {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: #D5FF5A;
+      background: rgba(213,255,90,0.1);
+      padding: 4px 12px;
+      border-radius: 4px;
+      position: absolute;
+      top: 16px; left: 20px;
+    }
+
+    .article-content {
+      padding: 24px 28px;
+    }
+
+    .thread-card.type-article .thread-header { margin-bottom: 8px; }
+
+    .thread-card.type-article .thread-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+    }
+
+    .thread-card.type-article .thread-body {
+      font-family: 'EB Garamond', serif;
+      font-size: 16px;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.5);
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .read-article-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 20px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: rgba(255,255,255,0.7);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+      margin-bottom: 16px;
+    }
+
+    .read-article-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+    .read-article-btn svg { width: 14px; height: 14px; }
+
+    /* ── 5. TERMINAL POST ── */
+    .thread-card.type-terminal {
+      background: #0a0a0a;
+      border-color: rgba(74,222,128,0.1);
+      padding: 0;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .terminal-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 16px;
+      background: rgba(74,222,128,0.04);
+      border-bottom: 1px solid rgba(74,222,128,0.08);
+    }
+
+    .terminal-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+    }
+
+    .terminal-dot.red { background: #FF5F57; }
+    .terminal-dot.yellow { background: #FEBC2E; }
+    .terminal-dot.green { background: #28C840; }
+
+    .terminal-title-bar {
+      flex: 1;
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: rgba(74,222,128,0.4);
+    }
+
+    .terminal-body {
+      padding: 20px 24px;
+    }
+
+    .thread-card.type-terminal .thread-header { margin-bottom: 4px; }
+
+    .thread-card.type-terminal .thread-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 15px;
+      font-weight: 700;
+      color: #4ADE80;
+    }
+
+    .thread-card.type-terminal .thread-author {
+      font-family: 'JetBrains Mono', monospace;
+      color: rgba(74,222,128,0.35);
+      font-size: 12px;
+    }
+
+    .thread-card.type-terminal .thread-body {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      line-height: 1.8;
+      color: rgba(74,222,128,0.6);
+    }
+
+    .thread-card.type-terminal .thread-body .cmd-prefix {
+      color: #4ADE80;
+      user-select: none;
+    }
+
+    .thread-card.type-terminal .thread-actions { padding: 0 24px 16px; }
+    .thread-card.type-terminal .thread-action { color: rgba(74,222,128,0.3); }
+    .thread-card.type-terminal .thread-action:hover { color: #4ADE80; background: rgba(74,222,128,0.06); }
+    .thread-card.type-terminal:hover { border-color: rgba(74,222,128,0.2); }
+
+    /* Scan-line effect */
+    .thread-card.type-terminal::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent 0px,
+        transparent 2px,
+        rgba(74,222,128,0.015) 2px,
+        rgba(74,222,128,0.015) 4px
+      );
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* ══ Article Overlay / Reader ══ */
+    .article-reader-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      overflow-y: auto;
+      animation: fadeInReader 0.3s ease;
+    }
+
+    .article-reader-overlay.active { display: block; }
+
+    @keyframes fadeInReader { from { opacity: 0; } to { opacity: 1; } }
+
+    .article-reader {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 60px 32px 80px;
+    }
+
+    .reader-close {
+      position: fixed;
+      top: 24px; right: 24px;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: #fff;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10001;
+      transition: background 0.2s;
+    }
+
+    .reader-close:hover { background: rgba(255,255,255,0.2); }
+
+    .reader-tag {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: #D5FF5A;
+      margin-bottom: 20px;
+    }
+
+    .reader-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 38px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .reader-byline {
+      font-size: 14px;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 12px;
+    }
+
+    .reader-divider {
+      width: 40px;
+      height: 2px;
+      background: rgba(255,255,255,0.1);
+      margin: 32px 0;
+    }
+
+    .reader-body {
+      font-family: 'EB Garamond', serif;
+      font-size: 19px;
+      line-height: 1.9;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .reader-body p { margin-bottom: 24px; }
+
+    /* ── Scrollbar ── */
+    .center-content::-webkit-scrollbar, .sidebar::-webkit-scrollbar { width:6px; }
+    .center-content::-webkit-scrollbar-track, .sidebar::-webkit-scrollbar-track { background:transparent; }
+    .center-content::-webkit-scrollbar-thumb, .sidebar::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.1); border-radius:3px; }
+
+    /* ════════════════════════════════════════════════
+       ══  COMMUNITY LEADER — PINNED ANNOUNCEMENT  ══
+       ════════════════════════════════════════════════ */
+
+    .leader-announcement {
+      padding: 0 20px;
+      margin-top: 16px;
+    }
+
+    .leader-card {
+      position: relative;
+      background: linear-gradient(135deg, rgba(213,255,90,0.04) 0%, rgba(15,14,18,0.95) 40%, rgba(15,14,18,0.98) 100%);
+      border: 1px solid rgba(213,255,90,0.12);
+      border-radius: 20px;
+      overflow: hidden;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+
+    .leader-card:hover {
+      border-color: rgba(213,255,90,0.22);
+      transform: translateY(-2px);
+    }
+
+    /* Subtle glow line at top */
+    .leader-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent 0%, #D5FF5A 30%, #D5FF5A 70%, transparent 100%);
+      opacity: 0.6;
+    }
+
+    .leader-card-inner {
+      padding: 24px 28px 20px;
+    }
+
+    .leader-badge-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .leader-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #D5FF5A, #9EBF3B);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 800;
+      color: #0F0E12;
+      flex-shrink: 0;
+      box-shadow: 0 0 0 2px rgba(213,255,90,0.15);
+    }
+
+    .leader-name-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .leader-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.02em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .leader-verified {
+      width: 14px; height: 14px;
+      display: inline-flex;
+    }
+
+    .leader-role {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #D5FF5A;
+      opacity: 0.7;
+    }
+
+    .leader-pin-tag {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: rgba(213,255,90,0.5);
+      background: rgba(213,255,90,0.06);
+      padding: 4px 12px;
+      border-radius: 6px;
+      border: 1px solid rgba(213,255,90,0.08);
+    }
+
+    .leader-pin-tag svg {
+      width: 10px; height: 10px;
+    }
+
+    .leader-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 1.3;
+      color: #fff;
+      margin-bottom: 10px;
+      letter-spacing: -0.01em;
+    }
+
+    .leader-body {
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.75;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 20px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .leader-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .leader-stats {
       display: flex;
       align-items: center;
       gap: 16px;
     }
 
-    .thread-action {
+    .leader-stat {
       display: flex;
       align-items: center;
-      justify-content: center;
-      width: 32px;
-      height: 32px;
-      border: none;
-      background: transparent;
-      color: rgba(255,255,255,0.25);
-      font-size: 18px;
-      font-weight: 600;
-      cursor: pointer;
-      border-radius: 8px;
-      transition: color 0.2s, background 0.2s;
-      font-family: 'Inter', sans-serif;
-      line-height: 1;
+      gap: 5px;
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.3);
     }
 
-    .thread-action:hover { color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.06); }
-
-    .thread-action svg { width: 18px; height: 18px; }
-
-    /* ── Scrollbar ── */
-    .center-content::-webkit-scrollbar,
-    .sidebar::-webkit-scrollbar {
-      width: 6px;
+    .leader-stat svg {
+      width: 14px; height: 14px;
+      opacity: 0.5;
     }
 
-    .center-content::-webkit-scrollbar-track,
-    .sidebar::-webkit-scrollbar-track {
-      background: transparent;
+    .leader-timestamp {
+      font-size: 11px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.2);
+      letter-spacing: 0.02em;
     }
 
-    .center-content::-webkit-scrollbar-thumb,
-    .sidebar::-webkit-scrollbar-thumb {
-      background: rgba(255,255,255,0.1);
-      border-radius: 3px;
+    /* Leader card with photo variant */
+    .leader-card.has-photo .leader-photo-wrap {
+      position: relative;
+      width: 100%;
+      height: 200px;
+    }
+
+    .leader-card.has-photo .leader-photo-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .leader-card.has-photo .leader-photo-wrap::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 70%;
+      background: linear-gradient(to top,
+        rgba(15,14,18,1) 0%,
+        rgba(15,14,18,0.7) 40%,
+        transparent 100%);
+      pointer-events: none;
     }
 
     /* ── Responsive ── */
@@ -537,6 +932,22 @@
       .search-bar { flex: 0 1 280px; }
       .page-header { padding: 24px 20px 20px; }
       .page-title { font-size: 22px; }
+      .post-type-selector { overflow-x: auto; }
+      .post-type-btn { padding: 8px 6px; font-size: 9px; }
+      .font-selector { padding: 0 4px 4px; }
+      .thread-card.type-photo .thread-title { font-size: 20px; }
+      .thread-card.type-quote .thread-title { font-size: 20px; }
+      .thread-photo-wrap img { height: 280px; }
+      .article-hero { height: 140px; }
+      .article-reader { padding: 40px 20px 60px; }
+      .reader-title { font-size: 28px; }
+      .reader-body { font-size: 17px; }
+      .leader-announcement { padding: 0 12px; margin-top: 12px; }
+      .leader-card-inner { padding: 18px 20px 16px; }
+      .leader-title { font-size: 20px; }
+      .leader-body { font-size: 13px; }
+      .leader-pin-tag { font-size: 8px; padding: 3px 8px; }
+      .leader-card.has-photo .leader-photo-wrap { height: 160px; }
     }
   </style>
 </head>
@@ -556,142 +967,46 @@
   </div>
   <script>
     (function(){
-      const code = '19';
-      const overlay = document.getElementById('gateOverlay');
-      const input = document.getElementById('gateInput');
-      if(sessionStorage.getItem('ziion_unlocked')==='true'){
-        overlay.style.display='none';
-      }
+      const code='19', overlay=document.getElementById('gateOverlay'), input=document.getElementById('gateInput');
+      if(sessionStorage.getItem('ziion_unlocked')==='true') overlay.style.display='none';
       input.addEventListener('input', function(){
-        if(this.value === code){
-          sessionStorage.setItem('ziion_unlocked','true');
-          overlay.classList.add('unlocked');
-          setTimeout(()=> overlay.style.display='none', 700);
-        } else if(this.value.length >= code.length){
-          this.classList.add('shake');
-          setTimeout(()=>{ this.classList.remove('shake'); this.value=''; }, 500);
-        }
+        if(this.value===code){ sessionStorage.setItem('ziion_unlocked','true'); overlay.classList.add('unlocked'); setTimeout(()=>overlay.style.display='none',700); }
+        else if(this.value.length>=code.length){ this.classList.add('shake'); setTimeout(()=>{this.classList.remove('shake');this.value='';},500); }
       });
     })();
   </script>
 
   <!-- Header -->
   <div class="header">
-    <div class="header-left">
-      <div class="logo-text">ZIION</div>
-    </div>
-
+    <div class="header-left"><div class="logo-text">ZIION</div></div>
     <div class="search-bar">
-      <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
-        <path d="M14 14L10 10M11.333 6.667a4.667 4.667 0 1 1-9.333 0 4.667 4.667 0 0 1 9.333 0z"
-              stroke="white" stroke-width="1.5" stroke-linecap="round"/>
-      </svg>
+      <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M14 14L10 10M11.333 6.667a4.667 4.667 0 1 1-9.333 0 4.667 4.667 0 0 1 9.333 0z" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
       <input type="text" placeholder="Search threads, people, topics...">
     </div>
-
     <div class="header-right">
-      <div class="header-icon" title="Notifications">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-        </svg>
-      </div>
-      <div class="header-icon" title="Messages">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-        </svg>
-      </div>
+      <div class="header-icon" title="Notifications"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
+      <div class="header-icon" title="Messages"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
       <div class="avatar"></div>
     </div>
   </div>
 
-  <!-- Main 2-Column Layout -->
+  <!-- Main Layout -->
   <div class="main-layout">
 
-    <!-- Left Sidebar -->
+    <!-- Sidebar -->
     <div class="sidebar">
-      <button class="sidebar-create">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-          <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-        Create
-      </button>
-
-      <a class="nav-item" href="cosmos-grid.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
-        </svg>
-        Dashboard
-      </a>
-      <a class="nav-item" href="library.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/>
-        </svg>
-        Library
-      </a>
-      <a class="nav-item active" href="threads.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-        </svg>
-        Threads
-      </a>
-      <a class="nav-item" href="directory.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-        </svg>
-        Connections
-      </a>
-      <a class="nav-item" href="assets.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-        </svg>
-        Assets
-      </a>
-      <a class="nav-item" href="world.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-        </svg>
-        World
-      </a>
-      <a class="nav-item" href="pulse.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-        </svg>
-        Pulse
-      </a>
-
+      <button class="sidebar-create"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg> Create</button>
+      <a class="nav-item" href="cosmos-grid.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg> Dashboard</a>
+      <a class="nav-item" href="library.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></svg> Library</a>
+      <a class="nav-item active" href="threads.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Threads</a>
+      <a class="nav-item" href="directory.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Connections</a>
+      <a class="nav-item" href="assets.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Assets</a>
+      <a class="nav-item" href="world.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> World</a>
+      <a class="nav-item" href="pulse.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg> Pulse</a>
       <div class="sidebar-divider"></div>
-
-      <a class="nav-item" href="book-19keys.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/>
-        </svg>
-        Book 19Keys
-      </a>
-      <a class="nav-item" href="#">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
-        </svg>
-        Calendar
-      </a>
-      <a class="nav-item" href="#">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
-        </svg>
-        Messages
-      </a>
-
-      <div class="sidebar-divider"></div>
-
-      <a class="nav-item" href="#">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-        </svg>
-        Settings
-      </a>
-
-      <div id="themeToggle" class="theme-toggle" title="Switch to light mode">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-      </div>
+      <a class="nav-item" href="book-19keys.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Book 19Keys</a>
+      <a class="nav-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.604.852.997 1.51 1H21a2 2 0 0 1 0 4h-.09c-.658.003-1.25.396-1.51 1z"/></svg> Settings</a>
+      <div id="themeToggle" class="theme-toggle" title="Switch to light mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></div>
     </div>
 
     <!-- Center Content -->
@@ -703,11 +1018,83 @@
         <div class="page-subtitle">Community conversations and shared ideas</div>
       </div>
 
-      <!-- Post Composer -->
+      <!-- ══════════ EXPANDED POST COMPOSER ══════════ -->
       <div class="composer">
-        <div class="composer-avatar"></div>
-        <input class="composer-input" type="text" placeholder="Start a thread...">
-        <button class="composer-btn">Post</button>
+        <!-- Collapsed state (click to expand) -->
+        <div class="composer-top" id="composerTop">
+          <div class="composer-avatar"></div>
+          <div class="composer-trigger" id="composerTrigger">Start a thread...</div>
+          <button class="composer-btn-sm" id="composerQuickPost">Post</button>
+        </div>
+
+        <!-- Expanded state -->
+        <div class="composer-expanded" id="composerExpanded">
+
+          <!-- Post Type Selector -->
+          <div class="post-type-selector">
+            <button class="post-type-btn active" data-type="text">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              Text
+            </button>
+            <button class="post-type-btn" data-type="photo">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              Photo
+            </button>
+            <button class="post-type-btn" data-type="quote">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V21z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg>
+              Quote
+            </button>
+            <button class="post-type-btn" data-type="article">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+              Article
+            </button>
+            <button class="post-type-btn" data-type="terminal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+              Terminal
+            </button>
+          </div>
+
+          <!-- Font Selector -->
+          <div class="font-selector">
+            <button class="font-option active" data-font="inter">Inter</button>
+            <button class="font-option" data-font="playfair">Playfair</button>
+            <button class="font-option" data-font="oswald">OSWALD</button>
+            <button class="font-option" data-font="garamond">Garamond</button>
+            <button class="font-option" data-font="mono">Mono</button>
+          </div>
+
+          <!-- Photo Upload Area (hidden by default) -->
+          <div class="photo-upload-area" id="photoUpload">
+            <div class="photo-upload-placeholder" id="photoPlaceholder">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              <span>Click to upload a photo</span>
+            </div>
+            <div class="photo-preview" id="photoPreview">
+              <img id="photoPreviewImg" src="" alt="Preview">
+              <div class="photo-overlay-text" id="photoOverlayText">Your text here...</div>
+            </div>
+            <input type="file" class="photo-upload-input" id="photoInput" accept="image/*">
+          </div>
+
+          <!-- Text Area -->
+          <textarea class="composer-textarea font-inter" id="composerTextarea" placeholder="What's on your mind..."></textarea>
+
+          <!-- Bottom Bar -->
+          <div class="composer-bottom">
+            <div class="composer-tools">
+              <button class="composer-tool" title="Add image" id="addImageTool">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              </button>
+              <button class="composer-tool" title="Add link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+              </button>
+              <button class="composer-tool" title="Formatting">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+              </button>
+            </div>
+            <button class="composer-post-btn" id="composerPostBtn">Post Thread</button>
+          </div>
+        </div>
       </div>
 
       <!-- Feed Tabs -->
@@ -728,64 +1115,150 @@
         <div class="topic-pill">Culture</div>
       </div>
 
-      <!-- Thread Feed -->
+      <!-- ══════════ COMMUNITY LEADER — PINNED ANNOUNCEMENT ══════════ -->
+      <div class="leader-announcement">
+        <div class="leader-card">
+          <div class="leader-card-inner">
+            <div class="leader-badge-row">
+              <div class="leader-avatar">19</div>
+              <div class="leader-name-wrap">
+                <div class="leader-name">
+                  19Keys
+                  <svg class="leader-verified" viewBox="0 0 24 24" fill="#D5FF5A"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+                </div>
+                <div class="leader-role">Community Leader</div>
+              </div>
+              <div class="leader-pin-tag">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 2L12 14"/><path d="M5 9L12 2L19 9"/></svg>
+                Pinned
+              </div>
+            </div>
+            <div class="leader-title">Welcome to the Sovereign Era: This Is What We're Building</div>
+            <div class="leader-body">The old systems are crumbling and a new paradigm is rising. ZIION isn't just a platform — it's the infrastructure for sovereign communities to connect, learn, and build wealth together. Every thread you post, every idea you share, every person you connect with is a brick in the foundation of something that will outlast all of us. This is bigger than content. This is legacy.</div>
+            <div class="leader-bottom">
+              <div class="leader-stats">
+                <div class="leader-stat">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                  2,847
+                </div>
+                <div class="leader-stat">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  384
+                </div>
+                <div class="leader-stat">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                  1,205
+                </div>
+              </div>
+              <div class="leader-timestamp">Pinned Announcement</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════ THREAD FEED — 5 POST TYPES ══════════ -->
       <div class="feed-list">
 
-        <!-- Thread 1 -->
-        <div class="thread-card">
+        <!-- ── PHOTO POST ── -->
+        <div class="thread-card type-photo">
+          <div class="thread-photo-wrap">
+            <img src="https://images.unsplash.com/photo-1531384441138-2736e62e0919?w=800&q=80" alt="Photo post">
+            <div class="thread-photo-content">
+              <div class="thread-header">
+                <div class="thread-avatar" style="background:linear-gradient(135deg, #8B5CF6, #6366F1)"></div>
+                <div class="thread-title">The Hardest Thing I Ever Had to Survive Was Me</div>
+              </div>
+              <div class="thread-author">u/19Keys</div>
+              <div class="thread-body">Your worst enemy isn't the person who hurt you. It's the person you become to yourself after that hurt. Healing starts with self-awareness.</div>
+              <div class="thread-actions">
+                <div class="thread-action">+</div>
+                <div class="thread-action">&minus;</div>
+                <div class="thread-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── TEXT POST (Bold Statement) ── -->
+        <div class="thread-card type-text">
           <div class="thread-header">
-            <div class="thread-avatar" style="background: linear-gradient(135deg, #4D4D4D, #322D2A)"></div>
-            <div class="thread-title">On the Future of Wealth</div>
+            <div class="thread-avatar" style="background:linear-gradient(135deg, #4D4D4D, #322D2A)"></div>
+            <div class="thread-title" style="font-family:'Oswald',sans-serif; font-size:20px; text-transform:uppercase; letter-spacing:0.02em;">You don't need to go viral. You just need to show up with value, intention, and consistency.</div>
           </div>
           <div class="thread-author">u/19Keys</div>
-          <div class="thread-body">The old models of wealth creation are collapsing. What we're witnessing isn't just a market correction - it's a complete paradigm shift in how value is created, distributed, and preserved. The question isn't whether change is coming. It's whether you're positioned for the transition.</div>
+          <div class="thread-body">Everyone is chasing algorithms when they should be chasing alignment. The people who win long-term aren't the ones who went viral — they're the ones who showed up every single day with something real to offer.</div>
           <div class="thread-actions">
             <div class="thread-action">+</div>
             <div class="thread-action">&minus;</div>
-            <div class="thread-action">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <div class="thread-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          </div>
+        </div>
+
+        <!-- ── QUOTE POST ── -->
+        <div class="thread-card type-quote">
+          <div class="thread-header">
+            <div class="thread-avatar" style="background:linear-gradient(135deg, #D4A574, #C4956A)"></div>
+          </div>
+          <div class="thread-title">The extraordinary doesn't wipe out the ordinary. People get married in wartime. Life persists through chaos — and that persistence is the real power.</div>
+          <div class="thread-author">u/MiriamDeAna — via Mary Laura Philpott</div>
+          <div class="thread-body"></div>
+          <div class="thread-actions">
+            <div class="thread-action">+</div>
+            <div class="thread-action">&minus;</div>
+            <div class="thread-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          </div>
+        </div>
+
+        <!-- ── ARTICLE POST ── -->
+        <div class="thread-card type-article" data-article-id="1">
+          <div class="article-hero">
+            <div class="article-hero-tag">LONG READ</div>
+          </div>
+          <div class="article-content">
+            <div class="thread-header">
+              <div class="thread-avatar" style="background:linear-gradient(135deg, #4D4D4D, #322D2A)"></div>
+              <div class="thread-title">On the Future of Wealth: Why Everything You Know Is About to Change</div>
+            </div>
+            <div class="thread-author">u/19Keys · 12 min read</div>
+            <div class="thread-body">The old models of wealth creation are collapsing. What we're witnessing isn't just a market correction — it's a complete paradigm shift in how value is created, distributed, and preserved. The question isn't whether change is coming. It's whether you're positioned for the transition...</div>
+            <button class="read-article-btn" onclick="openArticle(1)">
+              Read Article
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+            <div class="thread-actions">
+              <div class="thread-action">+</div>
+              <div class="thread-action">&minus;</div>
+              <div class="thread-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
             </div>
           </div>
         </div>
 
-        <!-- Thread 2 -->
-        <div class="thread-card">
-          <div class="thread-header">
-            <div class="thread-avatar" style="background: linear-gradient(135deg, #4D4D4D, #322D2A)"></div>
-            <div class="thread-title">The Body Is Not a Machine</div>
+        <!-- ── TERMINAL POST ── -->
+        <div class="thread-card type-terminal">
+          <div class="terminal-bar">
+            <div class="terminal-dot red"></div>
+            <div class="terminal-dot yellow"></div>
+            <div class="terminal-dot green"></div>
+            <div class="terminal-title-bar">ziion@sovereign — ~/threads</div>
           </div>
-          <div class="thread-author">u/SuperNatural</div>
-          <div class="thread-body">We've been conditioned to treat our bodies like machines that need optimizing. But the body has its own intelligence, its own rhythms. When you stop fighting it and start listening, everything changes. Here's what body intelligence actually looks like in practice.</div>
+          <div class="terminal-body">
+            <div class="thread-header">
+              <div class="thread-title"><span class="cmd-prefix">$ </span>the_matrix_has_you.sh</div>
+            </div>
+            <div class="thread-author">u/KatherinJoyette</div>
+            <div class="thread-body"><span class="cmd-prefix">&gt; </span>The conversation about AI displacement is missing the point entirely. The real shift isn't automation — it's augmentation. The gap between those who learn to leverage these tools and those who don't will be the defining inequality of this decade. <span class="cmd-prefix">_</span></div>
+          </div>
           <div class="thread-actions">
             <div class="thread-action">+</div>
             <div class="thread-action">&minus;</div>
-            <div class="thread-action">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            </div>
+            <div class="thread-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
           </div>
         </div>
 
-        <!-- Thread 3 -->
-        <div class="thread-card">
+        <!-- ── Regular TEXT POST ── -->
+        <div class="thread-card type-text">
           <div class="thread-header">
-            <div class="thread-avatar" style="background: linear-gradient(135deg, #4D4D4D, #322D2A)"></div>
-            <div class="thread-title">The Metacognition Framework</div>
-          </div>
-          <div class="thread-author">u/MiriamDeAna</div>
-          <div class="thread-body">Most people think they're thinking when they're really just rearranging their biases. True metacognition requires a level of self-awareness that most educational systems never teach. Here's the framework I use to actually think about thinking.</div>
-          <div class="thread-actions">
-            <div class="thread-action">+</div>
-            <div class="thread-action">&minus;</div>
-            <div class="thread-action">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            </div>
-          </div>
-        </div>
-
-        <!-- Thread 4 -->
-        <div class="thread-card">
-          <div class="thread-header">
-            <div class="thread-avatar" style="background: linear-gradient(135deg, #4D4D4D, #322D2A)"></div>
+            <div class="thread-avatar" style="background:linear-gradient(135deg, #4D4D4D, #322D2A)"></div>
             <div class="thread-title">Building Sovereign Communities in 2026</div>
           </div>
           <div class="thread-author">u/AntoinePatton</div>
@@ -793,43 +1266,42 @@
           <div class="thread-actions">
             <div class="thread-action">+</div>
             <div class="thread-action">&minus;</div>
-            <div class="thread-action">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <div class="thread-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          </div>
+        </div>
+
+        <!-- ── PHOTO POST 2 ── -->
+        <div class="thread-card type-photo">
+          <div class="thread-photo-wrap">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80" alt="Photo post">
+            <div class="thread-photo-content">
+              <div class="thread-header">
+                <div class="thread-avatar" style="background:linear-gradient(135deg, #F59E0B, #D97706)"></div>
+                <div class="thread-title">Reclaiming Cultural Sovereignty</div>
+              </div>
+              <div class="thread-author">u/YahkevedLevi</div>
+              <div class="thread-body">Culture is the operating system of a people. When you lose control of your cultural narrative, you lose control of everything.</div>
+              <div class="thread-actions">
+                <div class="thread-action">+</div>
+                <div class="thread-action">&minus;</div>
+                <div class="thread-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Thread 5 -->
-        <div class="thread-card">
+        <!-- ── QUOTE POST 2 ── -->
+        <div class="thread-card type-quote">
           <div class="thread-header">
-            <div class="thread-avatar" style="background: linear-gradient(135deg, #4D4D4D, #322D2A)"></div>
-            <div class="thread-title">AI Won't Replace You. Someone Using AI Will.</div>
+            <div class="thread-avatar" style="background:linear-gradient(135deg, #10B981, #059669)"></div>
           </div>
-          <div class="thread-author">u/KatherinJoyette</div>
-          <div class="thread-body">The conversation about AI displacement is missing the point entirely. The real shift isn't automation - it's augmentation. The gap between those who learn to leverage these tools and those who don't will be the defining inequality of this decade.</div>
+          <div class="thread-title">The body has its own intelligence, its own rhythms. When you stop fighting it and start listening, everything changes.</div>
+          <div class="thread-author">u/SuperNatural</div>
+          <div class="thread-body"></div>
           <div class="thread-actions">
             <div class="thread-action">+</div>
             <div class="thread-action">&minus;</div>
-            <div class="thread-action">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            </div>
-          </div>
-        </div>
-
-        <!-- Thread 6 -->
-        <div class="thread-card">
-          <div class="thread-header">
-            <div class="thread-avatar" style="background: linear-gradient(135deg, #4D4D4D, #322D2A)"></div>
-            <div class="thread-title">Reclaiming Cultural Sovereignty</div>
-          </div>
-          <div class="thread-author">u/YahkevedLevi</div>
-          <div class="thread-body">Culture is the operating system of a people. When you lose control of your cultural narrative, you lose control of everything. This isn't about nostalgia - it's about building the infrastructure for cultural self-determination.</div>
-          <div class="thread-actions">
-            <div class="thread-action">+</div>
-            <div class="thread-action">&minus;</div>
-            <div class="thread-action">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            </div>
+            <div class="thread-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
           </div>
         </div>
 
@@ -838,8 +1310,156 @@
 
   </div>
 
+  <!-- ══════════ ARTICLE READER OVERLAY ══════════ -->
+  <div class="article-reader-overlay" id="articleReader">
+    <button class="reader-close" onclick="closeArticle()">&times;</button>
+    <div class="article-reader">
+      <div class="reader-tag">LONG READ</div>
+      <div class="reader-title" id="readerTitle">On the Future of Wealth: Why Everything You Know Is About to Change</div>
+      <div class="reader-byline">by <strong>19Keys</strong> · March 12, 2026 · 12 min read</div>
+      <div class="reader-divider"></div>
+      <div class="reader-body" id="readerBody">
+        <p>The old models of wealth creation are collapsing. What we're witnessing isn't just a market correction — it's a complete paradigm shift in how value is created, distributed, and preserved.</p>
+        <p>For centuries, wealth followed a predictable pattern: own land, control resources, accumulate capital. But we've entered an era where the most valuable assets aren't physical — they're intellectual, cultural, and relational.</p>
+        <p>The question isn't whether change is coming. It's whether you're positioned for the transition. The people who understand this shift aren't waiting for permission. They're building the infrastructure of the new economy right now.</p>
+        <p>Think about what's actually happening: creators are building audiences that rival media companies. Communities are developing their own currencies and governance systems. Intellectual property is becoming the most valuable asset class in history.</p>
+        <p>The wealth of the future won't be measured in dollars alone. It will be measured in influence, in trust, in the depth of your network, and in the quality of the ideas you can bring to market. The sovereign individual isn't a theory anymore — it's becoming an economic reality.</p>
+        <p>What this means practically: if you're still thinking about wealth in terms of a salary and a 401(k), you're operating on outdated software. The new wealth builders are thinking in terms of IP portfolios, community equity, and attention as currency.</p>
+      </div>
+    </div>
+  </div>
+
   <script>
-    // ── Tab switching ──
+    // ══════════ COMPOSER LOGIC ══════════
+
+    const composerTrigger = document.getElementById('composerTrigger');
+    const composerTop = document.getElementById('composerTop');
+    const composerExpanded = document.getElementById('composerExpanded');
+    const composerTextarea = document.getElementById('composerTextarea');
+    const photoUpload = document.getElementById('photoUpload');
+    const photoInput = document.getElementById('photoInput');
+    const photoPreview = document.getElementById('photoPreview');
+    const photoPlaceholder = document.getElementById('photoPlaceholder');
+    const photoPreviewImg = document.getElementById('photoPreviewImg');
+    const photoOverlayText = document.getElementById('photoOverlayText');
+    let currentPostType = 'text';
+    let currentFont = 'inter';
+
+    // Expand composer
+    composerTrigger.addEventListener('click', () => {
+      composerTop.classList.add('expanded');
+      composerExpanded.classList.add('active');
+      composerTrigger.style.display = 'none';
+      document.getElementById('composerQuickPost').style.display = 'none';
+      setTimeout(() => composerTextarea.focus(), 100);
+    });
+
+    // Post type switching
+    document.querySelectorAll('.post-type-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.post-type-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentPostType = btn.dataset.type;
+
+        // Show/hide photo upload
+        if (currentPostType === 'photo') {
+          photoUpload.classList.add('active');
+        } else {
+          photoUpload.classList.remove('active');
+        }
+
+        // Auto-set font for certain types
+        if (currentPostType === 'quote') {
+          setFont('garamond');
+        } else if (currentPostType === 'terminal') {
+          setFont('mono');
+        } else if (currentPostType === 'article') {
+          setFont('playfair');
+        } else if (currentPostType === 'text') {
+          setFont('inter');
+        } else if (currentPostType === 'photo') {
+          setFont('playfair');
+        }
+
+        // Update placeholder
+        const placeholders = {
+          text: "What's on your mind...",
+          photo: "Add a caption to your photo...",
+          quote: "Share a powerful quote...",
+          article: "Write your article title and content...",
+          terminal: "Enter your terminal thoughts..."
+        };
+        composerTextarea.placeholder = placeholders[currentPostType] || "What's on your mind...";
+      });
+    });
+
+    // Font switching
+    function setFont(font) {
+      currentFont = font;
+      document.querySelectorAll('.font-option').forEach(f => f.classList.remove('active'));
+      document.querySelector(`.font-option[data-font="${font}"]`).classList.add('active');
+
+      composerTextarea.className = 'composer-textarea font-' + font;
+    }
+
+    document.querySelectorAll('.font-option').forEach(opt => {
+      opt.addEventListener('click', () => setFont(opt.dataset.font));
+    });
+
+    // Photo upload
+    photoUpload.addEventListener('click', () => {
+      if (!photoUpload.classList.contains('has-image')) {
+        photoInput.click();
+      }
+    });
+
+    document.getElementById('addImageTool').addEventListener('click', () => {
+      // Switch to photo type
+      document.querySelector('.post-type-btn[data-type="photo"]').click();
+      photoInput.click();
+    });
+
+    photoInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          photoPreviewImg.src = ev.target.result;
+          photoPlaceholder.style.display = 'none';
+          photoPreview.style.display = 'block';
+          photoUpload.classList.add('has-image');
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Update photo overlay text as user types
+    composerTextarea.addEventListener('input', () => {
+      if (currentPostType === 'photo') {
+        photoOverlayText.textContent = composerTextarea.value || 'Your text here...';
+      }
+    });
+
+    // ══════════ ARTICLE READER ══════════
+
+    function openArticle(id) {
+      document.getElementById('articleReader').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeArticle() {
+      document.getElementById('articleReader').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    // Close article on ESC
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeArticle();
+    });
+
+    // ══════════ EXISTING INTERACTIONS ══════════
+
+    // Tab switching
     document.querySelectorAll('.feed-tab').forEach(tab => {
       tab.addEventListener('click', () => {
         document.querySelectorAll('.feed-tab').forEach(t => t.classList.remove('active'));
@@ -847,7 +1467,7 @@
       });
     });
 
-    // ── Topic filter switching ──
+    // Topic switching
     document.querySelectorAll('.topic-pill').forEach(pill => {
       pill.addEventListener('click', () => {
         document.querySelectorAll('.topic-pill').forEach(p => p.classList.remove('active'));
@@ -855,40 +1475,13 @@
       });
     });
 
-    // ── Sidebar nav switching ──
+    // Sidebar nav
     document.querySelectorAll('.nav-item').forEach(item => {
       item.addEventListener('click', (e) => {
         const href = item.getAttribute('href');
-        if (!href || href === '#') {
-          e.preventDefault();
-        }
+        if (!href || href === '#') e.preventDefault();
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         item.classList.add('active');
-      });
-    });
-
-    // ── Vote buttons ──
-    document.querySelectorAll('.vote-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const col = btn.closest('.vote-col');
-        const countEl = col.querySelector('.vote-count');
-        let count = parseInt(countEl.textContent);
-        const dir = btn.dataset.dir;
-        const isUp = dir === 'up';
-        const wasActive = btn.classList.contains(isUp ? 'upvoted' : 'downvoted');
-
-        // Clear both states
-        col.querySelectorAll('.vote-btn').forEach(b => b.classList.remove('upvoted', 'downvoted'));
-
-        if (wasActive) {
-          // Toggle off
-          countEl.textContent = count + (isUp ? -1 : 1);
-        } else {
-          // Apply vote
-          btn.classList.add(isUp ? 'upvoted' : 'downvoted');
-          countEl.textContent = count + (isUp ? 1 : -1);
-        }
       });
     });
   </script>

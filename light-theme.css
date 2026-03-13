@@ -1488,3 +1488,298 @@ body.light-mode .agent-progress-fill.critical { background: #dc2626 !important; 
 body.light-mode .agent-progress-fill.in-progress { background: #b45309 !important; }
 body.light-mode .agent-progress-fill.near-complete { background: #16a34a !important; }
 body.light-mode .agent-progress-fill.ready { background: #3d8c40 !important; }
+
+/* ════════════════════════════════════════════════
+   ══  THREADS PAGE — NEW POST TYPES (Light)  ══
+   ════════════════════════════════════════════════ */
+
+/* ── Composer expanded ── */
+body.light-mode .composer-trigger {
+  background: rgba(0,0,0,0.04) !important;
+  border-color: rgba(0,0,0,0.08) !important;
+  color: rgba(0,0,0,0.4) !important;
+}
+
+body.light-mode .composer-trigger:hover {
+  border-color: rgba(0,0,0,0.15) !important;
+}
+
+body.light-mode .composer-btn-sm {
+  background: #1a1a1a !important;
+  color: #FFFFFF !important;
+}
+
+body.light-mode .post-type-selector {
+  background: rgba(0,0,0,0.03) !important;
+}
+
+body.light-mode .post-type-btn {
+  color: rgba(0,0,0,0.35) !important;
+}
+
+body.light-mode .post-type-btn:hover {
+  color: rgba(0,0,0,0.6) !important;
+  background: rgba(0,0,0,0.04) !important;
+}
+
+body.light-mode .post-type-btn.active {
+  color: #1a1a1a !important;
+  background: rgba(0,0,0,0.06) !important;
+  border-color: rgba(0,0,0,0.1) !important;
+}
+
+body.light-mode .font-option {
+  border-color: rgba(0,0,0,0.08) !important;
+  color: rgba(0,0,0,0.4) !important;
+}
+
+body.light-mode .font-option:hover {
+  color: rgba(0,0,0,0.7) !important;
+  border-color: rgba(0,0,0,0.15) !important;
+}
+
+body.light-mode .font-option.active {
+  color: #1a1a1a !important;
+  background: rgba(0,0,0,0.06) !important;
+  border-color: rgba(0,0,0,0.15) !important;
+}
+
+body.light-mode .composer-textarea {
+  background: rgba(0,0,0,0.03) !important;
+  border-color: rgba(0,0,0,0.06) !important;
+  color: #1a1a1a !important;
+}
+
+body.light-mode .composer-textarea:focus {
+  border-color: rgba(0,0,0,0.15) !important;
+}
+
+body.light-mode .composer-textarea::placeholder {
+  color: rgba(0,0,0,0.25) !important;
+}
+
+body.light-mode .composer-textarea.font-mono {
+  color: #2d7a3f !important;
+}
+
+body.light-mode .composer-tool {
+  color: rgba(0,0,0,0.3) !important;
+}
+
+body.light-mode .composer-tool:hover {
+  background: rgba(0,0,0,0.05) !important;
+  color: rgba(0,0,0,0.6) !important;
+}
+
+body.light-mode .composer-post-btn {
+  background: #1a1a1a !important;
+  color: #FFFFFF !important;
+}
+
+body.light-mode .photo-upload-area {
+  background: rgba(0,0,0,0.02) !important;
+  border-color: rgba(0,0,0,0.1) !important;
+}
+
+body.light-mode .photo-upload-placeholder {
+  color: rgba(0,0,0,0.3) !important;
+}
+
+/* ── Photo post (keep dark for contrast) ── */
+body.light-mode .thread-card.type-photo {
+  background: #0F0E12 !important;
+  border-color: rgba(0,0,0,0.1) !important;
+}
+
+body.light-mode .thread-card.type-photo .thread-title {
+  color: #fff !important;
+}
+
+body.light-mode .thread-card.type-photo .thread-author {
+  color: rgba(255,255,255,0.6) !important;
+}
+
+body.light-mode .thread-card.type-photo .thread-body {
+  color: rgba(255,255,255,0.7) !important;
+}
+
+body.light-mode .thread-card.type-photo .thread-action {
+  color: rgba(255,255,255,0.5) !important;
+}
+
+/* ── Quote post (already light — stays cream) ── */
+body.light-mode .thread-card.type-quote {
+  background: #F5F5EF !important;
+  border-color: rgba(0,0,0,0.08) !important;
+}
+
+body.light-mode .thread-card.type-quote:hover {
+  background: #EFEFE8 !important;
+  border-color: rgba(0,0,0,0.12) !important;
+}
+
+body.light-mode .thread-card.type-quote .thread-title {
+  color: #2a2a2a !important;
+}
+
+body.light-mode .thread-card.type-quote .thread-author {
+  color: rgba(0,0,0,0.35) !important;
+}
+
+body.light-mode .thread-card.type-quote .thread-action {
+  color: rgba(0,0,0,0.2) !important;
+}
+
+body.light-mode .thread-card.type-quote .thread-action:hover {
+  color: rgba(0,0,0,0.5) !important;
+  background: rgba(0,0,0,0.04) !important;
+}
+
+/* ── Article post ── */
+body.light-mode .thread-card.type-article {
+  background: #FFFFFF !important;
+  border-color: rgba(0,0,0,0.08) !important;
+}
+
+body.light-mode .article-hero {
+  background: linear-gradient(135deg, #e8e6e3 0%, #d5d3cf 50%, #c4c0ba 100%) !important;
+}
+
+body.light-mode .article-hero-tag {
+  color: #3d8c40 !important;
+  background: rgba(61,140,64,0.1) !important;
+}
+
+body.light-mode .thread-card.type-article .thread-title {
+  color: #1a1a1a !important;
+}
+
+body.light-mode .thread-card.type-article .thread-body {
+  color: #5a5a5a !important;
+}
+
+body.light-mode .read-article-btn {
+  background: rgba(0,0,0,0.04) !important;
+  border-color: rgba(0,0,0,0.1) !important;
+  color: #4a4a4a !important;
+}
+
+body.light-mode .read-article-btn:hover {
+  background: rgba(0,0,0,0.08) !important;
+  color: #1a1a1a !important;
+}
+
+/* ── Terminal post (keep dark for Matrix aesthetic) ── */
+body.light-mode .thread-card.type-terminal {
+  background: #0a0a0a !important;
+  border-color: rgba(74,222,128,0.1) !important;
+}
+
+body.light-mode .thread-card.type-terminal .thread-title {
+  color: #4ADE80 !important;
+}
+
+body.light-mode .thread-card.type-terminal .thread-author {
+  color: rgba(74,222,128,0.35) !important;
+}
+
+body.light-mode .thread-card.type-terminal .thread-body {
+  color: rgba(74,222,128,0.6) !important;
+}
+
+body.light-mode .thread-card.type-terminal .thread-action {
+  color: rgba(74,222,128,0.3) !important;
+}
+
+/* ── Article Reader Overlay ── */
+body.light-mode .article-reader-overlay {
+  background: rgba(250,250,248,0.92) !important;
+}
+
+body.light-mode .reader-close {
+  background: rgba(0,0,0,0.08) !important;
+  color: #1a1a1a !important;
+}
+
+body.light-mode .reader-close:hover {
+  background: rgba(0,0,0,0.15) !important;
+}
+
+body.light-mode .reader-tag {
+  color: #3d8c40 !important;
+}
+
+body.light-mode .reader-title {
+  color: #1a1a1a !important;
+}
+
+body.light-mode .reader-byline {
+  color: #7a7a7a !important;
+}
+
+body.light-mode .reader-divider {
+  background: rgba(0,0,0,0.08) !important;
+}
+
+body.light-mode .reader-body {
+  color: #3a3a3a !important;
+}
+
+/* ══ Community Leader Pinned Announcement (Light) ══ */
+body.light-mode .leader-card {
+  background: linear-gradient(135deg, rgba(61,140,64,0.04) 0%, #FFFFFF 40%, #FFFFFF 100%) !important;
+  border-color: rgba(61,140,64,0.15) !important;
+}
+
+body.light-mode .leader-card:hover {
+  border-color: rgba(61,140,64,0.25) !important;
+}
+
+body.light-mode .leader-card::before {
+  background: linear-gradient(90deg, transparent 0%, #3d8c40 30%, #3d8c40 70%, transparent 100%) !important;
+  opacity: 0.4 !important;
+}
+
+body.light-mode .leader-avatar {
+  background: linear-gradient(135deg, #3d8c40, #2d6930) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 0 0 2px rgba(61,140,64,0.15) !important;
+}
+
+body.light-mode .leader-name {
+  color: #1a1a1a !important;
+}
+
+body.light-mode .leader-role {
+  color: #3d8c40 !important;
+}
+
+body.light-mode .leader-pin-tag {
+  color: rgba(61,140,64,0.6) !important;
+  background: rgba(61,140,64,0.06) !important;
+  border-color: rgba(61,140,64,0.1) !important;
+}
+
+body.light-mode .leader-title {
+  color: #1a1a1a !important;
+}
+
+body.light-mode .leader-body {
+  color: #5a5a5a !important;
+}
+
+body.light-mode .leader-bottom {
+  border-top-color: rgba(0,0,0,0.04) !important;
+}
+
+body.light-mode .leader-stat {
+  color: #999 !important;
+}
+
+body.light-mode .leader-timestamp {
+  color: #bbb !important;
+}
+
+body.light-mode .leader-verified svg {
+  fill: #3d8c40 !important;
+}

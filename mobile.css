@@ -454,6 +454,114 @@ body.light-mode .mobile-menu-divider {
     grid-template-columns: 1fr !important;
   }
 
+  .portrait-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+
+  .view-toggle-bar {
+    margin: 0 0 16px !important;
+  }
+
+  .view-toggle-btn {
+    font-size: 12px !important;
+    padding: 8px 14px !important;
+  }
+
+  /* Discover card stack mobile */
+  .discover-view {
+    padding: 16px 0 !important;
+  }
+
+  .card-stack-container {
+    max-width: 320px !important;
+  }
+
+  .discover-card {
+    width: 100% !important;
+    max-width: 320px !important;
+    height: 460px !important;
+  }
+
+  .discover-actions {
+    gap: 16px !important;
+  }
+
+  .discover-action-btn {
+    width: 48px !important;
+    height: 48px !important;
+  }
+
+  .discover-action-btn.pass-btn,
+  .discover-action-btn.like-btn {
+    width: 56px !important;
+    height: 56px !important;
+  }
+
+  /* Map view mobile */
+  .map-container {
+    height: 280px !important;
+    border-radius: 12px !important;
+  }
+
+  .map-nearby-row {
+    gap: 10px !important;
+    padding-bottom: 8px !important;
+  }
+
+  .map-nearby-card {
+    min-width: 120px !important;
+    padding: 12px !important;
+  }
+
+  .map-nearby-avatar {
+    width: 44px !important;
+    height: 44px !important;
+  }
+
+  /* ── Messages Page ── */
+  .messages-container {
+    flex-direction: column !important;
+  }
+
+  .convo-sidebar {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-right: none !important;
+    border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+  }
+
+  .chat-panel {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    z-index: 200 !important;
+  }
+
+  .chat-back-btn {
+    display: flex !important;
+  }
+
+  /* ── Travel Section ── */
+  .travel-section {
+    padding: 40px 16px !important;
+  }
+
+  .travel-title {
+    font-size: 24px !important;
+  }
+
+  .travel-plans {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .travel-plan-card {
+    padding: 16px !important;
+  }
+
   /* ── Book Page ── */
   .chapter-grid {
     grid-template-columns: 1fr !important;

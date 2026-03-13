@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZIION — Messages</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="light-theme.css?v=2">
+  <link rel="stylesheet" href="mobile.css">
+  <style>
+    /* ── Password Gate ── */
+    .gate-overlay { position:fixed; inset:0; z-index:99999; background:#0a0a0a; display:flex; flex-direction:column; align-items:center; justify-content:center; transition:opacity 0.8s cubic-bezier(0.4,0,0.2,1),transform 0.8s cubic-bezier(0.4,0,0.2,1); }
+    .gate-overlay.unlocked { opacity:0; transform:scale(1.02); pointer-events:none; }
+    .gate-vignette { position:absolute; inset:0; background:radial-gradient(ellipse at center,transparent 30%,rgba(0,0,0,0.6) 100%); pointer-events:none; }
+    .gate-content { position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; gap:0; }
+    .gate-logo { font-family:'Inter',sans-serif; font-size:28px; font-weight:200; letter-spacing:16px; color:rgba(255,255,255,0.12); margin-bottom:60px; text-indent:16px; text-transform:uppercase; }
+    .gate-divider { width:40px; height:1px; background:rgba(255,255,255,0.06); margin-bottom:32px; }
+    .gate-input-wrap { display:flex; flex-direction:column; align-items:center; gap:16px; }
+    .gate-label { font-size:8px; font-weight:400; text-transform:uppercase; letter-spacing:4px; color:rgba(255,255,255,0.08); }
+    .gate-input { background:transparent; border:none; border-bottom:1px solid rgba(255,255,255,0.06); border-radius:0; padding:12px 20px; font-family:'Inter',sans-serif; font-size:20px; font-weight:200; color:rgba(255,255,255,0.3); text-align:center; letter-spacing:12px; width:140px; outline:none; transition:border-color 0.5s ease,color 0.5s ease; -webkit-text-security:disc; }
+    .gate-input:focus { border-bottom-color:rgba(255,255,255,0.12); color:rgba(255,255,255,0.5); }
+    .gate-input.shake { animation:gateShake 0.4s ease; border-bottom-color:rgba(255,60,60,0.2); }
+    .gate-hint { font-size:8px; font-weight:300; color:rgba(255,255,255,0.04); margin-top:48px; letter-spacing:3px; text-transform:lowercase; }
+    @keyframes gateShake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      background: #0F0E12;
+      color: #fff;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      overflow-x: hidden;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ── Header ── */
+    .header { position:sticky; top:0; z-index:100; background:rgba(15,14,18,0.85); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border-bottom:1px solid rgba(255,255,255,0.06); padding:0 24px; height:64px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+    .header-left { display:flex; align-items:center; gap:16px; }
+    .logo-text { font-size:18px; font-weight:800; letter-spacing:6px; color:#fff; text-transform:uppercase; text-decoration:none; }
+    .search-bar { flex:0 1 420px; height:40px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08); border-radius:10px; display:flex; align-items:center; padding:0 14px; gap:10px; transition:border-color 0.2s,background 0.2s; }
+    .search-bar:focus-within { border-color:rgba(255,255,255,0.2); background:rgba(255,255,255,0.08); }
+    .search-icon { opacity:0.4; flex-shrink:0; }
+    .search-bar input { flex:1; background:none; border:none; outline:none; color:rgba(255,255,255,0.6); font-size:14px; font-family:inherit; }
+    .search-bar input::placeholder { color:rgba(255,255,255,0.3); }
+    .header-right { display:flex; align-items:center; gap:12px; }
+    .header-icon { width:36px; height:36px; display:flex; align-items:center; justify-content:center; border-radius:8px; cursor:pointer; transition:background 0.15s; color:rgba(255,255,255,0.5); }
+    .header-icon:hover { background:rgba(255,255,255,0.08); color:#fff; }
+    .avatar { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#4D4D4D,#322D2A); cursor:pointer; }
+
+    /* ── Layout ── */
+    .main-layout { display:flex; flex:1; overflow:hidden; }
+
+    /* ── Sidebar ── */
+    .sidebar { width:220px; flex-shrink:0; border-right:1px solid rgba(255,255,255,0.06); padding:20px 12px; display:flex; flex-direction:column; gap:4px; overflow-y:auto; }
+    .sidebar-create { width:100%; height:40px; background:#fff; color:#0F0E12; border:none; border-radius:10px; font-size:13px; font-weight:500; letter-spacing:0.05em; cursor:pointer; transition:opacity 0.15s; margin-bottom:12px; display:flex; align-items:center; justify-content:center; gap:8px; font-family:inherit; }
+    .sidebar-create:hover { opacity:0.85; }
+    .nav-item { display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:10px; cursor:pointer; transition:background 0.15s,color 0.15s; color:rgba(255,255,255,0.4); font-size:13px; font-weight:500; letter-spacing:0.02em; text-decoration:none; }
+    .nav-item:hover { background:rgba(255,255,255,0.06); color:#fff; }
+    .nav-item.active { background:rgba(255,255,255,0.08); color:#fff; }
+    .nav-item svg { width:18px; height:18px; opacity:0.6; flex-shrink:0; }
+    .nav-item.active svg { opacity:1; }
+    .sidebar-divider { height:1px; background:rgba(255,255,255,0.06); margin:8px 0; }
+
+    .theme-toggle { display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; cursor:pointer; transition:background 0.15s; color:rgba(255,255,255,0.3); font-size:12px; margin-top:auto; }
+    .theme-toggle:hover { background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.6); }
+    .theme-toggle svg { width:16px; height:16px; }
+
+    /* ── Messages Layout ── */
+    .messages-container {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* ── Conversation List (Left Panel) ── */
+    .convo-list {
+      width: 340px;
+      flex-shrink: 0;
+      border-right: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .convo-header {
+      padding: 24px 20px 16px;
+      flex-shrink: 0;
+    }
+
+    .convo-title {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+
+    .convo-search {
+      width: 100%;
+      height: 40px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      gap: 8px;
+    }
+
+    .convo-search input {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      color: rgba(255,255,255,0.6);
+      font-size: 13px;
+      font-family: inherit;
+    }
+    .convo-search input::placeholder { color: rgba(255,255,255,0.25); }
+    .convo-search svg { opacity: 0.3; flex-shrink: 0; }
+
+    .convo-items {
+      flex: 1;
+      overflow-y: auto;
+      padding: 4px 8px;
+    }
+
+    .convo-items::-webkit-scrollbar { width: 4px; }
+    .convo-items::-webkit-scrollbar-track { background: transparent; }
+    .convo-items::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
+
+    .convo-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .convo-item:hover { background: rgba(255,255,255,0.04); }
+    .convo-item.active { background: rgba(255,255,255,0.08); }
+
+    .convo-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      filter: grayscale(100%);
+      object-fit: cover;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .convo-avatar-placeholder {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, #4D4D4D, #322D2A);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.6);
+    }
+
+    .convo-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .convo-name-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .convo-name {
+      font-size: 14px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .convo-time {
+      font-size: 11px;
+      color: rgba(255,255,255,0.25);
+      flex-shrink: 0;
+      margin-left: 8px;
+    }
+
+    .convo-preview {
+      font-size: 13px;
+      color: rgba(255,255,255,0.35);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .convo-unread .convo-name { color: #fff; }
+    .convo-unread .convo-preview { color: rgba(255,255,255,0.6); font-weight: 500; }
+    .convo-unread .convo-time { color: #D5FF5A; }
+
+    .unread-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #D5FF5A;
+      flex-shrink: 0;
+    }
+
+    /* ── Chat Panel (Right) ── */
+    .chat-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .chat-empty {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: rgba(255,255,255,0.2);
+    }
+
+    .chat-empty svg { opacity: 0.15; }
+    .chat-empty-text { font-size: 14px; font-weight: 400; }
+
+    .chat-header {
+      padding: 16px 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-shrink: 0;
+    }
+
+    .chat-header-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      filter: grayscale(100%);
+      object-fit: cover;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .chat-header-avatar-placeholder {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4D4D4D, #322D2A);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.6);
+    }
+
+    .chat-header-info { flex: 1; }
+    .chat-header-name { font-size: 15px; font-weight: 600; }
+    .chat-header-location { font-size: 12px; color: rgba(255,255,255,0.35); margin-top: 2px; }
+
+    .chat-back-btn {
+      display: none;
+      width: 36px; height: 36px;
+      align-items: center; justify-content: center;
+      border-radius: 8px; border: none; background: none;
+      color: rgba(255,255,255,0.5); cursor: pointer;
+      transition: background 0.15s;
+    }
+    .chat-back-btn:hover { background: rgba(255,255,255,0.08); }
+
+    .chat-header-actions {
+      display: flex;
+      gap: 4px;
+    }
+
+    .chat-action-btn {
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 8px; border: none; background: none;
+      color: rgba(255,255,255,0.4); cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    .chat-action-btn:hover { background: rgba(255,255,255,0.08); color: #fff; }
+
+    /* ── Messages Area ── */
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .chat-messages::-webkit-scrollbar { width: 4px; }
+    .chat-messages::-webkit-scrollbar-track { background: transparent; }
+    .chat-messages::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
+
+    .msg-group {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-bottom: 8px;
+    }
+
+    .msg-group.sent { align-items: flex-end; }
+    .msg-group.received { align-items: flex-start; }
+
+    .msg-bubble {
+      max-width: 420px;
+      padding: 10px 16px;
+      font-size: 14px;
+      line-height: 1.5;
+      border-radius: 18px;
+      position: relative;
+    }
+
+    .msg-group.sent .msg-bubble {
+      background: rgba(213,255,90,0.15);
+      color: rgba(255,255,255,0.9);
+      border-bottom-right-radius: 6px;
+    }
+
+    .msg-group.sent .msg-bubble:first-child { border-top-right-radius: 18px; }
+    .msg-group.sent .msg-bubble:last-child { border-bottom-right-radius: 18px; }
+
+    .msg-group.received .msg-bubble {
+      background: rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.85);
+      border-bottom-left-radius: 6px;
+    }
+
+    .msg-group.received .msg-bubble:first-child { border-top-left-radius: 18px; }
+    .msg-group.received .msg-bubble:last-child { border-bottom-left-radius: 18px; }
+
+    .msg-time {
+      font-size: 11px;
+      color: rgba(255,255,255,0.2);
+      margin-top: 4px;
+      padding: 0 4px;
+    }
+
+    /* ── Voice Message ── */
+    .msg-voice {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 200px;
+    }
+
+    .voice-play-btn {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      border: none; cursor: pointer;
+      flex-shrink: 0;
+      transition: opacity 0.15s;
+    }
+
+    .msg-group.sent .voice-play-btn { background: rgba(213,255,90,0.3); color: #D5FF5A; }
+    .msg-group.received .voice-play-btn { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
+    .voice-play-btn:hover { opacity: 0.8; }
+
+    .voice-waveform {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      height: 28px;
+    }
+
+    .voice-bar {
+      width: 3px;
+      border-radius: 2px;
+      transition: height 0.2s ease;
+    }
+
+    .msg-group.sent .voice-bar { background: rgba(213,255,90,0.5); }
+    .msg-group.received .voice-bar { background: rgba(255,255,255,0.2); }
+
+    .voice-duration {
+      font-size: 11px;
+      color: rgba(255,255,255,0.3);
+      flex-shrink: 0;
+      min-width: 32px;
+      text-align: right;
+    }
+
+    /* ── Heart Reaction ── */
+    .msg-reaction {
+      position: absolute;
+      bottom: -8px;
+      right: 8px;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: #0F0E12;
+      border: 2px solid #0F0E12;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px;
+    }
+
+    .msg-group.received .msg-reaction { left: 8px; right: auto; }
+
+    /* ── Date Separator ── */
+    .msg-date-sep {
+      text-align: center;
+      font-size: 11px;
+      color: rgba(255,255,255,0.2);
+      padding: 16px 0;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Input Bar ── */
+    .chat-input-bar {
+      padding: 12px 24px 16px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .input-action {
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 8px; border: none; background: none;
+      color: rgba(255,255,255,0.3); cursor: pointer;
+      transition: color 0.15s, background 0.15s;
+      flex-shrink: 0;
+    }
+    .input-action:hover { color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.06); }
+
+    .chat-text-input {
+      flex: 1;
+      height: 40px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 0 16px;
+      font-family: inherit;
+      font-size: 14px;
+      color: rgba(255,255,255,0.8);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .chat-text-input::placeholder { color: rgba(255,255,255,0.25); }
+    .chat-text-input:focus { border-color: rgba(255,255,255,0.2); }
+
+    .send-btn {
+      width: 40px; height: 40px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%;
+      border: none;
+      background: #D5FF5A;
+      color: #0F0E12;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.15s;
+      flex-shrink: 0;
+    }
+    .send-btn:hover { opacity: 0.85; transform: scale(1.05); }
+  </style>
+</head>
+<body>
+
+  <!-- Password Gate -->
+  <div class="gate-overlay" id="gateOverlay">
+    <div class="gate-vignette"></div>
+    <div class="gate-content">
+      <div class="gate-logo">ziion</div>
+      <div class="gate-divider"></div>
+      <div class="gate-input-wrap">
+        <div class="gate-label">access code</div>
+        <input class="gate-input" id="gateInput" type="text" maxlength="4" autofocus autocomplete="off" inputmode="numeric">
+      </div>
+      <div class="gate-hint">private preview</div>
+    </div>
+  </div>
+  <script>
+    (function(){
+      const code = '19';
+      const overlay = document.getElementById('gateOverlay');
+      const input = document.getElementById('gateInput');
+      if(sessionStorage.getItem('ziion_unlocked')==='true'){ overlay.style.display='none'; }
+      input.addEventListener('input', function(){
+        if(this.value === code){
+          sessionStorage.setItem('ziion_unlocked','true');
+          overlay.classList.add('unlocked');
+          setTimeout(()=> overlay.style.display='none', 700);
+        } else if(this.value.length >= code.length){
+          this.classList.add('shake');
+          setTimeout(()=>{ this.classList.remove('shake'); this.value=''; }, 500);
+        }
+      });
+    })();
+  </script>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <a class="logo-text" href="cosmos-grid.html">ZIION</a>
+    </div>
+    <div class="search-bar">
+      <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" placeholder="Search ZIION...">
+    </div>
+    <div class="header-right">
+      <div class="header-icon" title="Notifications">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      </div>
+      <div class="header-icon" title="Messages">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      <div class="avatar"></div>
+    </div>
+  </div>
+
+  <!-- Main Layout -->
+  <div class="main-layout">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <button class="sidebar-create">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        Create
+      </button>
+
+      <a class="nav-item" href="cosmos-grid.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <a class="nav-item" href="library.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/></svg>
+        Library
+      </a>
+      <a class="nav-item" href="threads.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Threads
+      </a>
+      <a class="nav-item" href="directory.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Connections
+      </a>
+      <a class="nav-item" href="assets.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Assets
+      </a>
+      <a class="nav-item" href="world.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        World
+      </a>
+      <a class="nav-item" href="pulse.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Pulse
+      </a>
+
+      <div class="sidebar-divider"></div>
+
+      <a class="nav-item" href="book-19keys.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/></svg>
+        Book 19Keys
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Calendar
+      </a>
+      <a class="nav-item active" href="messages.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Messages
+      </a>
+
+      <div class="sidebar-divider"></div>
+
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </a>
+
+      <div id="themeToggle" class="theme-toggle" title="Switch to light mode">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </div>
+    </div>
+
+    <!-- Messages Container -->
+    <div class="messages-container">
+
+      <!-- Conversation List -->
+      <div class="convo-list" id="convoList">
+        <div class="convo-header">
+          <div class="convo-title">Messages</div>
+          <div class="convo-search">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" placeholder="Search messages..." id="convoSearchInput">
+          </div>
+        </div>
+        <div class="convo-items" id="convoItems">
+          <!-- Conversations injected by JS -->
+        </div>
+      </div>
+
+      <!-- Chat Panel -->
+      <div class="chat-panel" id="chatPanel">
+        <div class="chat-empty" id="chatEmpty">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <div class="chat-empty-text">Select a conversation</div>
+        </div>
+
+        <div class="chat-active" id="chatActive" style="display:none; flex-direction:column; height:100%;">
+          <!-- Chat Header -->
+          <div class="chat-header">
+            <button class="chat-back-btn" id="chatBackBtn" onclick="closeChat()">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <div class="chat-header-avatar-placeholder" id="chatHeaderAvatar">?</div>
+            <div class="chat-header-info">
+              <div class="chat-header-name" id="chatHeaderName"></div>
+              <div class="chat-header-location" id="chatHeaderLocation"></div>
+            </div>
+            <div class="chat-header-actions">
+              <button class="chat-action-btn" title="Voice call">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              </button>
+              <button class="chat-action-btn" title="Video call">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+              </button>
+              <button class="chat-action-btn" title="More">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Messages Area -->
+          <div class="chat-messages" id="chatMessages"></div>
+
+          <!-- Input Bar -->
+          <div class="chat-input-bar">
+            <button class="input-action" title="Attach file">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+            </button>
+            <input class="chat-text-input" id="chatTextInput" type="text" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendMessage()">
+            <button class="input-action" title="Voice message" id="micBtn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            </button>
+            <button class="send-btn" onclick="sendMessage()" title="Send">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+  // ── Conversation Data ──
+  const conversations = [
+    {
+      id: 1,
+      name: 'Amara Osei',
+      initials: 'AO',
+      location: 'Accra, Ghana',
+      unread: 2,
+      lastTime: '2m ago',
+      preview: 'The frequency alignment session was incredible...',
+      messages: [
+        { type: 'date', text: 'Today' },
+        { from: 'them', text: 'Just finished reading your piece on sovereign economics. Pure fire.', time: '10:32 AM' },
+        { from: 'me', text: 'Appreciate that. Took me weeks to distill those ideas down.', time: '10:34 AM' },
+        { from: 'them', text: 'The part about circular economies in diaspora communities hit different.', time: '10:35 AM' },
+        { from: 'them', text: 'The frequency alignment session was incredible...', time: '10:36 AM', reaction: '\u2764\ufe0f' },
+        { from: 'me', type: 'voice', duration: '0:42', time: '10:38 AM' },
+      ]
+    },
+    {
+      id: 2,
+      name: 'Kwame Asante',
+      initials: 'KA',
+      location: 'London, UK',
+      unread: 0,
+      lastTime: '1h ago',
+      preview: 'Let me check the analytics dashboard and get back to you',
+      messages: [
+        { type: 'date', text: 'Today' },
+        { from: 'me', text: 'How are the community metrics looking this month?', time: '9:15 AM' },
+        { from: 'them', text: 'Growth is steady. 23% increase in active participation.', time: '9:18 AM' },
+        { from: 'them', text: 'The builders cohort is especially engaged.', time: '9:18 AM' },
+        { from: 'me', text: 'Beautiful. What about the new onboarding flow?', time: '9:22 AM' },
+        { from: 'them', text: 'Let me check the analytics dashboard and get back to you', time: '9:25 AM' },
+      ]
+    },
+    {
+      id: 3,
+      name: 'Zuri Mahlangu',
+      initials: 'ZM',
+      location: 'Johannesburg, SA',
+      unread: 1,
+      lastTime: '3h ago',
+      preview: 'Voice message',
+      messages: [
+        { type: 'date', text: 'Yesterday' },
+        { from: 'me', text: 'Your documentary pitch was brilliant. Let\'s collab on this.', time: '8:45 PM' },
+        { from: 'them', text: 'Yes! I\'ve been thinking about the visual direction all day.', time: '8:50 PM' },
+        { from: 'them', text: 'Something between Afrofuturism and raw documentary style.', time: '8:51 PM' },
+        { type: 'date', text: 'Today' },
+        { from: 'them', type: 'voice', duration: '1:15', time: '7:30 AM' },
+      ]
+    },
+    {
+      id: 4,
+      name: 'Nia Kamau',
+      initials: 'NK',
+      location: 'Nairobi, Kenya',
+      unread: 0,
+      lastTime: 'Yesterday',
+      preview: 'The prototype is almost ready for review',
+      messages: [
+        { type: 'date', text: 'Yesterday' },
+        { from: 'them', text: 'Quick update on the ZIION mobile experience.', time: '4:12 PM' },
+        { from: 'them', text: 'The prototype is almost ready for review', time: '4:12 PM' },
+        { from: 'me', text: 'Can\'t wait to see it. Drop the link when ready.', time: '4:30 PM' },
+        { from: 'me', type: 'voice', duration: '0:18', time: '4:31 PM' },
+      ]
+    },
+    {
+      id: 5,
+      name: 'Jabari Wright',
+      initials: 'JW',
+      location: 'Atlanta, US',
+      unread: 0,
+      lastTime: 'Mon',
+      preview: 'The beat is ready. Pure gold.',
+      messages: [
+        { type: 'date', text: 'Monday' },
+        { from: 'them', text: 'Yo the 432hz track we talked about is done.', time: '6:20 PM' },
+        { from: 'them', text: 'The beat is ready. Pure gold.', time: '6:20 PM', reaction: '\ud83d\udd25' },
+        { from: 'me', text: 'Send it through. I\'m in the studio tonight.', time: '6:45 PM' },
+      ]
+    },
+    {
+      id: 6,
+      name: 'Sanaa Diallo',
+      initials: 'SD',
+      location: 'Paris, France',
+      unread: 0,
+      lastTime: 'Sun',
+      preview: 'The gallery show was a success! Thank you for the support',
+      messages: [
+        { type: 'date', text: 'Sunday' },
+        { from: 'them', text: 'The gallery show was a success! Thank you for the support', time: '9:15 PM' },
+        { from: 'me', text: 'Congrats! Your work deserves every bit of recognition.', time: '9:30 PM' },
+        { from: 'them', text: 'Next one is in Berlin. You should come through.', time: '9:32 PM', reaction: '\u2764\ufe0f' },
+      ]
+    },
+  ];
+
+  let activeConvoId = null;
+
+  // ── Render Conversations ──
+  function renderConversations() {
+    const container = document.getElementById('convoItems');
+    container.innerHTML = conversations.map(c => `
+      <div class="convo-item ${c.unread ? 'convo-unread' : ''} ${activeConvoId === c.id ? 'active' : ''}" onclick="openChat(${c.id})">
+        <div class="convo-avatar-placeholder">${c.initials}</div>
+        <div class="convo-info">
+          <div class="convo-name-row">
+            <span class="convo-name">${c.name}</span>
+            <span class="convo-time">${c.lastTime}</span>
+          </div>
+          <div class="convo-preview">${c.preview}</div>
+        </div>
+        ${c.unread ? '<div class="unread-dot"></div>' : ''}
+      </div>
+    `).join('');
+  }
+
+  // ── Generate Waveform Bars ──
+  function generateWaveform(count) {
+    let bars = '';
+    for (let i = 0; i < count; i++) {
+      const h = Math.floor(Math.random() * 20) + 4;
+      bars += `<div class="voice-bar" style="height:${h}px"></div>`;
+    }
+    return bars;
+  }
+
+  // ── Open Chat ──
+  function openChat(id) {
+    activeConvoId = id;
+    const convo = conversations.find(c => c.id === id);
+    if (!convo) return;
+
+    // Mark as read
+    convo.unread = 0;
+    renderConversations();
+
+    // Show chat panel
+    document.getElementById('chatEmpty').style.display = 'none';
+    const chatActive = document.getElementById('chatActive');
+    chatActive.style.display = 'flex';
+
+    // Set header
+    document.getElementById('chatHeaderAvatar').textContent = convo.initials;
+    document.getElementById('chatHeaderName').textContent = convo.name;
+    document.getElementById('chatHeaderLocation').textContent = convo.location;
+
+    // Render messages
+    const container = document.getElementById('chatMessages');
+    container.innerHTML = convo.messages.map(msg => {
+      if (msg.type === 'date') {
+        return `<div class="msg-date-sep">${msg.text}</div>`;
+      }
+
+      const isSent = msg.from === 'me';
+      const groupClass = isSent ? 'sent' : 'received';
+
+      if (msg.type === 'voice') {
+        return `
+          <div class="msg-group ${groupClass}">
+            <div class="msg-bubble">
+              <div class="msg-voice">
+                <button class="voice-play-btn">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                </button>
+                <div class="voice-waveform">${generateWaveform(32)}</div>
+                <span class="voice-duration">${msg.duration}</span>
+              </div>
+              ${msg.reaction ? `<div class="msg-reaction">${msg.reaction}</div>` : ''}
+            </div>
+            <div class="msg-time">${msg.time}</div>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="msg-group ${groupClass}">
+          <div class="msg-bubble">
+            ${msg.text}
+            ${msg.reaction ? `<div class="msg-reaction">${msg.reaction}</div>` : ''}
+          </div>
+          <div class="msg-time">${msg.time}</div>
+        </div>
+      `;
+    }).join('');
+
+    // Scroll to bottom
+    container.scrollTop = container.scrollHeight;
+
+    // Mobile: show chat panel
+    if (window.innerWidth <= 768) {
+      document.getElementById('convoList').style.display = 'none';
+      document.getElementById('chatBackBtn').style.display = 'flex';
+    }
+
+    // Focus input
+    document.getElementById('chatTextInput').focus();
+  }
+
+  // ── Close Chat (Mobile) ──
+  function closeChat() {
+    document.getElementById('convoList').style.display = 'flex';
+    document.getElementById('chatActive').style.display = 'none';
+    document.getElementById('chatEmpty').style.display = 'flex';
+    document.getElementById('chatBackBtn').style.display = 'none';
+    activeConvoId = null;
+    renderConversations();
+  }
+
+  // ── Send Message ──
+  function sendMessage() {
+    const input = document.getElementById('chatTextInput');
+    const text = input.value.trim();
+    if (!text || !activeConvoId) return;
+
+    const convo = conversations.find(c => c.id === activeConvoId);
+    if (!convo) return;
+
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+
+    convo.messages.push({ from: 'me', text: text, time: timeStr });
+    convo.preview = text;
+    convo.lastTime = 'Just now';
+
+    input.value = '';
+    openChat(activeConvoId);
+  }
+
+  // ── Search Conversations ──
+  document.getElementById('convoSearchInput').addEventListener('input', function() {
+    const q = this.value.toLowerCase();
+    const items = document.querySelectorAll('.convo-item');
+    items.forEach((item, i) => {
+      const name = conversations[i].name.toLowerCase();
+      const preview = conversations[i].preview.toLowerCase();
+      item.style.display = (name.includes(q) || preview.includes(q)) ? 'flex' : 'none';
+    });
+  });
+
+  // ── Handle Resize ──
+  window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+      document.getElementById('convoList').style.display = 'flex';
+      document.getElementById('chatBackBtn').style.display = 'none';
+    }
+  });
+
+  // Init
+  renderConversations();
+  </script>
+
+  <!-- Theme Toggle -->
+  <script>
+  (function(){
+    const toggle = document.getElementById('themeToggle');
+    if (!toggle) return;
+    function applyTheme(light) {
+      document.body.classList.toggle('light-mode', light);
+      localStorage.setItem('ziion_theme', light ? 'light' : 'dark');
+    }
+    if (localStorage.getItem('ziion_theme') === 'light') applyTheme(true);
+    toggle.addEventListener('click', () => applyTheme(!document.body.classList.contains('light-mode')));
+  })();
+  </script>
+
+  <script src="mobile-nav.js"></script>
+</body>
+</html>

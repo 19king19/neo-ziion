@@ -94,6 +94,262 @@
       font-weight: 400;
     }
 
+    /* ── View Toggle Bar ── */
+    .view-toggle-bar {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 24px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 4px;
+      width: fit-content;
+    }
+    .view-toggle-btn {
+      padding: 8px 20px;
+      border-radius: 10px;
+      border: none;
+      background: none;
+      color: rgba(255,255,255,0.4);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .view-toggle-btn:hover { color: rgba(255,255,255,0.7); }
+    .view-toggle-btn.active { background: rgba(255,255,255,0.1); color: #fff; }
+    .view-toggle-btn svg { width: 14px; height: 14px; }
+
+    .view-panel { display: none; }
+    .view-panel.active { display: block; }
+
+    /* ── Discover Card Stack ── */
+    .discover-view {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 20px;
+    }
+    .discover-view.active { display: flex; }
+
+    .card-stack-container {
+      position: relative;
+      width: 360px;
+      height: 520px;
+      margin-bottom: 32px;
+    }
+
+    .discover-card {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 20px;
+      overflow: hidden;
+      cursor: grab;
+      user-select: none;
+      transition: transform 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.4s;
+      will-change: transform;
+    }
+    .discover-card:active { cursor: grabbing; }
+
+    .discover-card-img {
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center top;
+      filter: grayscale(100%) contrast(1.1);
+    }
+
+    .discover-card-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(15,14,18,0.95) 0%, rgba(15,14,18,0.5) 35%, transparent 60%);
+    }
+
+    .discover-card-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 28px;
+    }
+
+    .dc-name {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+    .dc-role {
+      font-size: 14px;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 4px;
+    }
+    .dc-location {
+      font-size: 12px;
+      color: rgba(255,255,255,0.35);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 12px;
+    }
+    .dc-bio {
+      font-size: 13px;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .discover-card .swipe-indicator {
+      position: absolute;
+      top: 24px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+    .swipe-indicator.like { right: 24px; color: #D5FF5A; border: 2px solid #D5FF5A; }
+    .swipe-indicator.pass { left: 24px; color: #ff4444; border: 2px solid #ff4444; }
+
+    /* ── Action Buttons ── */
+    .discover-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .discover-action-btn {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      border: 2px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .discover-action-btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); transform: scale(1.08); }
+    .discover-action-btn.undo { color: rgba(255,255,255,0.4); }
+    .discover-action-btn.pass-btn { color: #ff4444; border-color: rgba(255,68,68,0.3); }
+    .discover-action-btn.pass-btn:hover { background: rgba(255,68,68,0.1); border-color: #ff4444; }
+    .discover-action-btn.like-btn { color: #D5FF5A; border-color: rgba(213,255,90,0.3); }
+    .discover-action-btn.like-btn:hover { background: rgba(213,255,90,0.1); border-color: #D5FF5A; }
+    .discover-action-btn.msg-btn { color: rgba(255,255,255,0.5); }
+    .discover-action-btn.msg-btn:hover { color: #fff; }
+
+    /* ── Map View ── */
+    .map-view {
+      display: none;
+      flex-direction: column;
+    }
+    .map-view.active { display: flex; }
+
+    .map-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .map-toggle-group {
+      display: flex;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px;
+      padding: 3px;
+    }
+    .map-toggle-opt {
+      padding: 6px 16px;
+      border-radius: 8px;
+      border: none;
+      background: none;
+      color: rgba(255,255,255,0.4);
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .map-toggle-opt.active { background: rgba(255,255,255,0.1); color: #fff; }
+
+    .map-container {
+      position: relative;
+      width: 100%;
+      height: 420px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .map-svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .map-pin {
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .map-pin:hover { transform: scale(1.2); }
+
+    @keyframes mapPulse {
+      0% { r: 8; opacity: 0.3; }
+      100% { r: 20; opacity: 0; }
+    }
+    .map-pin-pulse {
+      animation: mapPulse 2s ease-out infinite;
+    }
+
+    .map-nearby-section {
+      margin-bottom: 24px;
+    }
+    .map-nearby-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 12px;
+    }
+    .map-nearby-row {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+    .map-nearby-card {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .map-nearby-card:hover { background: rgba(255,255,255,0.06); }
+    .map-nearby-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4D4D4D, #322D2A);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.6);
+      flex-shrink: 0;
+    }
+    .map-nearby-name { font-size: 13px; font-weight: 600; }
+    .map-nearby-loc { font-size: 11px; color: rgba(255,255,255,0.35); }
+
     /* ── Filter Bar ── */
     .filter-bar {
       display: flex;
@@ -566,7 +822,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         Calendar
       </a>
-      <a class="nav-item" href="#">
+      <a class="nav-item" href="messages.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
         Messages
       </a>
@@ -590,19 +846,139 @@
         <div class="dir-subtitle">The nation. Upload a photo — AI renders it black & white so every portrait is unified.</div>
       </div>
 
-      <!-- Filters -->
-      <div class="filter-bar">
-        <div class="filter-chip active" onclick="filterDir('all', this)">All Members</div>
-        <div class="filter-chip" onclick="filterDir('leadership', this)">Leadership</div>
-        <div class="filter-chip" onclick="filterDir('builder', this)">Builders</div>
-        <div class="filter-chip" onclick="filterDir('creative', this)">Creatives</div>
-        <div class="filter-chip" onclick="filterDir('educator', this)">Educators</div>
-        <div class="filter-chip" onclick="filterDir('analyst', this)">Analysts</div>
+      <!-- View Toggle -->
+      <div class="view-toggle-bar">
+        <button class="view-toggle-btn active" onclick="switchView('grid', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          Grid
+        </button>
+        <button class="view-toggle-btn" onclick="switchView('discover', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M12 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0-6 0"/></svg>
+          Discover
+        </button>
+        <button class="view-toggle-btn" onclick="switchView('map', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Map
+        </button>
       </div>
 
-      <!-- Portrait Grid -->
-      <div class="portrait-grid" id="portraitGrid">
-        <!-- Cards injected by JS -->
+      <!-- Grid View (default) -->
+      <div class="view-panel active" id="gridView">
+        <!-- Filters -->
+        <div class="filter-bar">
+          <div class="filter-chip active" onclick="filterDir('all', this)">All Members</div>
+          <div class="filter-chip" onclick="filterDir('leadership', this)">Leadership</div>
+          <div class="filter-chip" onclick="filterDir('builder', this)">Builders</div>
+          <div class="filter-chip" onclick="filterDir('creative', this)">Creatives</div>
+          <div class="filter-chip" onclick="filterDir('educator', this)">Educators</div>
+          <div class="filter-chip" onclick="filterDir('analyst', this)">Analysts</div>
+        </div>
+
+        <!-- Portrait Grid -->
+        <div class="portrait-grid" id="portraitGrid">
+          <!-- Cards injected by JS -->
+        </div>
+      </div>
+
+      <!-- Discover View -->
+      <div class="discover-view" id="discoverView">
+        <div class="card-stack-container" id="cardStack">
+          <!-- Cards injected by JS -->
+        </div>
+        <div class="discover-actions">
+          <button class="discover-action-btn undo" onclick="undoSwipe()" title="Undo">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+          </button>
+          <button class="discover-action-btn pass-btn" onclick="swipeCard('left')" title="Pass">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+          <button class="discover-action-btn like-btn" onclick="swipeCard('right')" title="Like">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <button class="discover-action-btn msg-btn" onclick="swipeCard('message')" title="Message">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Map View -->
+      <div class="map-view" id="mapView">
+        <div class="map-controls">
+          <div class="map-toggle-group">
+            <button class="map-toggle-opt active">Nearby</button>
+            <button class="map-toggle-opt">Global</button>
+          </div>
+        </div>
+
+        <div class="map-container">
+          <svg class="map-svg" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet">
+            <!-- Dark world map outline -->
+            <rect width="800" height="400" fill="#0F0E12"/>
+            <!-- Simplified continent outlines -->
+            <g opacity="0.12" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="0.8">
+              <!-- North America -->
+              <path d="M80,80 Q120,60 160,70 Q200,55 220,80 Q240,100 230,130 Q210,160 180,170 Q160,180 140,200 Q120,210 100,190 Q80,170 70,140 Q60,110 80,80Z"/>
+              <!-- South America -->
+              <path d="M180,220 Q200,210 210,230 Q220,260 230,290 Q225,320 210,340 Q195,355 180,350 Q165,340 160,310 Q155,280 160,250 Q165,230 180,220Z"/>
+              <!-- Europe -->
+              <path d="M370,70 Q390,60 410,65 Q430,70 440,90 Q435,110 420,120 Q400,130 380,125 Q365,115 360,95 Q365,80 370,70Z"/>
+              <!-- Africa -->
+              <path d="M380,140 Q400,130 420,140 Q440,160 450,200 Q445,240 430,280 Q415,310 400,320 Q385,315 375,290 Q365,260 360,220 Q365,180 370,160 Q375,145 380,140Z"/>
+              <!-- Asia -->
+              <path d="M450,60 Q500,50 550,55 Q600,65 640,80 Q670,100 680,130 Q675,160 650,170 Q620,180 580,175 Q540,170 500,160 Q470,145 460,120 Q450,95 450,60Z"/>
+              <!-- Australia -->
+              <path d="M620,260 Q650,250 680,260 Q700,275 695,300 Q680,315 650,315 Q625,310 615,290 Q615,275 620,260Z"/>
+            </g>
+
+            <!-- Grid lines -->
+            <g opacity="0.04" stroke="rgba(255,255,255,0.5)" stroke-width="0.5">
+              <line x1="0" y1="100" x2="800" y2="100"/><line x1="0" y1="200" x2="800" y2="200"/><line x1="0" y1="300" x2="800" y2="300"/>
+              <line x1="200" y1="0" x2="200" y2="400"/><line x1="400" y1="0" x2="400" y2="400"/><line x1="600" y1="0" x2="600" y2="400"/>
+            </g>
+
+            <!-- Member pins with pulse -->
+            <!-- Atlanta -->
+            <circle class="map-pin-pulse" cx="170" cy="130" r="8" fill="#D5FF5A" opacity="0.3"/>
+            <circle class="map-pin" cx="170" cy="130" r="5" fill="#D5FF5A" stroke="#0F0E12" stroke-width="2"/>
+            <text x="170" y="150" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="8" font-family="Inter">Atlanta</text>
+
+            <!-- London -->
+            <circle class="map-pin-pulse" cx="390" cy="85" r="8" fill="#D5FF5A" opacity="0.3"/>
+            <circle class="map-pin" cx="390" cy="85" r="5" fill="#D5FF5A" stroke="#0F0E12" stroke-width="2"/>
+            <text x="390" y="105" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="8" font-family="Inter">London</text>
+
+            <!-- Accra -->
+            <circle class="map-pin-pulse" cx="385" cy="195" r="8" fill="#D5FF5A" opacity="0.3"/>
+            <circle class="map-pin" cx="385" cy="195" r="5" fill="#D5FF5A" stroke="#0F0E12" stroke-width="2"/>
+            <text x="385" y="215" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="8" font-family="Inter">Accra</text>
+
+            <!-- Nairobi -->
+            <circle class="map-pin-pulse" cx="440" cy="210" r="8" fill="#D5FF5A" opacity="0.3"/>
+            <circle class="map-pin" cx="440" cy="210" r="5" fill="#D5FF5A" stroke="#0F0E12" stroke-width="2"/>
+            <text x="440" y="230" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="8" font-family="Inter">Nairobi</text>
+
+            <!-- Johannesburg -->
+            <circle class="map-pin-pulse" cx="420" cy="300" r="8" fill="#D5FF5A" opacity="0.3"/>
+            <circle class="map-pin" cx="420" cy="300" r="5" fill="#D5FF5A" stroke="#0F0E12" stroke-width="2"/>
+            <text x="420" y="320" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="8" font-family="Inter">Johannesburg</text>
+
+            <!-- Paris -->
+            <circle class="map-pin-pulse" cx="400" cy="78" r="8" fill="#D5FF5A" opacity="0.3"/>
+            <circle class="map-pin" cx="400" cy="78" r="4" fill="#D5FF5A" stroke="#0F0E12" stroke-width="2"/>
+
+            <!-- Tokyo -->
+            <circle class="map-pin-pulse" cx="660" cy="110" r="8" fill="#D5FF5A" opacity="0.3"/>
+            <circle class="map-pin" cx="660" cy="110" r="4" fill="#D5FF5A" stroke="#0F0E12" stroke-width="2"/>
+            <text x="660" y="130" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="8" font-family="Inter">Tokyo</text>
+          </svg>
+        </div>
+
+        <div class="map-nearby-section">
+          <div class="map-nearby-title">Members across the network</div>
+          <div class="map-nearby-row" id="mapNearbyRow">
+            <!-- Injected by JS -->
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -935,6 +1311,249 @@
       const cat = activeChip ? activeChip.textContent.toLowerCase().replace(' ', '') : 'all';
       const catMap = { 'allmembers': 'all', 'leadership': 'leadership', 'builders': 'builder', 'creatives': 'creative', 'educators': 'educator', 'analysts': 'analyst' };
       renderGrid(catMap[cat] || 'all', q);
+    }
+
+    // ── VIEW TOGGLE ──
+    function switchView(view, btn) {
+      // Update toggle buttons
+      document.querySelectorAll('.view-toggle-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      // Hide all views
+      document.getElementById('gridView').classList.remove('active');
+      document.getElementById('discoverView').classList.remove('active');
+      document.getElementById('mapView').classList.remove('active');
+
+      // Show selected view
+      if (view === 'grid') {
+        document.getElementById('gridView').classList.add('active');
+      } else if (view === 'discover') {
+        document.getElementById('discoverView').classList.add('active');
+        if (!discoverInitialized) initDiscover();
+      } else if (view === 'map') {
+        document.getElementById('mapView').classList.add('active');
+        if (!mapInitialized) initMap();
+      }
+    }
+
+    // ── DISCOVER CARD STACK ──
+    let discoverInitialized = false;
+    let discoverCards = [];
+    let discoverIndex = 0;
+    let swipeHistory = [];
+
+    // Synthetic locations for discover cards
+    const memberLocations = {
+      '19keys': 'Atlanta, GA',
+      'mariam': 'London, UK',
+      'rashad': 'New Jersey, US',
+      'akua': 'Accra, Ghana',
+      'jaylen': 'Boston, MA',
+      'supernatural': 'Los Angeles, CA',
+      'antoine': 'Atlanta, GA',
+      'ledger': 'Nairobi, Kenya'
+    };
+
+    function initDiscover() {
+      discoverInitialized = true;
+      discoverCards = [...members];
+      discoverIndex = 0;
+      swipeHistory = [];
+      renderCardStack();
+    }
+
+    function renderCardStack() {
+      const container = document.getElementById('cardStack');
+      container.innerHTML = '';
+
+      const remaining = discoverCards.slice(discoverIndex);
+      const visible = remaining.slice(0, 3);
+
+      if (visible.length === 0) {
+        container.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:rgba(255,255,255,0.4);text-align:center;padding:40px;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom:16px;opacity:0.3;"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg><div style="font-size:18px;font-weight:700;margin-bottom:8px;">You\'ve seen everyone</div><div style="font-size:14px;opacity:0.6;">Check back later for new connections</div></div>';
+        return;
+      }
+
+      // Render cards in reverse order (bottom card first in DOM)
+      for (let i = visible.length - 1; i >= 0; i--) {
+        const m = visible[i];
+        const card = document.createElement('div');
+        card.className = 'discover-card';
+        card.dataset.index = discoverIndex + i;
+        card.dataset.id = m.id;
+
+        // Stack positioning
+        card.style.zIndex = 10 - i;
+        card.style.transform = `translateY(${i * 8}px) scale(${1 - i * 0.04})`;
+        card.style.opacity = i === 0 ? '1' : i === 1 ? '0.7' : '0.4';
+
+        const location = memberLocations[m.id] || 'Worldwide';
+        const initials = m.name.split(' ').map(w => w[0]).join('').substring(0, 2);
+
+        card.innerHTML = `
+          <div class="discover-card-img" style="background-image: url('${m.img}')"></div>
+          <div class="swipe-indicator like">CONNECT</div>
+          <div class="swipe-indicator pass">PASS</div>
+          <div class="discover-card-info">
+            <div class="discover-card-name">${m.name}</div>
+            <div class="discover-card-title">${m.role}</div>
+            <div class="discover-card-location">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              ${location}
+            </div>
+            <div class="discover-card-bio">${m.bio.substring(0, 120)}...</div>
+          </div>
+        `;
+
+        // Only add drag to top card
+        if (i === 0) {
+          setupCardDrag(card);
+        }
+
+        container.appendChild(card);
+      }
+    }
+
+    function setupCardDrag(card) {
+      let startX = 0, startY = 0, currentX = 0, isDragging = false;
+
+      function onStart(e) {
+        isDragging = true;
+        const point = e.touches ? e.touches[0] : e;
+        startX = point.clientX;
+        startY = point.clientY;
+        card.style.transition = 'none';
+        card.classList.add('dragging');
+      }
+
+      function onMove(e) {
+        if (!isDragging) return;
+        e.preventDefault();
+        const point = e.touches ? e.touches[0] : e;
+        currentX = point.clientX - startX;
+        const rotate = currentX * 0.08;
+        card.style.transform = `translateX(${currentX}px) rotate(${rotate}deg)`;
+
+        // Show swipe indicators
+        const likeIndicator = card.querySelector('.swipe-indicator.like');
+        const passIndicator = card.querySelector('.swipe-indicator.pass');
+        if (currentX > 30) {
+          likeIndicator.style.opacity = Math.min((currentX - 30) / 80, 1);
+          passIndicator.style.opacity = 0;
+        } else if (currentX < -30) {
+          passIndicator.style.opacity = Math.min((-currentX - 30) / 80, 1);
+          likeIndicator.style.opacity = 0;
+        } else {
+          likeIndicator.style.opacity = 0;
+          passIndicator.style.opacity = 0;
+        }
+      }
+
+      function onEnd() {
+        if (!isDragging) return;
+        isDragging = false;
+        card.classList.remove('dragging');
+        card.style.transition = 'transform 0.3s cubic-bezier(0.4,0,0.2,1), opacity 0.3s';
+
+        if (currentX > 100) {
+          animateSwipe(card, 'right');
+        } else if (currentX < -100) {
+          animateSwipe(card, 'left');
+        } else {
+          card.style.transform = 'translateY(0) scale(1)';
+          card.querySelector('.swipe-indicator.like').style.opacity = 0;
+          card.querySelector('.swipe-indicator.pass').style.opacity = 0;
+        }
+        currentX = 0;
+      }
+
+      card.addEventListener('mousedown', onStart);
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onEnd);
+      card.addEventListener('touchstart', onStart, { passive: true });
+      card.addEventListener('touchmove', onMove, { passive: false });
+      card.addEventListener('touchend', onEnd);
+
+      // Click to view profile (only if not swiping)
+      card.addEventListener('click', function(e) {
+        if (Math.abs(currentX) < 5) {
+          openProfile(card.dataset.id);
+        }
+      });
+    }
+
+    function animateSwipe(card, direction) {
+      const offX = direction === 'right' ? 500 : -500;
+      const rotate = direction === 'right' ? 20 : -20;
+      card.style.transform = `translateX(${offX}px) rotate(${rotate}deg)`;
+      card.style.opacity = '0';
+
+      setTimeout(() => {
+        swipeHistory.push(discoverIndex);
+        discoverIndex++;
+        renderCardStack();
+      }, 250);
+    }
+
+    function swipeCard(direction) {
+      const topCard = document.querySelector('.discover-card[style*="z-index: 10"]') ||
+                      document.querySelector('.discover-card:last-child');
+      if (!topCard) return;
+
+      if (direction === 'message') {
+        openProfile(topCard.dataset.id);
+        return;
+      }
+
+      topCard.style.transition = 'transform 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s';
+      animateSwipe(topCard, direction);
+    }
+
+    function undoSwipe() {
+      if (swipeHistory.length === 0) return;
+      discoverIndex = swipeHistory.pop();
+      renderCardStack();
+    }
+
+    // ── MAP VIEW ──
+    let mapInitialized = false;
+
+    const memberMapData = [
+      { id: '19keys', name: '19Keys', location: 'Atlanta, GA', img: members[0].img },
+      { id: 'mariam', name: 'Mariam', location: 'London, UK', img: members[1].img },
+      { id: 'rashad', name: 'Rashad Bilal', location: 'New Jersey, US', img: members[2].img },
+      { id: 'akua', name: 'Akua Spirit', location: 'Accra, Ghana', img: members[3].img },
+      { id: 'jaylen', name: 'Jaylen Brown', location: 'Boston, MA', img: members[4].img },
+      { id: 'supernatural', name: 'SuperNatural', location: 'Los Angeles, CA', img: members[5].img },
+      { id: 'antoine', name: 'Antoine Digital', location: 'Atlanta, GA', img: members[6].img },
+      { id: 'ledger', name: 'LedgerMind', location: 'Nairobi, Kenya', img: members[7].img }
+    ];
+
+    function initMap() {
+      mapInitialized = true;
+      const row = document.getElementById('mapNearbyRow');
+      let html = '';
+
+      memberMapData.forEach(m => {
+        const initials = m.name.split(' ').map(w => w[0]).join('').substring(0, 2);
+        html += `
+          <div class="map-nearby-card" onclick="openProfile('${m.id}')">
+            <div class="map-nearby-avatar" style="background-image: url('${m.img}')"></div>
+            <div class="map-nearby-name">${m.name}</div>
+            <div class="map-nearby-location">${m.location}</div>
+          </div>
+        `;
+      });
+
+      row.innerHTML = html;
+
+      // Map toggle buttons
+      document.querySelectorAll('.map-toggle-opt').forEach(btn => {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('.map-toggle-opt').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+        });
+      });
     }
 
     // ── INIT ──

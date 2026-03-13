@@ -1848,3 +1848,395 @@ body.light-mode .leader-timestamp {
 body.light-mode .leader-verified svg {
   fill: #3d8c40 !important;
 }
+
+/* ════════════════════════════════════════════════
+   ══  MESSAGES PAGE (Light)  ══
+   ════════════════════════════════════════════════ */
+
+body.light-mode .messages-container {
+  background: #FAFAF8 !important;
+}
+
+body.light-mode .convo-sidebar {
+  background: #F2F1EF !important;
+  border-right-color: rgba(0,0,0,0.06) !important;
+}
+
+body.light-mode .convo-search {
+  border-bottom-color: rgba(0,0,0,0.06) !important;
+}
+
+body.light-mode .convo-search input {
+  background: rgba(0,0,0,0.04) !important;
+  border-color: rgba(0,0,0,0.06) !important;
+  color: #1a1a1a !important;
+}
+
+body.light-mode .convo-search input::placeholder {
+  color: rgba(0,0,0,0.3) !important;
+}
+
+body.light-mode .convo-item {
+  border-bottom-color: rgba(0,0,0,0.04) !important;
+}
+
+body.light-mode .convo-item:hover {
+  background: rgba(0,0,0,0.03) !important;
+}
+
+body.light-mode .convo-item.active {
+  background: rgba(0,0,0,0.06) !important;
+}
+
+body.light-mode .convo-name {
+  color: #1a1a1a !important;
+}
+
+body.light-mode .convo-preview {
+  color: #7a7a7a !important;
+}
+
+body.light-mode .convo-time {
+  color: #b0b0b0 !important;
+}
+
+body.light-mode .convo-unread .convo-time {
+  color: #3d8c40 !important;
+}
+
+body.light-mode .convo-avatar {
+  background: linear-gradient(135deg, #d4d4d4, #e8e8e8) !important;
+  color: #7a7a7a !important;
+}
+
+body.light-mode .convo-unread-dot {
+  background: #3d8c40 !important;
+}
+
+body.light-mode .chat-panel {
+  background: #FAFAF8 !important;
+}
+
+body.light-mode .chat-header {
+  background: rgba(250,250,248,0.92) !important;
+  border-bottom-color: rgba(0,0,0,0.06) !important;
+}
+
+body.light-mode .chat-name {
+  color: #1a1a1a !important;
+}
+
+body.light-mode .chat-location {
+  color: #7a7a7a !important;
+}
+
+body.light-mode .chat-header-actions button {
+  color: #7a7a7a !important;
+}
+
+body.light-mode .chat-header-actions button:hover {
+  background: rgba(0,0,0,0.04) !important;
+  color: #1a1a1a !important;
+}
+
+body.light-mode .msg-bubble.received {
+  background: rgba(0,0,0,0.04) !important;
+  color: #1a1a1a !important;
+}
+
+body.light-mode .msg-bubble.sent {
+  background: rgba(61,140,64,0.1) !important;
+  color: #1a1a1a !important;
+}
+
+body.light-mode .msg-time {
+  color: #b0b0b0 !important;
+}
+
+body.light-mode .msg-date-sep span {
+  background: #FAFAF8 !important;
+  color: #b0b0b0 !important;
+}
+
+body.light-mode .msg-date-sep::before {
+  background: rgba(0,0,0,0.06) !important;
+}
+
+body.light-mode .voice-msg {
+  background: rgba(0,0,0,0.04) !important;
+}
+
+body.light-mode .voice-bar {
+  background: rgba(0,0,0,0.15) !important;
+}
+
+body.light-mode .msg-reaction {
+  background: rgba(0,0,0,0.04) !important;
+  border-color: rgba(0,0,0,0.06) !important;
+}
+
+body.light-mode .chat-input-bar {
+  background: rgba(250,250,248,0.95) !important;
+  border-top-color: rgba(0,0,0,0.06) !important;
+}
+
+body.light-mode .chat-input-bar input {
+  background: rgba(0,0,0,0.04) !important;
+  border-color: rgba(0,0,0,0.06) !important;
+  color: #1a1a1a !important;
+}
+
+body.light-mode .chat-input-bar input::placeholder {
+  color: rgba(0,0,0,0.3) !important;
+}
+
+body.light-mode .input-action {
+  color: #7a7a7a !important;
+}
+
+body.light-mode .input-send {
+  background: #3d8c40 !important;
+}
+
+body.light-mode .chat-empty {
+  color: #b0b0b0 !important;
+}
+
+body.light-mode .chat-back-btn {
+  color: #7a7a7a !important;
+}
+
+/* ════════════════════════════════════════════════
+   ══  TRAVEL SECTION — world.html (Light)  ══
+   ════════════════════════════════════════════════ */
+
+body.light-mode .travel-section {
+  background: #F2F1EF !important;
+}
+
+body.light-mode .travel-section svg path {
+  stroke: rgba(0,0,0,0.04) !important;
+}
+
+body.light-mode .travel-label {
+  color: #3d8c40 !important;
+}
+
+body.light-mode .travel-title {
+  color: #1a1a1a !important;
+}
+
+body.light-mode .travel-desc {
+  color: #7a7a7a !important;
+}
+
+body.light-mode .travel-cta {
+  background: #1a1a1a !important;
+  color: #FFFFFF !important;
+}
+
+body.light-mode .travel-cta:hover {
+  background: #333 !important;
+}
+
+body.light-mode .travel-plan-card {
+  background: #FFFFFF !important;
+  border-color: rgba(0,0,0,0.06) !important;
+}
+
+body.light-mode .travel-plan-card:hover {
+  border-color: rgba(0,0,0,0.12) !important;
+}
+
+body.light-mode .travel-dest {
+  color: #1a1a1a !important;
+}
+
+body.light-mode .travel-dates {
+  color: #7a7a7a !important;
+}
+
+body.light-mode .travel-notes {
+  color: #999 !important;
+}
+
+body.light-mode .travel-avatar {
+  background: linear-gradient(135deg, #d4d4d4, #e8e8e8) !important;
+  color: #7a7a7a !important;
+  border-color: #FFFFFF !important;
+}
+
+body.light-mode .travel-modal-content {
+  background: #FFFFFF !important;
+  border-color: rgba(0,0,0,0.08) !important;
+}
+
+body.light-mode .travel-modal-content h3 {
+  color: #1a1a1a !important;
+}
+
+body.light-mode .travel-modal-content label {
+  color: #7a7a7a !important;
+}
+
+body.light-mode .travel-modal-content input,
+body.light-mode .travel-modal-content textarea {
+  background: rgba(0,0,0,0.03) !important;
+  border-color: rgba(0,0,0,0.08) !important;
+  color: #1a1a1a !important;
+}
+
+body.light-mode .travel-modal-content input:focus,
+body.light-mode .travel-modal-content textarea:focus {
+  border-color: rgba(0,0,0,0.15) !important;
+}
+
+body.light-mode .travel-cancel-btn {
+  background: rgba(0,0,0,0.04) !important;
+  color: #7a7a7a !important;
+}
+
+body.light-mode .travel-share-btn {
+  background: #1a1a1a !important;
+  color: #FFFFFF !important;
+}
+
+/* ════════════════════════════════════════════════
+   ══  DISCOVER + MAP VIEWS — directory.html (Light)  ══
+   ════════════════════════════════════════════════ */
+
+body.light-mode .view-toggle-bar {
+  background: rgba(0,0,0,0.03) !important;
+}
+
+body.light-mode .view-toggle-btn {
+  color: #7a7a7a !important;
+}
+
+body.light-mode .view-toggle-btn:hover {
+  color: #4a4a4a !important;
+}
+
+body.light-mode .view-toggle-btn.active {
+  background: #FFFFFF !important;
+  color: #1a1a1a !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important;
+}
+
+body.light-mode .discover-card {
+  background: #FFFFFF !important;
+  border-color: rgba(0,0,0,0.06) !important;
+}
+
+body.light-mode .discover-card-name {
+  color: #FFFFFF !important;
+}
+
+body.light-mode .discover-card-title {
+  color: rgba(255,255,255,0.8) !important;
+}
+
+body.light-mode .discover-card-location {
+  color: rgba(255,255,255,0.6) !important;
+}
+
+body.light-mode .discover-card-bio {
+  color: rgba(255,255,255,0.5) !important;
+}
+
+body.light-mode .discover-action-btn {
+  background: #FFFFFF !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
+}
+
+body.light-mode .discover-action-btn.undo {
+  border-color: rgba(0,0,0,0.1) !important;
+  color: #7a7a7a !important;
+}
+
+body.light-mode .discover-action-btn.pass-btn {
+  border-color: rgba(220,50,50,0.2) !important;
+  color: #dc3232 !important;
+}
+
+body.light-mode .discover-action-btn.like-btn {
+  border-color: rgba(61,140,64,0.2) !important;
+  color: #3d8c40 !important;
+}
+
+body.light-mode .discover-action-btn.msg-btn {
+  border-color: rgba(0,0,0,0.1) !important;
+  color: #4a4a4a !important;
+}
+
+body.light-mode .map-view {
+  background: transparent !important;
+}
+
+body.light-mode .map-container {
+  background: #F2F1EF !important;
+  border-color: rgba(0,0,0,0.06) !important;
+}
+
+body.light-mode .map-svg rect {
+  fill: #F2F1EF !important;
+}
+
+body.light-mode .map-svg g[opacity="0.12"] path {
+  stroke: rgba(0,0,0,0.12) !important;
+}
+
+body.light-mode .map-svg g[opacity="0.04"] line {
+  stroke: rgba(0,0,0,0.06) !important;
+}
+
+body.light-mode .map-pin {
+  fill: #3d8c40 !important;
+  stroke: #F2F1EF !important;
+}
+
+body.light-mode .map-pin-pulse {
+  fill: #3d8c40 !important;
+}
+
+body.light-mode .map-svg text {
+  fill: rgba(0,0,0,0.4) !important;
+}
+
+body.light-mode .map-toggle-opt {
+  color: #7a7a7a !important;
+}
+
+body.light-mode .map-toggle-opt.active {
+  background: #1a1a1a !important;
+  color: #FFFFFF !important;
+}
+
+body.light-mode .map-toggle-group {
+  background: rgba(0,0,0,0.04) !important;
+}
+
+body.light-mode .map-nearby-title {
+  color: #1a1a1a !important;
+}
+
+body.light-mode .map-nearby-card {
+  background: #FFFFFF !important;
+  border-color: rgba(0,0,0,0.06) !important;
+}
+
+body.light-mode .map-nearby-card:hover {
+  border-color: rgba(0,0,0,0.12) !important;
+}
+
+body.light-mode .map-nearby-name {
+  color: #1a1a1a !important;
+}
+
+body.light-mode .map-nearby-location {
+  color: #7a7a7a !important;
+}
+
+body.light-mode .map-nearby-avatar {
+  border-color: rgba(0,0,0,0.06) !important;
+}

@@ -1683,6 +1683,79 @@ body.light-mode .thread-card.type-terminal .thread-action {
   color: rgba(74,222,128,0.2) !important;
 }
 
+/* ── Matrix Composer (always dark in light mode too) ── */
+body.light-mode .composer.matrix-mode .composer-expanded {
+  background: #000000 !important;
+  border-color: rgba(74,222,128,0.1) !important;
+}
+
+body.light-mode .composer.matrix-mode .composer-textarea {
+  color: #4ADE80 !important;
+  background: transparent !important;
+}
+
+body.light-mode .composer.matrix-mode .composer-textarea::placeholder {
+  color: rgba(74,222,128,0.25) !important;
+}
+
+body.light-mode .composer.matrix-mode .post-type-btn {
+  color: rgba(74,222,128,0.35) !important;
+}
+
+body.light-mode .composer.matrix-mode .post-type-btn.active {
+  color: #4ADE80 !important;
+  background: rgba(74,222,128,0.1) !important;
+  border-color: rgba(74,222,128,0.2) !important;
+}
+
+body.light-mode .composer.matrix-mode .post-type-selector {
+  background: rgba(74,222,128,0.04) !important;
+}
+
+body.light-mode .composer.matrix-mode .composer-post-btn {
+  background: #4ADE80 !important;
+  color: #000 !important;
+}
+
+body.light-mode .composer.matrix-mode .composer-tool {
+  color: rgba(74,222,128,0.25) !important;
+}
+
+body.light-mode .matrix-char-counter {
+  color: rgba(74,222,128,0.4) !important;
+}
+
+/* ── Matrix Color Picker (always dark) ── */
+body.light-mode .matrix-color-picker-label {
+  color: rgba(255,255,255,0.15) !important;
+}
+
+/* ── Matrix Color Variants in Light Mode (stay dark) ── */
+body.light-mode .thread-card.type-terminal.color-gold { background: #000000 !important; border-color: rgba(255,215,0,0.08) !important; }
+body.light-mode .thread-card.type-terminal.color-gold .matrix-text { color: #FFD700 !important; }
+body.light-mode .thread-card.type-terminal.color-gold .thread-action { color: rgba(255,215,0,0.2) !important; }
+
+body.light-mode .thread-card.type-terminal.color-metallic { background: #000000 !important; border-color: rgba(212,175,55,0.08) !important; }
+body.light-mode .thread-card.type-terminal.color-metallic .matrix-text { color: #D4AF37 !important; }
+body.light-mode .thread-card.type-terminal.color-metallic .thread-action { color: rgba(212,175,55,0.2) !important; }
+
+body.light-mode .thread-card.type-terminal.color-beige { background: #000000 !important; border-color: rgba(237,232,208,0.08) !important; }
+body.light-mode .thread-card.type-terminal.color-beige .matrix-text { color: #EDE8D0 !important; }
+body.light-mode .thread-card.type-terminal.color-beige .thread-action { color: rgba(237,232,208,0.2) !important; }
+
+/* ── Composer Color Variants in Light Mode ── */
+body.light-mode .composer.matrix-mode.matrix-gold .composer-textarea { color: #FFD700 !important; }
+body.light-mode .composer.matrix-mode.matrix-gold .composer-post-btn { background: #FFD700 !important; color: #000 !important; }
+body.light-mode .composer.matrix-mode.matrix-gold .post-type-btn.active { color: #FFD700 !important; }
+
+body.light-mode .composer.matrix-mode.matrix-metallic .composer-textarea { color: #D4AF37 !important; }
+body.light-mode .composer.matrix-mode.matrix-metallic .composer-post-btn { background: #D4AF37 !important; color: #000 !important; }
+body.light-mode .composer.matrix-mode.matrix-metallic .post-type-btn.active { color: #D4AF37 !important; }
+
+body.light-mode .composer.matrix-mode.matrix-beige .composer-textarea { color: #EDE8D0 !important; }
+body.light-mode .composer.matrix-mode.matrix-beige .composer-post-btn { background: #EDE8D0 !important; color: #000 !important; }
+body.light-mode .composer.matrix-mode.matrix-beige .post-type-btn.active { color: #EDE8D0 !important; }
+
 /* ── Article Reader Overlay ── */
 body.light-mode .article-reader-overlay {
   background: rgba(250,250,248,0.92) !important;

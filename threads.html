@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Oswald:wght@400;500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="light-theme.css?v=2">
   <link rel="stylesheet" href="mobile.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     /* ── Password Gate ── */
     .gate-overlay { position:fixed; inset:0; z-index:99999; background:#0a0a0a; display:flex; flex-direction:column; align-items:center; justify-content:center; transition: opacity 0.8s cubic-bezier(0.4,0,0.2,1), transform 0.8s cubic-bezier(0.4,0,0.2,1); }
@@ -215,6 +216,264 @@
     .composer-textarea.font-oswald { font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: 0.02em; }
     .composer-textarea.font-garamond { font-family: 'EB Garamond', serif; font-size: 18px; }
     .composer-textarea.font-mono { font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #4ADE80; }
+
+    /* ── Matrix Composer Mode ── */
+    .composer.matrix-mode .composer-expanded {
+      background: #000000;
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid rgba(74,222,128,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* CRT scan lines on matrix composer */
+    .composer.matrix-mode .composer-expanded::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(74,222,128,0.012) 2px, rgba(74,222,128,0.012) 4px);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .composer.matrix-mode .composer-textarea {
+      background: transparent;
+      border: none;
+      color: #4ADE80;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.6;
+      padding: 12px 0;
+      min-height: 60px;
+      caret-color: #4ADE80;
+    }
+
+    .composer.matrix-mode .composer-textarea::placeholder {
+      color: rgba(74,222,128,0.25);
+    }
+
+    .composer.matrix-mode .composer-textarea:focus {
+      border-color: transparent;
+    }
+
+    .composer.matrix-mode .post-type-selector {
+      background: rgba(74,222,128,0.04);
+    }
+
+    .composer.matrix-mode .post-type-btn {
+      color: rgba(74,222,128,0.35);
+    }
+    .composer.matrix-mode .post-type-btn:hover {
+      color: rgba(74,222,128,0.6);
+      background: rgba(74,222,128,0.06);
+    }
+    .composer.matrix-mode .post-type-btn.active {
+      color: #4ADE80;
+      background: rgba(74,222,128,0.1);
+      border-color: rgba(74,222,128,0.2);
+    }
+
+    .composer.matrix-mode .font-selector { display: none; }
+    .composer.matrix-mode .photo-upload-area { display: none !important; }
+
+    .composer.matrix-mode .composer-tool {
+      color: rgba(74,222,128,0.25);
+    }
+    .composer.matrix-mode .composer-tool:hover {
+      color: #4ADE80;
+      background: rgba(74,222,128,0.08);
+    }
+
+    .composer.matrix-mode .composer-post-btn {
+      background: #4ADE80;
+      color: #000;
+    }
+
+    /* ── Matrix Character Counter ── */
+    .matrix-char-counter {
+      display: none;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(74,222,128,0.4);
+      text-align: right;
+      padding: 4px 0 0;
+      letter-spacing: 0.05em;
+    }
+
+    .matrix-char-counter.visible { display: block; }
+    .matrix-char-counter.warning { color: #F59E0B; }
+    .matrix-char-counter.danger { color: #EF4444; }
+
+    /* ── Matrix Color Picker ── */
+    .matrix-color-picker {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0 4px;
+    }
+
+    .matrix-color-picker.visible { display: flex; }
+
+    .matrix-color-picker-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.15);
+      white-space: nowrap;
+    }
+
+    .matrix-color-swatch {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+      position: relative;
+    }
+
+    .matrix-color-swatch:hover {
+      transform: scale(1.15);
+    }
+
+    .matrix-color-swatch.active {
+      border-color: currentColor;
+      box-shadow: 0 0 12px currentColor;
+      transform: scale(1.1);
+    }
+
+    .matrix-color-swatch[data-color="green"] { background: #4ADE80; color: #4ADE80; }
+    .matrix-color-swatch[data-color="gold"] { background: #FFD700; color: #FFD700; }
+    .matrix-color-swatch[data-color="metallic"] { background: #D4AF37; color: #D4AF37; }
+    .matrix-color-swatch[data-color="beige"] { background: #EDE8D0; color: #EDE8D0; }
+
+    /* ── Matrix Color Variants on Cards ── */
+    .thread-card.type-terminal.color-gold .matrix-text { color: #FFD700; }
+    .thread-card.type-terminal.color-gold .matrix-cursor { background: #FFD700; }
+    .thread-card.type-terminal.color-gold .matrix-avatar { background: #000000; border-color: rgba(255,215,0,0.2); }
+    .thread-card.type-terminal.color-gold .matrix-avatar-text { color: #FFD700; }
+    .thread-card.type-terminal.color-gold .matrix-avatar svg { fill: #FFD700; }
+    .thread-card.type-terminal.color-gold { border-color: rgba(255,215,0,0.08); }
+    .thread-card.type-terminal.color-gold:hover { border-color: rgba(255,215,0,0.2); }
+    .thread-card.type-terminal.color-gold .thread-action { color: rgba(255,215,0,0.2); }
+    .thread-card.type-terminal.color-gold .thread-action:hover { color: #FFD700; background: rgba(255,215,0,0.06); }
+    .thread-card.type-terminal.color-gold .matrix-share-btn { color: rgba(255,215,0,0.2); }
+    .thread-card.type-terminal.color-gold .matrix-share-btn:hover { color: #FFD700; background: rgba(255,215,0,0.06); }
+    .thread-card.type-terminal.color-gold::before { background: repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(255,215,0,0.012) 2px, rgba(255,215,0,0.012) 4px); }
+    .thread-card.type-terminal.color-gold::after { background: radial-gradient(ellipse at 50% 0%, rgba(255,215,0,0.04) 0%, transparent 60%); }
+
+    .thread-card.type-terminal.color-metallic .matrix-text { color: #D4AF37; }
+    .thread-card.type-terminal.color-metallic .matrix-cursor { background: #D4AF37; }
+    .thread-card.type-terminal.color-metallic .matrix-avatar { background: #000000; border-color: rgba(212,175,55,0.2); }
+    .thread-card.type-terminal.color-metallic .matrix-avatar-text { color: #D4AF37; }
+    .thread-card.type-terminal.color-metallic .matrix-avatar svg { fill: #D4AF37; }
+    .thread-card.type-terminal.color-metallic { border-color: rgba(212,175,55,0.08); }
+    .thread-card.type-terminal.color-metallic:hover { border-color: rgba(212,175,55,0.2); }
+    .thread-card.type-terminal.color-metallic .thread-action { color: rgba(212,175,55,0.2); }
+    .thread-card.type-terminal.color-metallic .thread-action:hover { color: #D4AF37; background: rgba(212,175,55,0.06); }
+    .thread-card.type-terminal.color-metallic .matrix-share-btn { color: rgba(212,175,55,0.2); }
+    .thread-card.type-terminal.color-metallic .matrix-share-btn:hover { color: #D4AF37; background: rgba(212,175,55,0.06); }
+    .thread-card.type-terminal.color-metallic::before { background: repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(212,175,55,0.012) 2px, rgba(212,175,55,0.012) 4px); }
+    .thread-card.type-terminal.color-metallic::after { background: radial-gradient(ellipse at 50% 0%, rgba(212,175,55,0.04) 0%, transparent 60%); }
+
+    .thread-card.type-terminal.color-beige .matrix-text { color: #EDE8D0; }
+    .thread-card.type-terminal.color-beige .matrix-cursor { background: #EDE8D0; }
+    .thread-card.type-terminal.color-beige .matrix-avatar { background: #000000; border-color: rgba(237,232,208,0.2); }
+    .thread-card.type-terminal.color-beige .matrix-avatar-text { color: #EDE8D0; }
+    .thread-card.type-terminal.color-beige .matrix-avatar svg { fill: #EDE8D0; }
+    .thread-card.type-terminal.color-beige { border-color: rgba(237,232,208,0.08); }
+    .thread-card.type-terminal.color-beige:hover { border-color: rgba(237,232,208,0.2); }
+    .thread-card.type-terminal.color-beige .thread-action { color: rgba(237,232,208,0.2); }
+    .thread-card.type-terminal.color-beige .thread-action:hover { color: #EDE8D0; background: rgba(237,232,208,0.06); }
+    .thread-card.type-terminal.color-beige .matrix-share-btn { color: rgba(237,232,208,0.2); }
+    .thread-card.type-terminal.color-beige .matrix-share-btn:hover { color: #EDE8D0; background: rgba(237,232,208,0.06); }
+    .thread-card.type-terminal.color-beige::before { background: repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(237,232,208,0.012) 2px, rgba(237,232,208,0.012) 4px); }
+    .thread-card.type-terminal.color-beige::after { background: radial-gradient(ellipse at 50% 0%, rgba(237,232,208,0.04) 0%, transparent 60%); }
+
+    /* ── Composer color preview when picking ── */
+    .composer.matrix-mode.matrix-gold .composer-textarea { color: #FFD700; caret-color: #FFD700; }
+    .composer.matrix-mode.matrix-gold .composer-textarea::placeholder { color: rgba(255,215,0,0.25); }
+    .composer.matrix-mode.matrix-gold .composer-expanded { border-color: rgba(255,215,0,0.1); }
+    .composer.matrix-mode.matrix-gold .composer-expanded::before { background: repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(255,215,0,0.012) 2px, rgba(255,215,0,0.012) 4px); }
+    .composer.matrix-mode.matrix-gold .composer-post-btn { background: #FFD700; }
+    .composer.matrix-mode.matrix-gold .post-type-btn.active { color: #FFD700; background: rgba(255,215,0,0.1); border-color: rgba(255,215,0,0.2); }
+
+    .composer.matrix-mode.matrix-metallic .composer-textarea { color: #D4AF37; caret-color: #D4AF37; }
+    .composer.matrix-mode.matrix-metallic .composer-textarea::placeholder { color: rgba(212,175,55,0.25); }
+    .composer.matrix-mode.matrix-metallic .composer-expanded { border-color: rgba(212,175,55,0.1); }
+    .composer.matrix-mode.matrix-metallic .composer-expanded::before { background: repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(212,175,55,0.012) 2px, rgba(212,175,55,0.012) 4px); }
+    .composer.matrix-mode.matrix-metallic .composer-post-btn { background: #D4AF37; }
+    .composer.matrix-mode.matrix-metallic .post-type-btn.active { color: #D4AF37; background: rgba(212,175,55,0.1); border-color: rgba(212,175,55,0.2); }
+
+    .composer.matrix-mode.matrix-beige .composer-textarea { color: #EDE8D0; caret-color: #EDE8D0; }
+    .composer.matrix-mode.matrix-beige .composer-textarea::placeholder { color: rgba(237,232,208,0.25); }
+    .composer.matrix-mode.matrix-beige .composer-expanded { border-color: rgba(237,232,208,0.1); }
+    .composer.matrix-mode.matrix-beige .composer-expanded::before { background: repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(237,232,208,0.012) 2px, rgba(237,232,208,0.012) 4px); }
+    .composer.matrix-mode.matrix-beige .composer-post-btn { background: #EDE8D0; }
+    .composer.matrix-mode.matrix-beige .post-type-btn.active { color: #EDE8D0; background: rgba(237,232,208,0.1); border-color: rgba(237,232,208,0.2); }
+
+    /* ── Matrix Share Button ── */
+    .matrix-share-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: transparent;
+      color: rgba(74,222,128,0.2);
+      cursor: pointer;
+      border-radius: 8px;
+      transition: color 0.2s, background 0.2s;
+      margin-left: auto;
+    }
+
+    .matrix-share-btn:hover {
+      color: #4ADE80;
+      background: rgba(74,222,128,0.06);
+    }
+
+    .matrix-share-btn svg { width: 16px; height: 16px; }
+
+    .matrix-share-btn.saving {
+      pointer-events: none;
+      animation: sharePulse 0.8s ease infinite;
+    }
+
+    @keyframes sharePulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+
+    /* ── Share Toast Notification ── */
+    .share-toast {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #000;
+      color: #4ADE80;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 12px 24px;
+      border-radius: 12px;
+      border: 1px solid rgba(74,222,128,0.2);
+      opacity: 0;
+      transition: opacity 0.3s, transform 0.3s;
+      z-index: 9999;
+      pointer-events: none;
+    }
+
+    .share-toast.active {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
 
     /* ── Photo Upload Area ── */
     .photo-upload-area {
@@ -590,12 +849,23 @@
       width: 32px;
       height: 32px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #0a2e0a, #0d3d0d);
+      background: #000000;
       border: 1.5px solid rgba(74,222,128,0.2);
       flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+
+    .matrix-avatar-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 6px;
+      font-weight: 700;
+      color: #4ADE80;
+      opacity: 0.7;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      white-space: nowrap;
     }
 
     .matrix-avatar svg {
@@ -1094,7 +1364,17 @@
           </div>
 
           <!-- Text Area -->
-          <textarea class="composer-textarea font-inter" id="composerTextarea" placeholder="What's on your mind..."></textarea>
+          <textarea class="composer-textarea font-inter" id="composerTextarea" placeholder="What's on your mind..." maxlength="5000"></textarea>
+          <div class="matrix-char-counter" id="matrixCharCounter">0 / 280</div>
+
+          <!-- Matrix Color Picker -->
+          <div class="matrix-color-picker" id="matrixColorPicker">
+            <span class="matrix-color-picker-label">Color</span>
+            <div class="matrix-color-swatch active" data-color="green" title="Matrix Green"></div>
+            <div class="matrix-color-swatch" data-color="gold" title="Gold"></div>
+            <div class="matrix-color-swatch" data-color="metallic" title="Metallic Gold"></div>
+            <div class="matrix-color-swatch" data-color="beige" title="Beige"></div>
+          </div>
 
           <!-- Bottom Bar -->
           <div class="composer-bottom">
@@ -1253,26 +1533,28 @@
         <!-- ── MATRIX TWEET ── -->
         <div class="thread-card type-terminal">
           <div class="matrix-tweet">
-            <div class="matrix-avatar"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 0 0-16 0"/></svg></div>
+            <div class="matrix-avatar"><span class="matrix-avatar-text">19keys</span></div>
             <div class="matrix-text">The gap between those who learn to leverage AI and those who don't will be the defining inequality of this decade.<span class="matrix-cursor"></span></div>
           </div>
           <div class="thread-actions">
             <div class="thread-action">+</div>
             <div class="thread-action">&minus;</div>
             <div class="thread-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+            <button class="matrix-share-btn" onclick="shareMatrixTweet(this)" title="Save as image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
           </div>
         </div>
 
         <!-- ── MATRIX TWEET 2 ── -->
         <div class="thread-card type-terminal">
           <div class="matrix-tweet">
-            <div class="matrix-avatar"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 0 0-16 0"/></svg></div>
+            <div class="matrix-avatar"><span class="matrix-avatar-text">19keys</span></div>
             <div class="matrix-text">Sovereignty isn't given. It's built.<span class="matrix-cursor"></span></div>
           </div>
           <div class="thread-actions">
             <div class="thread-action">+</div>
             <div class="thread-action">&minus;</div>
             <div class="thread-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+            <button class="matrix-share-btn" onclick="shareMatrixTweet(this)" title="Save as image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
           </div>
         </div>
 
@@ -1365,6 +1647,7 @@
     const photoOverlayText = document.getElementById('photoOverlayText');
     let currentPostType = 'text';
     let currentFont = 'inter';
+    let currentMatrixColor = 'green';
 
     // Expand composer
     composerTrigger.addEventListener('click', () => {
@@ -1402,13 +1685,33 @@
           setFont('playfair');
         }
 
+        // Matrix mode toggle
+        const composer = document.querySelector('.composer');
+        const charCounter = document.getElementById('matrixCharCounter');
+        const colorPicker = document.getElementById('matrixColorPicker');
+        if (currentPostType === 'terminal') {
+          composer.classList.add('matrix-mode');
+          composerTextarea.setAttribute('maxlength', '280');
+          charCounter.classList.add('visible');
+          colorPicker.classList.add('visible');
+          updateCharCounter();
+          // Apply saved color
+          applyComposerColor(currentMatrixColor);
+        } else {
+          composer.classList.remove('matrix-mode');
+          composer.classList.remove('matrix-gold', 'matrix-metallic', 'matrix-beige');
+          composerTextarea.setAttribute('maxlength', '5000');
+          charCounter.classList.remove('visible');
+          colorPicker.classList.remove('visible');
+        }
+
         // Update placeholder
         const placeholders = {
           text: "What's on your mind...",
           photo: "Add a caption to your photo...",
           quote: "Share a powerful quote...",
           article: "Write your article title and content...",
-          terminal: "Enter your terminal thoughts..."
+          terminal: "Broadcast from the Matrix..."
         };
         composerTextarea.placeholder = placeholders[currentPostType] || "What's on your mind...";
       });
@@ -1454,10 +1757,185 @@
       }
     });
 
-    // Update photo overlay text as user types
+    // Update photo overlay text + matrix char counter as user types
+    function updateCharCounter() {
+      const counter = document.getElementById('matrixCharCounter');
+      const len = composerTextarea.value.length;
+      const max = 280;
+      counter.textContent = `${len} / ${max}`;
+      counter.classList.remove('warning', 'danger');
+      if (len >= max) {
+        counter.classList.add('danger');
+      } else if (len >= 220) {
+        counter.classList.add('warning');
+      }
+    }
+
     composerTextarea.addEventListener('input', () => {
       if (currentPostType === 'photo') {
         photoOverlayText.textContent = composerTextarea.value || 'Your text here...';
+      }
+      if (currentPostType === 'terminal') {
+        updateCharCounter();
+      }
+    });
+
+    // ── Matrix Color Picker ──
+    function applyComposerColor(color) {
+      const composer = document.querySelector('.composer');
+      composer.classList.remove('matrix-gold', 'matrix-metallic', 'matrix-beige');
+      if (color === 'gold') composer.classList.add('matrix-gold');
+      else if (color === 'metallic') composer.classList.add('matrix-metallic');
+      else if (color === 'beige') composer.classList.add('matrix-beige');
+      // 'green' is default — no extra class needed
+
+      // Update active swatch
+      document.querySelectorAll('.matrix-color-swatch').forEach(s => s.classList.remove('active'));
+      const activeSwatch = document.querySelector(`.matrix-color-swatch[data-color="${color}"]`);
+      if (activeSwatch) activeSwatch.classList.add('active');
+    }
+
+    document.querySelectorAll('.matrix-color-swatch').forEach(swatch => {
+      swatch.addEventListener('click', () => {
+        currentMatrixColor = swatch.dataset.color;
+        applyComposerColor(currentMatrixColor);
+      });
+    });
+
+    // ══════════ POST CREATION ══════════
+
+    function createMatrixTweet(text, color) {
+      color = color || 'green';
+      const colorClass = color !== 'green' ? ` color-${color}` : '';
+      const card = document.createElement('div');
+      card.className = 'thread-card type-terminal' + colorClass;
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(-10px)';
+      card.innerHTML = `
+        <div class="matrix-tweet">
+          <div class="matrix-avatar"><span class="matrix-avatar-text">19keys</span></div>
+          <div class="matrix-text">${text}<span class="matrix-cursor"></span></div>
+        </div>
+        <div class="thread-actions">
+          <div class="thread-action">+</div>
+          <div class="thread-action">&minus;</div>
+          <div class="thread-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          <button class="matrix-share-btn" onclick="shareMatrixTweet(this)" title="Save as image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+        </div>
+      `;
+      return card;
+    }
+
+    function createTextPost(text) {
+      const card = document.createElement('div');
+      card.className = 'thread-card type-text';
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(-10px)';
+      card.innerHTML = `
+        <div class="thread-header">
+          <div class="thread-avatar" style="background:linear-gradient(135deg, #4D4D4D, #322D2A)"></div>
+          <div class="thread-title">New Thread</div>
+        </div>
+        <div class="thread-author">u/You</div>
+        <div class="thread-body">${text}</div>
+        <div class="thread-actions">
+          <div class="thread-action">+</div>
+          <div class="thread-action">&minus;</div>
+          <div class="thread-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        </div>
+      `;
+      return card;
+    }
+
+    function createQuotePost(text) {
+      const card = document.createElement('div');
+      card.className = 'thread-card type-quote';
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(-10px)';
+      card.innerHTML = `
+        <div class="thread-header">
+          <div class="thread-avatar" style="background:linear-gradient(135deg, #4D4D4D, #322D2A)"></div>
+        </div>
+        <div class="thread-title">${text}</div>
+        <div class="thread-author">u/You</div>
+        <div class="thread-body"></div>
+        <div class="thread-actions">
+          <div class="thread-action">+</div>
+          <div class="thread-action">&minus;</div>
+          <div class="thread-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        </div>
+      `;
+      return card;
+    }
+
+    function postThread() {
+      const text = composerTextarea.value.trim();
+      if (!text) return;
+
+      const feedList = document.querySelector('.feed-list');
+      let card;
+
+      if (currentPostType === 'terminal') {
+        card = createMatrixTweet(text, currentMatrixColor);
+      } else if (currentPostType === 'quote') {
+        card = createQuotePost(text);
+      } else {
+        card = createTextPost(text);
+      }
+
+      // Insert at top of feed (after any pinned leader cards)
+      const leaderCard = feedList.querySelector('.leader-card');
+      if (leaderCard) {
+        leaderCard.after(card);
+      } else {
+        feedList.prepend(card);
+      }
+
+      // Animate in
+      requestAnimationFrame(() => {
+        card.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0)';
+      });
+
+      // Scroll to the new post
+      setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
+
+      // Reset composer
+      composerTextarea.value = '';
+      composerExpanded.classList.remove('active');
+      composerTop.classList.remove('expanded');
+      composerTrigger.style.display = '';
+      document.getElementById('composerQuickPost').style.display = '';
+
+      // Reset matrix mode if needed
+      if (currentPostType === 'terminal') {
+        const comp = document.querySelector('.composer');
+        comp.classList.remove('matrix-mode', 'matrix-gold', 'matrix-metallic', 'matrix-beige');
+        document.getElementById('matrixCharCounter').classList.remove('visible');
+        document.getElementById('matrixColorPicker').classList.remove('visible');
+        // Reset color to green for next time
+        currentMatrixColor = 'green';
+        document.querySelectorAll('.matrix-color-swatch').forEach(s => s.classList.remove('active'));
+        document.querySelector('.matrix-color-swatch[data-color="green"]').classList.add('active');
+      }
+
+      // Reset post type back to text
+      document.querySelectorAll('.post-type-btn').forEach(b => b.classList.remove('active'));
+      document.querySelector('.post-type-btn[data-type="text"]').classList.add('active');
+      currentPostType = 'text';
+      composerTextarea.setAttribute('maxlength', '5000');
+      setFont('inter');
+    }
+
+    // Post button click
+    document.getElementById('composerPostBtn').addEventListener('click', postThread);
+
+    // Ctrl+Enter to post
+    composerTextarea.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        postThread();
       }
     });
 
@@ -1496,6 +1974,155 @@
       });
     });
 
+    // ══════════ SHARE / DOWNLOAD MATRIX TWEET ══════════
+
+    function showToast(msg) {
+      const toast = document.getElementById('shareToast');
+      toast.textContent = msg;
+      toast.classList.add('active');
+      setTimeout(() => toast.classList.remove('active'), 2500);
+    }
+
+    async function shareMatrixTweet(btn) {
+      const card = btn.closest('.thread-card.type-terminal');
+      if (!card || btn.classList.contains('saving')) return;
+
+      btn.classList.add('saving');
+
+      // Determine color
+      const isGold = card.classList.contains('color-gold');
+      const isMetallic = card.classList.contains('color-metallic');
+      const isBeige = card.classList.contains('color-beige');
+      const textColor = isGold ? '#FFD700' : isMetallic ? '#D4AF37' : isBeige ? '#EDE8D0' : '#4ADE80';
+      const colorName = isGold ? 'gold' : isMetallic ? 'metallic' : isBeige ? 'beige' : 'matrix';
+      const fileName = `${colorName}-tweet.png`;
+
+      // Get the tweet text
+      const matrixTextEl = card.querySelector('.matrix-text');
+      const tweetText = matrixTextEl ? matrixTextEl.textContent.trim() : '';
+
+      try {
+        // Build a square 1080x1080 off-screen element for social media
+        const size = 1080;
+        const wrapper = document.createElement('div');
+        wrapper.style.cssText = `
+          position: fixed; top: -9999px; left: -9999px;
+          width: ${size}px; height: ${size}px;
+          background: #000000;
+          display: flex; align-items: center; justify-content: center;
+          padding: 80px;
+          box-sizing: border-box;
+          overflow: hidden;
+        `;
+
+        // CRT scan lines
+        const scanlines = document.createElement('div');
+        scanlines.style.cssText = `
+          position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+          background: repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(${isGold ? '255,215,0' : isMetallic ? '212,175,55' : isBeige ? '237,232,208' : '74,222,128'},0.015) 2px, rgba(${isGold ? '255,215,0' : isMetallic ? '212,175,55' : isBeige ? '237,232,208' : '74,222,128'},0.015) 4px);
+          pointer-events: none; z-index: 1;
+        `;
+        wrapper.appendChild(scanlines);
+
+        // Inner content — avatar + text
+        const inner = document.createElement('div');
+        inner.style.cssText = `
+          position: relative; z-index: 2;
+          display: flex; gap: 20px; align-items: flex-start;
+          max-width: 100%;
+        `;
+
+        // Avatar circle with "19keys"
+        const avatar = document.createElement('div');
+        avatar.style.cssText = `
+          width: 48px; height: 48px; border-radius: 50%;
+          background: #000000; border: 2px solid ${textColor}30;
+          display: flex; align-items: center; justify-content: center;
+          flex-shrink: 0;
+        `;
+        const avatarText = document.createElement('span');
+        avatarText.textContent = '19keys';
+        avatarText.style.cssText = `
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 8px; font-weight: 700;
+          color: ${textColor}; opacity: 0.7;
+          letter-spacing: -0.02em;
+        `;
+        avatar.appendChild(avatarText);
+        inner.appendChild(avatar);
+
+        // Text
+        const textEl = document.createElement('div');
+        textEl.textContent = tweetText;
+        textEl.style.cssText = `
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 28px; font-weight: 700;
+          line-height: 1.6; color: ${textColor};
+          letter-spacing: -0.01em;
+          word-break: break-word;
+        `;
+        inner.appendChild(textEl);
+
+        wrapper.appendChild(inner);
+
+        // Subtle top glow
+        const glow = document.createElement('div');
+        glow.style.cssText = `
+          position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+          background: radial-gradient(ellipse at 50% 0%, ${textColor}08 0%, transparent 60%);
+          pointer-events: none; z-index: 0;
+        `;
+        wrapper.appendChild(glow);
+
+        document.body.appendChild(wrapper);
+
+        const canvas = await html2canvas(wrapper, {
+          backgroundColor: '#000000',
+          width: size,
+          height: size,
+          scale: 1,
+          useCORS: true,
+          logging: false,
+        });
+
+        document.body.removeChild(wrapper);
+
+        const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+        const file = new File([blob], fileName, { type: 'image/png' });
+
+        // Try native share API first (mobile — enables "Save Image")
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          try {
+            await navigator.share({ files: [file], title: 'Matrix Tweet' });
+            showToast('Shared ✓');
+          } catch (shareErr) {
+            if (shareErr.name !== 'AbortError') {
+              downloadCanvas(canvas, fileName);
+              showToast('Image saved ✓');
+            }
+          }
+        } else {
+          downloadCanvas(canvas, fileName);
+          showToast('Image saved ✓');
+        }
+      } catch (err) {
+        console.error('Share error:', err);
+        showToast('Error — try again');
+      } finally {
+        btn.classList.remove('saving');
+      }
+    }
+
+    function downloadCanvas(canvas, fileName) {
+      const url = canvas.toDataURL('image/png');
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
     // Sidebar nav
     document.querySelectorAll('.nav-item').forEach(item => {
       item.addEventListener('click', (e) => {
@@ -1506,6 +2133,9 @@
       });
     });
   </script>
+
+  <!-- Share Toast -->
+  <div class="share-toast" id="shareToast">Image saved ✓</div>
 
   <script src="theme-toggle.js"></script>
   <script src="mobile-nav.js"></script>

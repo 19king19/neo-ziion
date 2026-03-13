@@ -753,6 +753,66 @@
     }
 
     .profile-message-btn:hover { background: rgba(255,255,255,0.06); }
+
+    /* ── Events Section ── */
+    .travel-section {
+      position: relative;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 20px;
+      padding: 48px 40px;
+      margin-bottom: 32px;
+      overflow: hidden;
+    }
+    .travel-bg-lines { position: absolute; inset: 0; opacity: 0.06; pointer-events: none; }
+    .travel-content { position: relative; z-index: 1; }
+    .travel-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 3px; color: #D5FF5A; margin-bottom: 16px; }
+    .travel-headline { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 8px; }
+    .travel-desc { font-size: 14px; color: rgba(255,255,255,0.4); margin-bottom: 28px; max-width: 480px; line-height: 1.6; }
+    .travel-cta {
+      display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px;
+      background: #D5FF5A; color: #0F0E12; border: none; border-radius: 12px;
+      font-size: 14px; font-weight: 600; font-family: inherit; cursor: pointer;
+      transition: opacity 0.15s, transform 0.15s;
+    }
+    .travel-cta:hover { opacity: 0.85; transform: translateY(-1px); }
+    .travel-plans { display: flex; gap: 16px; margin-top: 32px; overflow-x: auto; padding-bottom: 4px; }
+    .travel-plans::-webkit-scrollbar { height: 3px; }
+    .travel-plans::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
+    .travel-plan-card {
+      flex-shrink: 0; width: 240px; background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; padding: 20px;
+      cursor: pointer; transition: background 0.15s, border-color 0.15s;
+    }
+    .travel-plan-card:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.1); }
+    .tp-dest { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+    .tp-dates { font-size: 12px; color: rgba(255,255,255,0.35); margin-bottom: 12px; }
+    .tp-note { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.5; }
+    .tp-avatar-row { display: flex; margin-top: 12px; gap: 0; }
+    .tp-avatar {
+      width: 24px; height: 24px; border-radius: 50%; border: 2px solid #0F0E12;
+      background: linear-gradient(135deg, #4D4D4D, #322D2A); margin-left: -6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 8px; font-weight: 700; color: rgba(255,255,255,0.6);
+    }
+    .tp-avatar:first-child { margin-left: 0; }
+
+    /* ── Event Modal ── */
+    .travel-modal-overlay { display: none; position: fixed; inset: 0; z-index: 10000; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); align-items: center; justify-content: center; }
+    .travel-modal-overlay.open { display: flex; }
+    .travel-modal { background: #1a1920; border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 32px; width: 90%; max-width: 440px; }
+    .travel-modal-title { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 24px; }
+    .travel-form-group { margin-bottom: 18px; }
+    .travel-form-label { display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.4); margin-bottom: 8px; }
+    .travel-form-input { width: 100%; height: 42px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 0 14px; font-family: inherit; font-size: 14px; color: rgba(255,255,255,0.8); outline: none; transition: border-color 0.2s; }
+    .travel-form-input:focus { border-color: rgba(255,255,255,0.2); }
+    .travel-form-textarea { width: 100%; height: 80px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 12px 14px; font-family: inherit; font-size: 14px; color: rgba(255,255,255,0.8); outline: none; resize: none; transition: border-color 0.2s; }
+    .travel-form-textarea:focus { border-color: rgba(255,255,255,0.2); }
+    .travel-modal-actions { display: flex; gap: 10px; margin-top: 24px; }
+    .travel-modal-cancel { flex: 1; height: 42px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; color: rgba(255,255,255,0.5); font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.15s; }
+    .travel-modal-cancel:hover { background: rgba(255,255,255,0.08); }
+    .travel-modal-submit { flex: 1; height: 42px; background: #D5FF5A; border: none; border-radius: 10px; color: #0F0E12; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: opacity 0.15s; }
+    .travel-modal-submit:hover { opacity: 0.85; }
   </style>
 </head>
 <body>
@@ -844,6 +904,58 @@
       <div class="dir-header">
         <div class="dir-title">Connections</div>
         <div class="dir-subtitle">The nation. Upload a photo — AI renders it black & white so every portrait is unified.</div>
+      </div>
+
+      <!-- Events Section -->
+      <div class="travel-section">
+        <svg class="travel-bg-lines" viewBox="0 0 800 200" preserveAspectRatio="none">
+          <path d="M0,100 C100,60 200,140 300,100 C400,60 500,140 600,100 C700,60 800,140 800,100" fill="none" stroke="white" stroke-width="1"/>
+          <path d="M0,120 C100,80 200,160 300,120 C400,80 500,160 600,120 C700,80 800,160 800,120" fill="none" stroke="white" stroke-width="0.5"/>
+          <path d="M0,80 C100,40 200,120 300,80 C400,40 500,120 600,80 C700,40 800,120 800,80" fill="none" stroke="white" stroke-width="0.5"/>
+          <path d="M0,140 C150,100 250,180 400,140 C550,100 650,180 800,140" fill="none" stroke="white" stroke-width="0.3"/>
+          <path d="M0,60 C150,20 250,100 400,60 C550,20 650,100 800,60" fill="none" stroke="white" stroke-width="0.3"/>
+        </svg>
+        <div class="travel-content">
+          <div class="travel-label">Events</div>
+          <div class="travel-headline">Any upcoming travel?</div>
+          <div class="travel-desc">Let the network know where you're headed. Connect with members in your destination city before you arrive.</div>
+          <button class="travel-cta" onclick="document.getElementById('travelModal').classList.add('open')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Create a travel plan
+          </button>
+          <div class="travel-plans">
+            <div class="travel-plan-card">
+              <div class="tp-dest">Accra, Ghana</div>
+              <div class="tp-dates">Mar 28 — Apr 5, 2026</div>
+              <div class="tp-note">Connecting with builders in the Web3 ecosystem. Open to meetups.</div>
+              <div class="tp-avatar-row">
+                <div class="tp-avatar">AO</div>
+                <div class="tp-avatar">KA</div>
+                <div class="tp-avatar">+3</div>
+              </div>
+            </div>
+            <div class="travel-plan-card">
+              <div class="tp-dest">Tokyo, Japan</div>
+              <div class="tp-dates">Apr 15 — Apr 22, 2026</div>
+              <div class="tp-note">Speaking at a consciousness & tech convergence event.</div>
+              <div class="tp-avatar-row">
+                <div class="tp-avatar">NK</div>
+                <div class="tp-avatar">+1</div>
+              </div>
+            </div>
+            <div class="travel-plan-card">
+              <div class="tp-dest">London, UK</div>
+              <div class="tp-dates">May 1 — May 8, 2026</div>
+              <div class="tp-note">Sovereign economics workshop. Looking for venue recommendations.</div>
+              <div class="tp-avatar-row">
+                <div class="tp-avatar">KA</div>
+                <div class="tp-avatar">SD</div>
+                <div class="tp-avatar">JW</div>
+                <div class="tp-avatar">+5</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- View Toggle -->
@@ -1558,6 +1670,63 @@
 
     // ── INIT ──
     renderGrid();
+  </script>
+  <!-- Event Modal -->
+  <div class="travel-modal-overlay" id="travelModal" onclick="if(event.target===this)this.classList.remove('open')">
+    <div class="travel-modal">
+      <div class="travel-modal-title">Create Travel Plan</div>
+      <div class="travel-form-group">
+        <label class="travel-form-label">Destination</label>
+        <input class="travel-form-input" type="text" placeholder="City, Country" id="travelDest">
+      </div>
+      <div class="travel-form-group" style="display:flex; gap:12px;">
+        <div style="flex:1;">
+          <label class="travel-form-label">From</label>
+          <input class="travel-form-input" type="date" id="travelFrom">
+        </div>
+        <div style="flex:1;">
+          <label class="travel-form-label">To</label>
+          <input class="travel-form-input" type="date" id="travelTo">
+        </div>
+      </div>
+      <div class="travel-form-group">
+        <label class="travel-form-label">Notes</label>
+        <textarea class="travel-form-textarea" placeholder="What are you looking to do there?" id="travelNotes"></textarea>
+      </div>
+      <div class="travel-modal-actions">
+        <button class="travel-modal-cancel" onclick="document.getElementById('travelModal').classList.remove('open')">Cancel</button>
+        <button class="travel-modal-submit" onclick="addTravelPlan()">Share Plan</button>
+      </div>
+    </div>
+  </div>
+  <script>
+  function addTravelPlan() {
+    const dest = document.getElementById('travelDest').value.trim();
+    const from = document.getElementById('travelFrom').value;
+    const to = document.getElementById('travelTo').value;
+    const notes = document.getElementById('travelNotes').value.trim();
+    if (!dest) return;
+    const formatDate = (d) => {
+      if (!d) return '';
+      const dt = new Date(d + 'T00:00:00');
+      return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    };
+    const dateStr = from && to ? `${formatDate(from)} — ${formatDate(to)}` : 'Dates TBD';
+    const card = document.createElement('div');
+    card.className = 'travel-plan-card';
+    card.innerHTML = `
+      <div class="tp-dest">${dest}</div>
+      <div class="tp-dates">${dateStr}</div>
+      <div class="tp-note">${notes || 'No notes yet.'}</div>
+      <div class="tp-avatar-row"><div class="tp-avatar">19</div></div>
+    `;
+    document.querySelector('.travel-plans').insertBefore(card, document.querySelector('.travel-plans').firstChild);
+    document.getElementById('travelDest').value = '';
+    document.getElementById('travelFrom').value = '';
+    document.getElementById('travelTo').value = '';
+    document.getElementById('travelNotes').value = '';
+    document.getElementById('travelModal').classList.remove('open');
+  }
   </script>
   <script src="theme-toggle.js"></script>
   <script src="mobile-nav.js"></script>

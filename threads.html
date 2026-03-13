@@ -566,77 +566,84 @@
     .read-article-btn svg { width: 14px; height: 14px; }
 
     /* ── 5. TERMINAL POST ── */
+    /* ── Matrix Tweet ── */
     .thread-card.type-terminal {
-      background: #0a0a0a;
-      border-color: rgba(74,222,128,0.1);
-      padding: 0;
+      background: #000000;
+      border: 1px solid rgba(74,222,128,0.08);
+      border-radius: 16px;
+      padding: 24px 24px 20px;
       overflow: hidden;
       position: relative;
     }
 
-    .terminal-bar {
+    .thread-card.type-terminal:hover {
+      border-color: rgba(74,222,128,0.2);
+    }
+
+    .matrix-tweet {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .matrix-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0a2e0a, #0d3d0d);
+      border: 1.5px solid rgba(74,222,128,0.2);
+      flex-shrink: 0;
       display: flex;
       align-items: center;
-      gap: 6px;
-      padding: 10px 16px;
-      background: rgba(74,222,128,0.04);
-      border-bottom: 1px solid rgba(74,222,128,0.08);
+      justify-content: center;
     }
 
-    .terminal-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
+    .matrix-avatar svg {
+      width: 14px;
+      height: 14px;
+      fill: #4ADE80;
+      opacity: 0.6;
     }
 
-    .terminal-dot.red { background: #FF5F57; }
-    .terminal-dot.yellow { background: #FEBC2E; }
-    .terminal-dot.green { background: #28C840; }
-
-    .terminal-title-bar {
-      flex: 1;
-      text-align: center;
+    .matrix-text {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      color: rgba(74,222,128,0.4);
-    }
-
-    .terminal-body {
-      padding: 20px 24px;
-    }
-
-    .thread-card.type-terminal .thread-header { margin-bottom: 4px; }
-
-    .thread-card.type-terminal .thread-title {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 15px;
+      font-size: 16px;
       font-weight: 700;
+      line-height: 1.6;
       color: #4ADE80;
+      letter-spacing: -0.01em;
     }
 
-    .thread-card.type-terminal .thread-author {
-      font-family: 'JetBrains Mono', monospace;
-      color: rgba(74,222,128,0.35);
-      font-size: 12px;
+    .matrix-cursor {
+      display: inline-block;
+      width: 8px;
+      height: 18px;
+      background: #4ADE80;
+      margin-left: 3px;
+      vertical-align: text-bottom;
+      animation: cursorBlink 1s step-end infinite;
     }
 
-    .thread-card.type-terminal .thread-body {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
-      line-height: 1.8;
-      color: rgba(74,222,128,0.6);
+    @keyframes cursorBlink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
     }
 
-    .thread-card.type-terminal .thread-body .cmd-prefix {
+    .thread-card.type-terminal .thread-actions {
+      padding: 12px 0 0;
+      margin-left: 46px;
+    }
+
+    .thread-card.type-terminal .thread-action {
+      color: rgba(74,222,128,0.2);
+    }
+
+    .thread-card.type-terminal .thread-action:hover {
       color: #4ADE80;
-      user-select: none;
+      background: rgba(74,222,128,0.06);
     }
 
-    .thread-card.type-terminal .thread-actions { padding: 0 24px 16px; }
-    .thread-card.type-terminal .thread-action { color: rgba(74,222,128,0.3); }
-    .thread-card.type-terminal .thread-action:hover { color: #4ADE80; background: rgba(74,222,128,0.06); }
-    .thread-card.type-terminal:hover { border-color: rgba(74,222,128,0.2); }
-
-    /* Scan-line effect */
+    /* CRT scan-line effect */
     .thread-card.type-terminal::before {
       content: '';
       position: absolute;
@@ -645,11 +652,21 @@
         0deg,
         transparent 0px,
         transparent 2px,
-        rgba(74,222,128,0.015) 2px,
-        rgba(74,222,128,0.015) 4px
+        rgba(74,222,128,0.012) 2px,
+        rgba(74,222,128,0.012) 4px
       );
       pointer-events: none;
       z-index: 1;
+    }
+
+    /* Subtle green glow on the card */
+    .thread-card.type-terminal::after {
+      content: '';
+      position: absolute;
+      top: -1px; left: -1px; right: -1px; bottom: -1px;
+      border-radius: 17px;
+      background: radial-gradient(ellipse at 50% 0%, rgba(74,222,128,0.04) 0%, transparent 60%);
+      pointer-events: none;
     }
 
     /* ══ Article Overlay / Reader ══ */
@@ -1233,20 +1250,24 @@
           </div>
         </div>
 
-        <!-- ── TERMINAL POST ── -->
+        <!-- ── MATRIX TWEET ── -->
         <div class="thread-card type-terminal">
-          <div class="terminal-bar">
-            <div class="terminal-dot red"></div>
-            <div class="terminal-dot yellow"></div>
-            <div class="terminal-dot green"></div>
-            <div class="terminal-title-bar">ziion@sovereign — ~/threads</div>
+          <div class="matrix-tweet">
+            <div class="matrix-avatar"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 0 0-16 0"/></svg></div>
+            <div class="matrix-text">The gap between those who learn to leverage AI and those who don't will be the defining inequality of this decade.<span class="matrix-cursor"></span></div>
           </div>
-          <div class="terminal-body">
-            <div class="thread-header">
-              <div class="thread-title"><span class="cmd-prefix">$ </span>the_matrix_has_you.sh</div>
-            </div>
-            <div class="thread-author">u/KatherinJoyette</div>
-            <div class="thread-body"><span class="cmd-prefix">&gt; </span>The conversation about AI displacement is missing the point entirely. The real shift isn't automation — it's augmentation. The gap between those who learn to leverage these tools and those who don't will be the defining inequality of this decade. <span class="cmd-prefix">_</span></div>
+          <div class="thread-actions">
+            <div class="thread-action">+</div>
+            <div class="thread-action">&minus;</div>
+            <div class="thread-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          </div>
+        </div>
+
+        <!-- ── MATRIX TWEET 2 ── -->
+        <div class="thread-card type-terminal">
+          <div class="matrix-tweet">
+            <div class="matrix-avatar"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 0 0-16 0"/></svg></div>
+            <div class="matrix-text">Sovereignty isn't given. It's built.<span class="matrix-cursor"></span></div>
           </div>
           <div class="thread-actions">
             <div class="thread-action">+</div>

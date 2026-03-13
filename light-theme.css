@@ -1669,26 +1669,18 @@ body.light-mode .read-article-btn:hover {
   color: #1a1a1a !important;
 }
 
-/* ── Terminal post (keep dark for Matrix aesthetic) ── */
+/* ── Matrix Tweet (always dark — never changes in light mode) ── */
 body.light-mode .thread-card.type-terminal {
-  background: #0a0a0a !important;
-  border-color: rgba(74,222,128,0.1) !important;
+  background: #000000 !important;
+  border-color: rgba(74,222,128,0.08) !important;
 }
 
-body.light-mode .thread-card.type-terminal .thread-title {
+body.light-mode .matrix-text {
   color: #4ADE80 !important;
 }
 
-body.light-mode .thread-card.type-terminal .thread-author {
-  color: rgba(74,222,128,0.35) !important;
-}
-
-body.light-mode .thread-card.type-terminal .thread-body {
-  color: rgba(74,222,128,0.6) !important;
-}
-
 body.light-mode .thread-card.type-terminal .thread-action {
-  color: rgba(74,222,128,0.3) !important;
+  color: rgba(74,222,128,0.2) !important;
 }
 
 /* ── Article Reader Overlay ── */

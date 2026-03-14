@@ -2241,9 +2241,9 @@ body.light-mode .map-nearby-avatar {
   border-color: rgba(0,0,0,0.06) !important;
 }
 
-/* ════════════════════════════════════════════════
-   ══  IP VAULT (Light)  ══
-   ════════════════════════════════════════════════ */
+/* ================================================
+   ==  IP VAULT (Light)  ==
+   ================================================ */
 
 /* Vault header */
 body.light-mode .vault-header { border-bottom-color: rgba(0,0,0,0.06) !important; }

@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="light-theme.css?v=2">
+  <link rel="stylesheet" href="light-theme.css?v=3">
   <link rel="stylesheet" href="mobile.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -431,46 +431,72 @@
        THE VAULT — IP Data
        ══════════════════════════════════════ */
     const vault = [
-      // Brands
-      { title: "ZIION",                       cat: "brand",     status: "active", meta: "Platform" },
-      { title: "T1 Energy",                   cat: "brand",     status: "active", meta: "Identity System" },
-      { title: "The Architect",               cat: "brand",     status: "filed",  meta: "Personal Brand" },
-      { title: "19Keys",                      cat: "brand",     status: "active", meta: "Creator Brand" },
-      { title: "Sovereign Empire",            cat: "brand",     status: "filed",  meta: "Holding Co." },
+      /* ── Brands & Identity ─────────────────────────────── */
+      { title: "19Keys",                          cat: "brand",     status: "active", meta: "Creator Brand" },
+      { title: "ZIION",                           cat: "brand",     status: "active", meta: "Platform" },
+      { title: "Sovereign Empire",                cat: "brand",     status: "active", meta: "Holding Company" },
+      { title: "T1 Energy",                       cat: "brand",     status: "active", meta: "Identity System" },
+      { title: "Cognition Key",                   cat: "brand",     status: "active", meta: "Education Brand" },
+      { title: "Dynasty Club",                    cat: "brand",     status: "active", meta: "Membership" },
 
-      // Frameworks
-      { title: "Sovereign Empire Framework",  cat: "framework", status: "filed",  meta: "Business Model" },
-      { title: "The Metacognition Method",    cat: "framework", status: "filed",  meta: "Learning System" },
-      { title: "Community Builder Toolkit",   cat: "framework", status: "active", meta: "Playbook" },
-      { title: "Knowledge Protocol",          cat: "framework", status: "filed",  meta: "Info Architecture" },
-      { title: "Liberation Economics",        cat: "framework", status: "active", meta: "Economic Model" },
+      /* ── Frameworks & Systems ──────────────────────────── */
+      { title: "The C.C.C. Protocol",             cat: "framework", status: "filed",  meta: "Execution Framework" },
+      { title: "The S.T.E. Model",                cat: "framework", status: "filed",  meta: "Growth Model" },
+      { title: "The Six Laws of Thought Leadership", cat: "framework", status: "filed", meta: "Leadership System" },
+      { title: "The Fourfold Engineering System",  cat: "framework", status: "filed",  meta: "Health Assessment" },
+      { title: "The Supermind 7-Day Protocol",     cat: "framework", status: "filed",  meta: "Weekly Protocol" },
+      { title: "The Next Step Execution Formula",  cat: "framework", status: "filed",  meta: "Action System" },
+      { title: "The Write It Down Law",            cat: "framework", status: "filed",  meta: "Documentation Law" },
+      { title: "The Five Vibrations",              cat: "framework", status: "filed",  meta: "Team Framework" },
+      { title: "The Good Influence Program",       cat: "framework", status: "filed",  meta: "Creator Tiers" },
+      { title: "The Five Levels of Speakers",      cat: "framework", status: "filed",  meta: "Communication" },
+      { title: "The Cheat Code Trading System",    cat: "framework", status: "filed",  meta: "Finance System" },
+      { title: "The P.A.I.D. Formula",             cat: "framework", status: "filed",  meta: "Discipline Model" },
+      { title: "The Cognitive Wealth Key",         cat: "framework", status: "filed",  meta: "Wealth Framework" },
+      { title: "The Liberation Protocol",          cat: "framework", status: "filed",  meta: "Liberation System" },
+      { title: "The Enemy System",                 cat: "framework", status: "filed",  meta: "Cognitive Warfare" },
+      { title: "The Execution Engine",             cat: "framework", status: "filed",  meta: "Productivity System" },
+      { title: "The Fortress Protocol",            cat: "framework", status: "filed",  meta: "Protection System" },
+      { title: "The Morning Protocol",             cat: "framework", status: "filed",  meta: "Daily Ritual" },
+      { title: "The Media Empire Blueprint",       cat: "framework", status: "filed",  meta: "Media Strategy" },
+      { title: "The Legacy Blueprint",             cat: "framework", status: "filed",  meta: "Generational Model" },
 
-      // Products
-      { title: "ZIION Platform",              cat: "product",   status: "active", meta: "Web App" },
-      { title: "Cosmos Grid Dashboard",       cat: "product",   status: "active", meta: "Dashboard" },
-      { title: "Chairman OS",                 cat: "product",   status: "active", meta: "Operating System" },
-      { title: "ZIION Threads Engine",        cat: "product",   status: "active", meta: "Social Layer" },
-      { title: "Pulse Analytics",             cat: "product",   status: "draft",  meta: "Analytics" },
-      { title: "ZIION Mobile",                cat: "product",   status: "draft",  meta: "iOS / Android" },
-      { title: "Sovereign Wallet",            cat: "product",   status: "draft",  meta: "FinTech" },
-      { title: "Wealth Visualization Tool",   cat: "product",   status: "draft",  meta: "Finance" },
+      /* ── Products & Tools ──────────────────────────────── */
+      { title: "ZIION Platform",                   cat: "product",   status: "active", meta: "Web App" },
+      { title: "Chairman OS",                      cat: "product",   status: "active", meta: "Operating System" },
+      { title: "Cognition Key Course",             cat: "product",   status: "active", meta: "12 Modules" },
+      { title: "Cognitive Types Assessment",       cat: "product",   status: "active", meta: "Diagnostic Tool" },
+      { title: "The Black File",                   cat: "product",   status: "active", meta: "Personality System" },
+      { title: "Cosmos Grid Dashboard",            cat: "product",   status: "active", meta: "Dashboard" },
+      { title: "Sovereignty Score",                cat: "product",   status: "draft",  meta: "Assessment" },
+      { title: "Wealth Architecture Audit",        cat: "product",   status: "draft",  meta: "Finance Tool" },
 
-      // Content
-      { title: "Generational Wealth Blueprint",cat: "content",  status: "active", meta: "Course" },
-      { title: "Sovereign Economics Course",  cat: "content",   status: "draft",  meta: "Course" },
-      { title: "Liberation Playbook",         cat: "content",   status: "active", meta: "Guide" },
-      { title: "The Builder's Manifesto",     cat: "content",   status: "active", meta: "Written Work" },
+      /* ── Content & Courses ─────────────────────────────── */
+      { title: "Save Yourself",                    cat: "content",   status: "active", meta: "Book / Manifesto" },
+      { title: "Cognition Key Book",               cat: "content",   status: "active", meta: "Written Work" },
+      { title: "Cognitive Wealth Key Curriculum",   cat: "content",   status: "active", meta: "Flagship Course" },
+      { title: "Black Clock",                      cat: "content",   status: "draft",  meta: "Manuscript" },
+      { title: "Infinite Wealth: 21 Strategies",   cat: "content",   status: "filed",  meta: "Content System" },
+      { title: "Reprogramming the Future",         cat: "content",   status: "filed",  meta: "AI & Culture" },
 
-      // Media
-      { title: "19Keys Podcast",              cat: "media",     status: "active", meta: "Podcast" },
-      { title: "Empire Media Network",        cat: "media",     status: "active", meta: "Media Co." },
-      { title: "Cultural Renaissance Series", cat: "media",     status: "active", meta: "Video Series" },
+      /* ── Media & Production ────────────────────────────── */
+      { title: "High Level Conversations",         cat: "media",     status: "active", meta: "Podcast · 470+ Eps" },
+      { title: "19Keys YouTube",                   cat: "media",     status: "active", meta: "Video Platform" },
+      { title: "Keynote Speaking",                 cat: "media",     status: "active", meta: "Live Events" },
+      { title: "Local AI Series",                  cat: "media",     status: "active", meta: "Tech Content" },
 
-      // Concepts
-      { title: "Chairman OS Concept",         cat: "concept",   status: "active", meta: "Architecture" },
-      { title: "Decentralized Identity",      cat: "concept",   status: "draft",  meta: "Research" },
-      { title: "Node Network Architecture",   cat: "concept",   status: "filed",  meta: "Infrastructure" },
-      { title: "Sovereign Digital State",     cat: "concept",   status: "draft",  meta: "Vision Paper" },
+      /* ── Concepts & Research ───────────────────────────── */
+      { title: "Keyism",                           cat: "concept",   status: "filed",  meta: "Philosophy" },
+      { title: "Cognitive Architecture",           cat: "concept",   status: "filed",  meta: "Theory" },
+      { title: "Zion Theory",                      cat: "concept",   status: "filed",  meta: "Architecture" },
+      { title: "Cognitive Sovereignty",            cat: "concept",   status: "filed",  meta: "Sovereignty Model" },
+      { title: "The Mirror Economy",               cat: "concept",   status: "filed",  meta: "Economic Theory" },
+      { title: "The Boule",                        cat: "concept",   status: "filed",  meta: "Counter-Intel" },
+      { title: "Ecosystem Brand Map",              cat: "concept",   status: "filed",  meta: "Brand Strategy" },
+
+      /* ── Events ────────────────────────────────────────── */
+      { title: "Supermind Summit",                 cat: "event",     status: "draft",  meta: "Conference" },
+      { title: "Dynasty Experience",               cat: "event",     status: "draft",  meta: "Private Event" },
     ];
 
     /* ── Category config ── */

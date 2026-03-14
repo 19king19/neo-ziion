@@ -2241,76 +2241,73 @@ body.light-mode .map-nearby-avatar {
   border-color: rgba(0,0,0,0.06) !important;
 }
 
-/* ---- IP Library ---- */
-body.light-mode .ip-card {
-  background: rgba(0,0,0,0.02) !important;
+/* ════════════════════════════════════════════════
+   ══  IP VAULT (Light)  ══
+   ════════════════════════════════════════════════ */
+
+/* Vault header */
+body.light-mode .vault-header { border-bottom-color: rgba(0,0,0,0.06) !important; }
+body.light-mode .vault-label { color: rgba(0,0,0,0.25) !important; }
+body.light-mode .vault-title { color: #1a1a1a !important; }
+body.light-mode .vault-subtitle { color: #7a7a7a !important; }
+body.light-mode .vault-count { color: #999 !important; }
+body.light-mode .vault-count strong { color: #3d8c40 !important; }
+
+/* Vault sections */
+body.light-mode .vault-section { border-bottom-color: rgba(0,0,0,0.04) !important; }
+body.light-mode .vault-section-title { color: rgba(0,0,0,0.3) !important; }
+body.light-mode .vault-section-count { color: rgba(0,0,0,0.15) !important; }
+body.light-mode .vault-section-icon { stroke: rgba(0,0,0,0.15) !important; }
+
+/* Vault rows */
+body.light-mode .vault-row { border-top-color: rgba(0,0,0,0.04) !important; }
+body.light-mode .vault-row:hover { background: rgba(0,0,0,0.02) !important; }
+body.light-mode .vault-name { color: #4a4a4a !important; }
+body.light-mode .vault-row:hover .vault-name { color: #1a1a1a !important; }
+body.light-mode .vault-meta { color: rgba(0,0,0,0.25) !important; }
+
+/* Vault icons */
+body.light-mode .vault-icon {
+  background: rgba(0,0,0,0.03) !important;
   border-color: rgba(0,0,0,0.06) !important;
 }
-body.light-mode .ip-card:hover {
-  border-color: rgba(61,140,64,0.3) !important;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.08) !important;
-}
-body.light-mode .ip-card-title { color: #1a1a1a !important; }
-body.light-mode .ip-card-date { color: #999 !important; }
-body.light-mode .ip-card-placeholder {
-  background: linear-gradient(135deg, rgba(61,140,64,0.05) 0%, rgba(0,0,0,0.02) 100%) !important;
-}
-body.light-mode .ip-card-placeholder svg { stroke: rgba(0,0,0,0.08) !important; }
-body.light-mode .ip-type-badge {
-  background: rgba(255,255,255,0.9) !important;
-  color: #3d8c40 !important;
-}
-body.light-mode .stat-card {
-  background: rgba(0,0,0,0.02) !important;
-  border-color: rgba(0,0,0,0.06) !important;
-}
-body.light-mode .stat-number { color: #3d8c40 !important; }
-body.light-mode .stat-label { color: #999 !important; }
-body.light-mode .cat-pill {
-  border-color: rgba(0,0,0,0.08) !important;
-  color: #666 !important;
-}
-body.light-mode .cat-pill.active {
-  background: #3d8c40 !important;
-  border-color: #3d8c40 !important;
-  color: #fff !important;
-}
-body.light-mode .ip-btn-primary {
-  background: #3d8c40 !important;
-  color: #fff !important;
-}
-body.light-mode .ip-btn-secondary {
-  background: rgba(0,0,0,0.04) !important;
-  border-color: rgba(0,0,0,0.08) !important;
-  color: #1a1a1a !important;
-}
-body.light-mode .ip-upload-card {
-  border-color: rgba(0,0,0,0.08) !important;
-  background: rgba(0,0,0,0.01) !important;
-}
-body.light-mode .ip-upload-card:hover {
-  border-color: rgba(61,140,64,0.3) !important;
-  background: rgba(61,140,64,0.03) !important;
-}
-body.light-mode .ip-upload-card svg { stroke: rgba(0,0,0,0.12) !important; }
-body.light-mode .ip-upload-text { color: #999 !important; }
-body.light-mode .ip-list-item {
-  background: rgba(0,0,0,0.02) !important;
-  border-color: rgba(0,0,0,0.04) !important;
-}
-body.light-mode .ip-list-item:hover {
-  background: rgba(0,0,0,0.04) !important;
-  border-color: rgba(61,140,64,0.2) !important;
-}
-body.light-mode .ip-list-title { color: #1a1a1a !important; }
-body.light-mode .ip-list-type { color: #3d8c40 !important; }
-body.light-mode .ip-list-date { color: #999 !important; }
+body.light-mode .vault-row:hover .vault-icon { border-color: rgba(61,140,64,0.3) !important; }
+body.light-mode .vault-icon-label { color: rgba(0,0,0,0.35) !important; }
+body.light-mode .vault-icon.brand .vault-icon-label { color: #3d8c40 !important; }
+body.light-mode .vault-icon.framework .vault-icon-label { color: #2a7fbf !important; }
+body.light-mode .vault-icon.content .vault-icon-label { color: #c07030 !important; }
+body.light-mode .vault-icon.product .vault-icon-label { color: #8a5cc0 !important; }
+body.light-mode .vault-icon.media .vault-icon-label { color: #c04060 !important; }
+body.light-mode .vault-icon.concept .vault-icon-label { color: #2db090 !important; }
+body.light-mode .vault-icon.event .vault-icon-label { color: #b0952a !important; }
+
+/* Vault status pills */
+body.light-mode .vault-status.active { background: rgba(61,140,64,0.08) !important; color: #3d8c40 !important; }
+body.light-mode .vault-status.draft { background: rgba(0,0,0,0.04) !important; color: #999 !important; }
+body.light-mode .vault-status.filed { background: rgba(42,127,191,0.08) !important; color: #2a7fbf !important; }
+
+/* Add row */
+body.light-mode .vault-add-row { border-top-color: rgba(0,0,0,0.04) !important; }
+body.light-mode .vault-add-row:hover { background: rgba(61,140,64,0.03) !important; }
+body.light-mode .vault-add-icon { border-color: rgba(0,0,0,0.1) !important; }
+body.light-mode .vault-add-row:hover .vault-add-icon { border-color: rgba(61,140,64,0.4) !important; }
+body.light-mode .vault-add-icon svg { stroke: rgba(0,0,0,0.15) !important; }
+body.light-mode .vault-add-row:hover .vault-add-icon svg { stroke: #3d8c40 !important; }
+body.light-mode .vault-add-text { color: rgba(0,0,0,0.25) !important; }
+body.light-mode .vault-add-row:hover .vault-add-text { color: #3d8c40 !important; }
+
+/* IP Modal */
+body.light-mode .ip-modal-overlay { background: rgba(250,250,248,0.85) !important; }
 body.light-mode .ip-modal {
-  background: #fff !important;
+  background: #FFFFFF !important;
   border-color: rgba(0,0,0,0.08) !important;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.12) !important;
 }
-body.light-mode .ip-modal-header { border-color: rgba(0,0,0,0.06) !important; }
+body.light-mode .ip-modal-header { border-bottom-color: rgba(0,0,0,0.06) !important; }
 body.light-mode .ip-modal-header h3 { color: #1a1a1a !important; }
+body.light-mode .ip-modal-close { background: rgba(0,0,0,0.04) !important; color: #1a1a1a !important; }
+body.light-mode .ip-modal-close:hover { background: rgba(0,0,0,0.08) !important; }
+body.light-mode .ip-modal-body label { color: #999 !important; }
 body.light-mode .ip-modal-body input,
 body.light-mode .ip-modal-body select,
 body.light-mode .ip-modal-body textarea {
@@ -2318,8 +2315,15 @@ body.light-mode .ip-modal-body textarea {
   border-color: rgba(0,0,0,0.08) !important;
   color: #1a1a1a !important;
 }
-body.light-mode .ip-modal-body label { color: #999 !important; }
-body.light-mode .ip-modal-footer { border-color: rgba(0,0,0,0.06) !important; }
-body.light-mode .view-toggle { background: rgba(0,0,0,0.04) !important; }
-body.light-mode .view-btn { color: #999 !important; }
-body.light-mode .view-btn.active { background: rgba(0,0,0,0.08) !important; color: #1a1a1a !important; }
+body.light-mode .ip-modal-body input:focus,
+body.light-mode .ip-modal-body select:focus,
+body.light-mode .ip-modal-body textarea:focus { border-color: #3d8c40 !important; }
+body.light-mode .ip-modal-body select option { background: #FFFFFF !important; color: #1a1a1a !important; }
+body.light-mode .ip-modal-footer { border-top-color: rgba(0,0,0,0.06) !important; }
+body.light-mode .ip-btn-primary { background: #3d8c40 !important; color: #fff !important; }
+body.light-mode .ip-btn-primary:hover { background: #357a38 !important; }
+body.light-mode .ip-btn-secondary {
+  background: rgba(0,0,0,0.04) !important;
+  border-color: rgba(0,0,0,0.08) !important;
+  color: #1a1a1a !important;
+}

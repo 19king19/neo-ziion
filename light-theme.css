@@ -2240,3 +2240,86 @@ body.light-mode .map-nearby-location {
 body.light-mode .map-nearby-avatar {
   border-color: rgba(0,0,0,0.06) !important;
 }
+
+/* ---- IP Library ---- */
+body.light-mode .ip-card {
+  background: rgba(0,0,0,0.02) !important;
+  border-color: rgba(0,0,0,0.06) !important;
+}
+body.light-mode .ip-card:hover {
+  border-color: rgba(61,140,64,0.3) !important;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.08) !important;
+}
+body.light-mode .ip-card-title { color: #1a1a1a !important; }
+body.light-mode .ip-card-date { color: #999 !important; }
+body.light-mode .ip-card-placeholder {
+  background: linear-gradient(135deg, rgba(61,140,64,0.05) 0%, rgba(0,0,0,0.02) 100%) !important;
+}
+body.light-mode .ip-card-placeholder svg { stroke: rgba(0,0,0,0.08) !important; }
+body.light-mode .ip-type-badge {
+  background: rgba(255,255,255,0.9) !important;
+  color: #3d8c40 !important;
+}
+body.light-mode .stat-card {
+  background: rgba(0,0,0,0.02) !important;
+  border-color: rgba(0,0,0,0.06) !important;
+}
+body.light-mode .stat-number { color: #3d8c40 !important; }
+body.light-mode .stat-label { color: #999 !important; }
+body.light-mode .cat-pill {
+  border-color: rgba(0,0,0,0.08) !important;
+  color: #666 !important;
+}
+body.light-mode .cat-pill.active {
+  background: #3d8c40 !important;
+  border-color: #3d8c40 !important;
+  color: #fff !important;
+}
+body.light-mode .ip-btn-primary {
+  background: #3d8c40 !important;
+  color: #fff !important;
+}
+body.light-mode .ip-btn-secondary {
+  background: rgba(0,0,0,0.04) !important;
+  border-color: rgba(0,0,0,0.08) !important;
+  color: #1a1a1a !important;
+}
+body.light-mode .ip-upload-card {
+  border-color: rgba(0,0,0,0.08) !important;
+  background: rgba(0,0,0,0.01) !important;
+}
+body.light-mode .ip-upload-card:hover {
+  border-color: rgba(61,140,64,0.3) !important;
+  background: rgba(61,140,64,0.03) !important;
+}
+body.light-mode .ip-upload-card svg { stroke: rgba(0,0,0,0.12) !important; }
+body.light-mode .ip-upload-text { color: #999 !important; }
+body.light-mode .ip-list-item {
+  background: rgba(0,0,0,0.02) !important;
+  border-color: rgba(0,0,0,0.04) !important;
+}
+body.light-mode .ip-list-item:hover {
+  background: rgba(0,0,0,0.04) !important;
+  border-color: rgba(61,140,64,0.2) !important;
+}
+body.light-mode .ip-list-title { color: #1a1a1a !important; }
+body.light-mode .ip-list-type { color: #3d8c40 !important; }
+body.light-mode .ip-list-date { color: #999 !important; }
+body.light-mode .ip-modal {
+  background: #fff !important;
+  border-color: rgba(0,0,0,0.08) !important;
+}
+body.light-mode .ip-modal-header { border-color: rgba(0,0,0,0.06) !important; }
+body.light-mode .ip-modal-header h3 { color: #1a1a1a !important; }
+body.light-mode .ip-modal-body input,
+body.light-mode .ip-modal-body select,
+body.light-mode .ip-modal-body textarea {
+  background: rgba(0,0,0,0.03) !important;
+  border-color: rgba(0,0,0,0.08) !important;
+  color: #1a1a1a !important;
+}
+body.light-mode .ip-modal-body label { color: #999 !important; }
+body.light-mode .ip-modal-footer { border-color: rgba(0,0,0,0.06) !important; }
+body.light-mode .view-toggle { background: rgba(0,0,0,0.04) !important; }
+body.light-mode .view-btn { color: #999 !important; }
+body.light-mode .view-btn.active { background: rgba(0,0,0,0.08) !important; color: #1a1a1a !important; }

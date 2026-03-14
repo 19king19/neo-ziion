@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZIION — IP Library</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="light-theme.css?v=2">
+  <link rel="stylesheet" href="mobile.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0F0E12;
+      color: #fff;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      overflow-x: hidden;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ── Sticky Header ── */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(15, 14, 18, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .header-left { display: flex; align-items: center; gap: 16px; }
+    .logo-text {
+      font-size: 18px; font-weight: 800; letter-spacing: 6px;
+      color: #fff; text-transform: uppercase; text-decoration: none;
+    }
+    .search-bar {
+      flex: 0 1 420px; height: 40px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      display: flex; align-items: center; padding: 0 14px; gap: 10px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .search-bar:focus-within { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.08); }
+    .search-bar svg { width: 16px; height: 16px; stroke: rgba(255,255,255,0.3); flex-shrink: 0; }
+    .search-bar input {
+      flex: 1; background: none; border: none; outline: none;
+      color: #fff; font-size: 14px; font-weight: 400;
+    }
+    .search-bar input::placeholder { color: rgba(255,255,255,0.3); }
+    .header-right { display: flex; align-items: center; gap: 16px; }
+    .notification-bell { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 8px; transition: background 0.2s; }
+    .notification-bell:hover { background: rgba(255,255,255,0.06); }
+    .notification-bell svg { width: 20px; height: 20px; stroke: rgba(255,255,255,0.5); fill: none; stroke-width: 1.8; }
+    .avatar { width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.1); cursor: pointer; }
+
+    /* ── Main Layout ── */
+    .main-layout {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 220px;
+      background: rgba(15, 14, 18, 0.6);
+      border-right: 1px solid rgba(255,255,255,0.06);
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+    .sidebar::-webkit-scrollbar { width: 0; }
+    .sidebar-create {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 14px; margin-bottom: 12px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      color: #fff; font-size: 14px; font-weight: 500;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .sidebar-create:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.15); }
+    .sidebar-create svg { width: 14px; height: 14px; stroke: currentColor; fill: none; }
+    .nav-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 8px 14px; border-radius: 8px;
+      color: rgba(255,255,255,0.5); text-decoration: none;
+      font-size: 13.5px; font-weight: 500;
+      transition: all 0.15s; cursor: pointer;
+    }
+    .nav-item:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.8); }
+    .nav-item.active { background: rgba(255,255,255,0.08); color: #fff; }
+    .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .sidebar-divider { height: 1px; background: rgba(255,255,255,0.06); margin: 8px 14px; }
+    .theme-toggle {
+      margin-top: auto; padding: 8px 14px; cursor: pointer;
+      opacity: 0.4; transition: opacity 0.2s;
+    }
+    .theme-toggle:hover { opacity: 0.7; }
+    .theme-toggle svg { width: 18px; height: 18px; }
+
+    /* ── Content Area ── */
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 40px 48px;
+    }
+    .content::-webkit-scrollbar { width: 6px; }
+    .content::-webkit-scrollbar-track { background: transparent; }
+    .content::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+
+    /* ── Page Header ── */
+    .page-header {
+      margin-bottom: 40px;
+    }
+    .page-title {
+      font-size: 36px; font-weight: 800; letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    .page-subtitle {
+      font-size: 15px; font-weight: 400;
+      color: rgba(255,255,255,0.4);
+      max-width: 600px; line-height: 1.5;
+    }
+
+    /* ── Stats Row ── */
+    .ip-stats {
+      display: flex; gap: 16px; margin-bottom: 32px;
+    }
+    .stat-card {
+      flex: 1;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      padding: 20px 24px;
+      transition: border-color 0.2s;
+    }
+    .stat-card:hover { border-color: rgba(255,255,255,0.12); }
+    .stat-number {
+      font-size: 32px; font-weight: 800; letter-spacing: -0.02em;
+      color: #D5FF5A;
+    }
+    .stat-label {
+      font-size: 12px; font-weight: 500; text-transform: uppercase;
+      letter-spacing: 2px; color: rgba(255,255,255,0.35);
+      margin-top: 4px;
+    }
+
+    /* ── Toolbar ── */
+    .ip-toolbar {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 24px;
+    }
+    .ip-categories {
+      display: flex; gap: 8px;
+    }
+    .cat-pill {
+      padding: 8px 20px;
+      border-radius: 100px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: transparent;
+      color: rgba(255,255,255,0.5);
+      font-size: 13px; font-weight: 500;
+      cursor: pointer; transition: all 0.2s;
+      font-family: inherit;
+    }
+    .cat-pill:hover { border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.8); }
+    .cat-pill.active {
+      background: #D5FF5A; border-color: #D5FF5A;
+      color: #0F0E12; font-weight: 600;
+    }
+    .ip-actions { display: flex; gap: 10px; }
+    .ip-btn {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 20px; border-radius: 10px;
+      font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+      font-family: inherit; border: none;
+    }
+    .ip-btn-primary {
+      background: #D5FF5A; color: #0F0E12;
+    }
+    .ip-btn-primary:hover { background: #e2ff7a; }
+    .ip-btn-secondary {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #fff;
+    }
+    .ip-btn-secondary:hover { background: rgba(255,255,255,0.1); }
+    .ip-btn svg { width: 16px; height: 16px; }
+
+    /* ── View Toggle ── */
+    .view-toggle {
+      display: flex; gap: 4px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 8px; padding: 3px;
+    }
+    .view-btn {
+      padding: 6px 10px; border-radius: 6px;
+      background: transparent; border: none;
+      color: rgba(255,255,255,0.4);
+      cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .view-btn.active { background: rgba(255,255,255,0.1); color: #fff; }
+    .view-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+    /* ── IP Grid ── */
+    .ip-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    /* ── IP Card ── */
+    .ip-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+    .ip-card:hover {
+      border-color: rgba(213, 255, 90, 0.3);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+    }
+    .ip-card-image {
+      width: 100%;
+      aspect-ratio: 4/3;
+      background: rgba(255,255,255,0.04);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+    .ip-card-image img {
+      width: 100%; height: 100%; object-fit: cover;
+      filter: grayscale(40%) contrast(1.05);
+      transition: filter 0.3s;
+    }
+    .ip-card:hover .ip-card-image img { filter: grayscale(0%) contrast(1); }
+    .ip-card-placeholder {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, rgba(213,255,90,0.05) 0%, rgba(255,255,255,0.02) 100%);
+    }
+    .ip-card-placeholder svg { width: 48px; height: 48px; stroke: rgba(255,255,255,0.1); fill: none; stroke-width: 1.5; }
+    .ip-type-badge {
+      position: absolute; top: 10px; left: 10px;
+      padding: 4px 10px; border-radius: 6px;
+      background: rgba(15, 14, 18, 0.8);
+      backdrop-filter: blur(10px);
+      font-size: 10px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 1.5px;
+      color: #D5FF5A;
+    }
+    .ip-card-info {
+      padding: 16px 18px;
+    }
+    .ip-card-title {
+      font-size: 15px; font-weight: 700;
+      color: #fff; margin-bottom: 6px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .ip-card-meta {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .ip-card-date {
+      font-size: 12px; color: rgba(255,255,255,0.3); font-weight: 400;
+    }
+    .ip-card-status {
+      padding: 3px 10px; border-radius: 100px;
+      font-size: 10px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 1px;
+    }
+    .status-active { background: rgba(213,255,90,0.15); color: #D5FF5A; }
+    .status-draft { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.4); }
+    .status-filed { background: rgba(90,180,255,0.15); color: #5AB4FF; }
+
+    /* ── IP List View ── */
+    .ip-list { display: none; flex-direction: column; gap: 4px; }
+    .ip-list.active { display: flex; }
+    .ip-grid.active { display: grid; }
+    .ip-grid:not(.active) { display: none; }
+
+    .ip-list-item {
+      display: flex; align-items: center; gap: 16px;
+      padding: 14px 20px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 12px;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .ip-list-item:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(213, 255, 90, 0.2);
+    }
+    .ip-list-thumb {
+      width: 56px; height: 42px; border-radius: 8px;
+      background: rgba(255,255,255,0.04); overflow: hidden; flex-shrink: 0;
+    }
+    .ip-list-thumb img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(40%); }
+    .ip-list-title { flex: 1; font-size: 14px; font-weight: 600; }
+    .ip-list-type {
+      font-size: 11px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 1.5px; color: #D5FF5A; width: 120px;
+    }
+    .ip-list-date { font-size: 12px; color: rgba(255,255,255,0.3); width: 100px; text-align: right; }
+    .ip-list-status { width: 80px; text-align: right; }
+
+    /* ── Upload Drop Zone ── */
+    .ip-upload-card {
+      background: rgba(255,255,255,0.02);
+      border: 2px dashed rgba(255,255,255,0.08);
+      border-radius: 16px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      min-height: 200px;
+      cursor: pointer; transition: all 0.3s;
+      gap: 12px;
+    }
+    .ip-upload-card:hover {
+      border-color: rgba(213,255,90,0.3);
+      background: rgba(213,255,90,0.03);
+    }
+    .ip-upload-card svg { width: 40px; height: 40px; stroke: rgba(255,255,255,0.15); fill: none; stroke-width: 1.5; }
+    .ip-upload-card:hover svg { stroke: rgba(213,255,90,0.5); }
+    .ip-upload-text {
+      font-size: 14px; font-weight: 500;
+      color: rgba(255,255,255,0.3);
+    }
+    .ip-upload-card:hover .ip-upload-text { color: rgba(213,255,90,0.7); }
+
+    /* ── Detail Modal ── */
+    .ip-modal-overlay {
+      position: fixed; inset: 0; z-index: 1000;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(20px);
+      display: none; align-items: center; justify-content: center;
+      padding: 40px;
+    }
+    .ip-modal-overlay.active { display: flex; }
+    .ip-modal {
+      background: #1a1a20;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 24px;
+      width: 100%; max-width: 680px;
+      overflow: hidden;
+    }
+    .ip-modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 24px 28px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .ip-modal-header h3 { font-size: 18px; font-weight: 700; }
+    .ip-modal-close {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: rgba(255,255,255,0.06); border: none;
+      color: #fff; font-size: 18px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .ip-modal-close:hover { background: rgba(255,255,255,0.12); }
+    .ip-modal-body { padding: 28px; }
+    .ip-modal-body label {
+      display: block; font-size: 12px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 1.5px;
+      color: rgba(255,255,255,0.4); margin-bottom: 8px;
+    }
+    .ip-modal-body input,
+    .ip-modal-body select,
+    .ip-modal-body textarea {
+      width: 100%; padding: 12px 16px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      color: #fff; font-size: 14px; font-family: inherit;
+      outline: none; margin-bottom: 20px;
+      transition: border-color 0.2s;
+    }
+    .ip-modal-body input:focus,
+    .ip-modal-body select:focus,
+    .ip-modal-body textarea:focus { border-color: #D5FF5A; }
+    .ip-modal-body textarea { min-height: 80px; resize: vertical; }
+    .ip-modal-body select option { background: #1a1a20; }
+    .ip-modal-drop {
+      width: 100%; min-height: 140px;
+      border: 2px dashed rgba(255,255,255,0.08);
+      border-radius: 14px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 8px; margin-bottom: 20px;
+      cursor: pointer; transition: all 0.3s;
+    }
+    .ip-modal-drop:hover { border-color: rgba(213,255,90,0.3); }
+    .ip-modal-drop svg { width: 36px; height: 36px; stroke: rgba(255,255,255,0.15); fill: none; stroke-width: 1.5; }
+    .ip-modal-drop span { font-size: 13px; color: rgba(255,255,255,0.3); }
+    .ip-modal-footer {
+      display: flex; justify-content: flex-end; gap: 10px;
+      padding: 20px 28px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <a href="cosmos-grid.html" class="logo-text">ZIION</a>
+    </div>
+    <div class="search-bar">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" placeholder="Search IP library..." id="ipSearch">
+    </div>
+    <div class="header-right">
+      <div class="notification-bell">
+        <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      </div>
+      <div class="avatar"></div>
+    </div>
+  </header>
+
+  <div class="main-layout">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <button class="sidebar-create" onclick="openAddModal()">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        Create
+      </button>
+      <a class="nav-item" href="cosmos-grid.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <a class="nav-item" href="library.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/></svg>
+        Library
+      </a>
+      <a class="nav-item" href="threads.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Threads
+      </a>
+      <a class="nav-item" href="directory.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Connections
+      </a>
+      <a class="nav-item active" href="ip.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        IP
+      </a>
+      <a class="nav-item" href="assets.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Assets
+      </a>
+      <a class="nav-item" href="world.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        World
+      </a>
+      <a class="nav-item" href="pulse.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Pulse
+      </a>
+      <div class="sidebar-divider"></div>
+      <a class="nav-item" href="book-19keys.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/></svg>
+        Book 19Keys
+      </a>
+      <a class="nav-item" href="messages.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Messages
+      </a>
+      <div class="sidebar-divider"></div>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </a>
+      <div id="themeToggle" class="theme-toggle" title="Switch to light mode">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+      <div class="page-header">
+        <div class="page-title">IP Library</div>
+        <div class="page-subtitle">Your sovereign intellectual property vault. Every brand, concept, framework, and creation — catalogued and protected under your empire.</div>
+      </div>
+
+      <!-- Stats -->
+      <div class="ip-stats">
+        <div class="stat-card">
+          <div class="stat-number" id="totalCount">24</div>
+          <div class="stat-label">Total Assets</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">7</div>
+          <div class="stat-label">Categories</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">12</div>
+          <div class="stat-label">Active</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">5</div>
+          <div class="stat-label">Filed / Protected</div>
+        </div>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="ip-toolbar">
+        <div class="ip-categories">
+          <button class="cat-pill active" onclick="filterIP('all')">All</button>
+          <button class="cat-pill" onclick="filterIP('brand')">Brands</button>
+          <button class="cat-pill" onclick="filterIP('framework')">Frameworks</button>
+          <button class="cat-pill" onclick="filterIP('content')">Content</button>
+          <button class="cat-pill" onclick="filterIP('product')">Products</button>
+          <button class="cat-pill" onclick="filterIP('media')">Media</button>
+          <button class="cat-pill" onclick="filterIP('concept')">Concepts</button>
+        </div>
+        <div class="ip-actions">
+          <div class="view-toggle">
+            <button class="view-btn active" onclick="setView('grid')" id="gridViewBtn">
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+            </button>
+            <button class="view-btn" onclick="setView('list')" id="listViewBtn">
+              <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
+          </div>
+          <button class="ip-btn ip-btn-primary" onclick="openAddModal()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add IP
+          </button>
+        </div>
+      </div>
+
+      <!-- Grid View -->
+      <div class="ip-grid active" id="ipGrid">
+        <!-- Upload Card -->
+        <div class="ip-upload-card" onclick="openAddModal()">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <div class="ip-upload-text">Add new IP asset</div>
+        </div>
+      </div>
+
+      <!-- List View -->
+      <div class="ip-list" id="ipList"></div>
+    </div>
+  </div>
+
+  <!-- Add/Edit Modal -->
+  <div class="ip-modal-overlay" id="ipModal">
+    <div class="ip-modal">
+      <div class="ip-modal-header">
+        <h3>Add IP Asset</h3>
+        <button class="ip-modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="ip-modal-body">
+        <label>Title</label>
+        <input type="text" id="ipTitle" placeholder="e.g. ZIION Platform">
+
+        <label>Category</label>
+        <select id="ipCategory">
+          <option value="brand">Brand</option>
+          <option value="framework">Framework</option>
+          <option value="content">Content</option>
+          <option value="product">Product</option>
+          <option value="media">Media</option>
+          <option value="concept">Concept</option>
+        </select>
+
+        <label>Status</label>
+        <select id="ipStatus">
+          <option value="active">Active</option>
+          <option value="draft">Draft</option>
+          <option value="filed">Filed / Protected</option>
+        </select>
+
+        <label>Notes</label>
+        <textarea id="ipNotes" placeholder="Brief description or notes..."></textarea>
+
+        <label>Reference Image</label>
+        <div class="ip-modal-drop" onclick="document.getElementById('ipFileInput').click()">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <span id="dropLabel">Click to upload reference photo</span>
+        </div>
+        <input type="file" id="ipFileInput" accept="image/*" style="display:none" onchange="handleFileSelect(event)">
+      </div>
+      <div class="ip-modal-footer">
+        <button class="ip-btn ip-btn-secondary" onclick="closeModal()">Cancel</button>
+        <button class="ip-btn ip-btn-primary" onclick="saveIP()">Save Asset</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="theme-toggle.js"></script>
+  <script src="mobile-nav.js"></script>
+  <script>
+    /* ── IP Data ── */
+    const ipData = [
+      { id: 1,  title: "ZIION Platform",           category: "product",   status: "active", date: "2024-01-15", image: null },
+      { id: 2,  title: "T1 Energy Identity",       category: "brand",     status: "active", date: "2024-02-01", image: null },
+      { id: 3,  title: "Sovereign Empire Framework",category: "framework", status: "filed",  date: "2023-11-20", image: null },
+      { id: 4,  title: "19Keys Podcast",            category: "media",     status: "active", date: "2023-06-10", image: null },
+      { id: 5,  title: "Chairman OS Concept",       category: "concept",   status: "active", date: "2024-03-01", image: null },
+      { id: 6,  title: "The Metacognition Method",  category: "framework", status: "filed",  date: "2023-09-14", image: null },
+      { id: 7,  title: "Generational Wealth Blueprint",category: "content",status: "active", date: "2024-01-28", image: null },
+      { id: 8,  title: "Cosmos Grid Dashboard",     category: "product",   status: "active", date: "2024-02-15", image: null },
+      { id: 9,  title: "Sovereign Economics Course", category: "content",  status: "draft",  date: "2024-03-05", image: null },
+      { id: 10, title: "ZIION Threads Engine",      category: "product",   status: "active", date: "2024-02-20", image: null },
+      { id: 11, title: "Pulse Analytics System",    category: "product",   status: "draft",  date: "2024-03-08", image: null },
+      { id: 12, title: "The Architect Brand",       category: "brand",     status: "filed",  date: "2023-08-01", image: null },
+      { id: 13, title: "Liberation Playbook",       category: "content",   status: "active", date: "2024-01-05", image: null },
+      { id: 14, title: "Decentralized Identity Paper",category: "concept", status: "draft",  date: "2024-03-10", image: null },
+      { id: 15, title: "Community Builder Toolkit",  category: "framework", status: "active", date: "2024-02-10", image: null },
+      { id: 16, title: "Sovereign Wallet Concept",   category: "concept",  status: "draft",  date: "2024-03-12", image: null },
+      { id: 17, title: "Empire Media Network",       category: "media",    status: "active", date: "2024-01-20", image: null },
+      { id: 18, title: "Knowledge Protocol",         category: "framework", status: "filed",  date: "2023-12-01", image: null },
+      { id: 19, title: "ZIION Mobile App",           category: "product",   status: "draft",  date: "2024-03-11", image: null },
+      { id: 20, title: "The Builder's Manifesto",    category: "content",   status: "active", date: "2024-02-25", image: null },
+      { id: 21, title: "Node Network Architecture",  category: "concept",   status: "filed",  date: "2023-10-15", image: null },
+      { id: 22, title: "Wealth Visualization Tool",  category: "product",   status: "draft",  date: "2024-03-09", image: null },
+      { id: 23, title: "Cultural Renaissance Series",category: "media",     status: "active", date: "2024-02-05", image: null },
+      { id: 24, title: "19Keys Brand System",        category: "brand",     status: "active", date: "2023-07-20", image: null },
+    ];
+
+    let currentFilter = 'all';
+    let currentView = 'grid';
+    let selectedFile = null;
+
+    /* ── Render ── */
+    function renderIP() {
+      const filtered = currentFilter === 'all' ? ipData : ipData.filter(ip => ip.category === currentFilter);
+
+      // Grid
+      const grid = document.getElementById('ipGrid');
+      const uploadCard = grid.querySelector('.ip-upload-card');
+      grid.innerHTML = '';
+      grid.appendChild(uploadCard);
+      filtered.forEach(ip => {
+        const card = document.createElement('div');
+        card.className = 'ip-card';
+        card.setAttribute('data-category', ip.category);
+        const statusClass = ip.status === 'active' ? 'status-active' : ip.status === 'filed' ? 'status-filed' : 'status-draft';
+        const statusText = ip.status === 'filed' ? 'Filed' : ip.status.charAt(0).toUpperCase() + ip.status.slice(1);
+        const dateStr = new Date(ip.date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        card.innerHTML = `
+          <div class="ip-card-image">
+            ${ip.image ? `<img src="${ip.image}" alt="${ip.title}">` : `
+            <div class="ip-card-placeholder">
+              <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            </div>`}
+            <div class="ip-type-badge">${ip.category}</div>
+          </div>
+          <div class="ip-card-info">
+            <div class="ip-card-title">${ip.title}</div>
+            <div class="ip-card-meta">
+              <span class="ip-card-date">${dateStr}</span>
+              <span class="ip-card-status ${statusClass}">${statusText}</span>
+            </div>
+          </div>`;
+        grid.appendChild(card);
+      });
+
+      // List
+      const list = document.getElementById('ipList');
+      list.innerHTML = '';
+      filtered.forEach(ip => {
+        const statusClass = ip.status === 'active' ? 'status-active' : ip.status === 'filed' ? 'status-filed' : 'status-draft';
+        const statusText = ip.status === 'filed' ? 'Filed' : ip.status.charAt(0).toUpperCase() + ip.status.slice(1);
+        const dateStr = new Date(ip.date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        const item = document.createElement('div');
+        item.className = 'ip-list-item';
+        item.innerHTML = `
+          <div class="ip-list-thumb">
+            ${ip.image ? `<img src="${ip.image}" alt="">` : ''}
+          </div>
+          <div class="ip-list-title">${ip.title}</div>
+          <div class="ip-list-type">${ip.category}</div>
+          <div class="ip-list-date">${dateStr}</div>
+          <div class="ip-list-status"><span class="ip-card-status ${statusClass}">${statusText}</span></div>`;
+        list.appendChild(item);
+      });
+    }
+
+    /* ── Filter ── */
+    function filterIP(cat) {
+      currentFilter = cat;
+      document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+      event.target.classList.add('active');
+      renderIP();
+    }
+
+    /* ── View Toggle ── */
+    function setView(view) {
+      currentView = view;
+      document.getElementById('ipGrid').classList.toggle('active', view === 'grid');
+      document.getElementById('ipList').classList.toggle('active', view === 'list');
+      document.getElementById('gridViewBtn').classList.toggle('active', view === 'grid');
+      document.getElementById('listViewBtn').classList.toggle('active', view === 'list');
+    }
+
+    /* ── Modal ── */
+    function openAddModal() {
+      document.getElementById('ipModal').classList.add('active');
+    }
+    function closeModal() {
+      document.getElementById('ipModal').classList.remove('active');
+      document.getElementById('ipTitle').value = '';
+      document.getElementById('ipNotes').value = '';
+      document.getElementById('dropLabel').textContent = 'Click to upload reference photo';
+      selectedFile = null;
+    }
+
+    /* ── File ── */
+    function handleFileSelect(e) {
+      const file = e.target.files[0];
+      if (file) {
+        selectedFile = URL.createObjectURL(file);
+        document.getElementById('dropLabel').textContent = file.name;
+      }
+    }
+
+    /* ── Save ── */
+    function saveIP() {
+      const title = document.getElementById('ipTitle').value.trim();
+      if (!title) return;
+      const newIP = {
+        id: ipData.length + 1,
+        title,
+        category: document.getElementById('ipCategory').value,
+        status: document.getElementById('ipStatus').value,
+        date: new Date().toISOString().split('T')[0],
+        image: selectedFile || null,
+      };
+      ipData.unshift(newIP);
+      document.getElementById('totalCount').textContent = ipData.length;
+      closeModal();
+      renderIP();
+    }
+
+    /* ── Search ── */
+    document.getElementById('ipSearch').addEventListener('input', function() {
+      const q = this.value.toLowerCase();
+      document.querySelectorAll('.ip-card:not(.ip-upload-card)').forEach(card => {
+        const title = card.querySelector('.ip-card-title')?.textContent.toLowerCase() || '';
+        card.style.display = title.includes(q) ? '' : 'none';
+      });
+      document.querySelectorAll('.ip-list-item').forEach(item => {
+        const title = item.querySelector('.ip-list-title')?.textContent.toLowerCase() || '';
+        item.style.display = title.includes(q) ? '' : 'none';
+      });
+    });
+
+    /* ── Init ── */
+    renderIP();
+  </script>
+</body>
+</html>

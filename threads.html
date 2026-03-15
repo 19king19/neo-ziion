@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Oswald:wght@400;500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="light-theme.css?v=2">
+  <link rel="stylesheet" href="light-theme.css?v=3">
   <link rel="stylesheet" href="mobile.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
@@ -449,6 +449,33 @@
       0%, 100% { opacity: 0.4; }
       50% { opacity: 1; }
     }
+
+    /* ── Universal Post Share/Download Button ── */
+    .post-share-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: rgba(255,255,255,0.15);
+      border-radius: 8px;
+      transition: color 0.2s, background 0.2s;
+      margin-left: auto;
+    }
+    .post-share-btn:hover {
+      color: rgba(255,255,255,0.6);
+      background: rgba(255,255,255,0.06);
+    }
+    .post-share-btn svg { width: 16px; height: 16px; }
+    .post-share-btn.saving {
+      pointer-events: none;
+      animation: sharePulse 0.8s ease infinite;
+    }
+    .thread-card.type-quote .post-share-btn { color: rgba(139,115,85,0.25); }
+    .thread-card.type-quote .post-share-btn:hover { color: rgba(139,115,85,0.7); background: rgba(139,115,85,0.08); }
 
     /* ── Share Toast Notification ── */
     .share-toast {
@@ -1458,60 +1485,63 @@
         </div>
       </div>
 
-      <!-- ══════════ THREAD FEED — 5 POST TYPES ══════════ -->
+      <!-- ══════════ THREAD FEED — REAL 19KEYS IP CONTENT ══════════ -->
       <div class="feed-list">
 
-        <!-- ── PHOTO POST ── -->
+        <!-- ── PHOTO POST — C.C.C. Protocol ── -->
         <div class="thread-card type-photo">
           <div class="thread-photo-wrap">
-            <img src="https://images.unsplash.com/photo-1531384441138-2736e62e0919?w=800&q=80" alt="Photo post">
+            <img src="https://images.unsplash.com/photo-1531384441138-2736e62e0919?w=800&q=80" alt="C.C.C. Protocol">
             <div class="thread-photo-content">
               <div class="thread-header">
-                <div class="thread-avatar" style="background:linear-gradient(135deg, #8B5CF6, #6366F1)"></div>
-                <div class="thread-title">The Hardest Thing I Ever Had to Survive Was Me</div>
+                <div class="thread-avatar" style="background:linear-gradient(135deg, #4D4D4D, #322D2A)"></div>
+                <div class="thread-title">Clarity. Capacity. Capability.</div>
               </div>
               <div class="thread-author">u/19Keys</div>
-              <div class="thread-body">Your worst enemy isn't the person who hurt you. It's the person you become to yourself after that hurt. Healing starts with self-awareness.</div>
+              <div class="thread-body">The C.C.C. Protocol is how you build anything that lasts. First you get clear on the vision. Then you build the capacity to execute. Then you develop the capability to scale. Most people skip clarity and wonder why nothing works.</div>
               <div class="thread-actions">
                 <div class="thread-action">+</div>
                 <div class="thread-action">&minus;</div>
                 <div class="thread-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+                <button class="post-share-btn" onclick="sharePost(this)" title="Save as image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- ── TEXT POST (Bold Statement) ── -->
+        <!-- ── TEXT POST — S.T.E. Model ── -->
         <div class="thread-card type-text">
           <div class="thread-header">
             <div class="thread-avatar" style="background:linear-gradient(135deg, #4D4D4D, #322D2A)"></div>
-            <div class="thread-title" style="font-family:'Oswald',sans-serif; font-size:20px; text-transform:uppercase; letter-spacing:0.02em;">You don't need to go viral. You just need to show up with value, intention, and consistency.</div>
+            <div class="thread-title" style="font-family:'Oswald',sans-serif; font-size:20px; text-transform:uppercase; letter-spacing:0.02em;">Survive. Thrive. Evolve. — The S.T.E. Model</div>
           </div>
           <div class="thread-author">u/19Keys</div>
-          <div class="thread-body">Everyone is chasing algorithms when they should be chasing alignment. The people who win long-term aren't the ones who went viral — they're the ones who showed up every single day with something real to offer.</div>
+          <div class="thread-body">Every person, business, and empire goes through the same three stages. You survive the chaos. You learn to thrive within it. Then you evolve beyond it. The mistake most make is trying to thrive before they've survived — or trying to evolve before they've thrived. Honor the stage you're in.</div>
           <div class="thread-actions">
             <div class="thread-action">+</div>
             <div class="thread-action">&minus;</div>
             <div class="thread-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+            <button class="post-share-btn" onclick="sharePost(this)" title="Save as image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
           </div>
         </div>
 
-        <!-- ── QUOTE POST ── -->
+        <!-- ── QUOTE POST — Cognitive Sovereignty ── -->
         <div class="thread-card type-quote">
           <div class="thread-header">
             <div class="thread-avatar" style="background:linear-gradient(135deg, #D4A574, #C4956A)"></div>
           </div>
-          <div class="thread-title">The extraordinary doesn't wipe out the ordinary. People get married in wartime. Life persists through chaos — and that persistence is the real power.</div>
-          <div class="thread-author">u/MiriamDeAna — via Mary Laura Philpott</div>
+          <div class="thread-title">The most valuable thing you own isn't in your bank account. It's between your ears. Cognitive sovereignty — the ability to think independently — is the real currency of freedom.</div>
+          <div class="thread-author">u/19Keys — from Cognition Key</div>
           <div class="thread-body"></div>
           <div class="thread-actions">
             <div class="thread-action">+</div>
             <div class="thread-action">&minus;</div>
             <div class="thread-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+            <button class="post-share-btn" onclick="sharePost(this)" title="Save as image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
           </div>
         </div>
 
-        <!-- ── ARTICLE POST ── -->
+        <!-- ── ARTICLE POST — Cognitive Wealth Key ── -->
         <div class="thread-card type-article" data-article-id="1">
           <div class="article-hero">
             <div class="article-hero-tag">LONG READ</div>
@@ -1519,10 +1549,10 @@
           <div class="article-content">
             <div class="thread-header">
               <div class="thread-avatar" style="background:linear-gradient(135deg, #4D4D4D, #322D2A)"></div>
-              <div class="thread-title">On the Future of Wealth: Why Everything You Know Is About to Change</div>
+              <div class="thread-title">The Cognitive Wealth Key: Why Your Mind Is Your Greatest Asset</div>
             </div>
-            <div class="thread-author">u/19Keys · 12 min read</div>
-            <div class="thread-body">The old models of wealth creation are collapsing. What we're witnessing isn't just a market correction — it's a complete paradigm shift in how value is created, distributed, and preserved. The question isn't whether change is coming. It's whether you're positioned for the transition...</div>
+            <div class="thread-author">u/19Keys · 14 min read</div>
+            <div class="thread-body">Wealth isn't just financial — it's cognitive. The Cognitive Wealth Key is a framework for engineering financial intelligence from the inside out. It starts with how you think about value, expands to how you create systems, and culminates in generational transfer of both assets and knowledge...</div>
             <button class="read-article-btn" onclick="openArticle(1)">
               Read Article
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
@@ -1531,15 +1561,16 @@
               <div class="thread-action">+</div>
               <div class="thread-action">&minus;</div>
               <div class="thread-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+              <button class="post-share-btn" onclick="sharePost(this)" title="Save as image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
             </div>
           </div>
         </div>
 
-        <!-- ── MATRIX TWEET ── -->
+        <!-- ── MATRIX TWEET — Five Vibrations ── -->
         <div class="thread-card type-terminal">
           <div class="matrix-tweet">
             <div class="matrix-avatar"><span class="matrix-avatar-text">19keys</span></div>
-            <div class="matrix-text">The gap between those who learn to leverage AI and those who don't will be the defining inequality of this decade.<span class="matrix-cursor"></span></div>
+            <div class="matrix-text">Five Vibrations. Five frequencies of leadership. King. Thinker. Protector. Executor. Roarer. You need all five to build something that lasts.<span class="matrix-cursor"></span></div>
           </div>
           <div class="thread-actions">
             <div class="thread-action">+</div>
@@ -1549,11 +1580,11 @@
           </div>
         </div>
 
-        <!-- ── MATRIX TWEET 2 ── -->
-        <div class="thread-card type-terminal">
+        <!-- ── MATRIX TWEET — Keyism ── -->
+        <div class="thread-card type-terminal color-gold">
           <div class="matrix-tweet">
             <div class="matrix-avatar"><span class="matrix-avatar-text">19keys</span></div>
-            <div class="matrix-text">Sovereignty isn't given. It's built.<span class="matrix-cursor"></span></div>
+            <div class="matrix-text">Keyism isn't a religion. It's a cognitive operating system. A way of thinking that unlocks every door that matters.<span class="matrix-cursor"></span></div>
           </div>
           <div class="thread-actions">
             <div class="thread-action">+</div>
@@ -1563,53 +1594,178 @@
           </div>
         </div>
 
-        <!-- ── Regular TEXT POST ── -->
+        <!-- ── TEXT POST — P.A.I.D. Formula ── -->
         <div class="thread-card type-text">
           <div class="thread-header">
             <div class="thread-avatar" style="background:linear-gradient(135deg, #4D4D4D, #322D2A)"></div>
-            <div class="thread-title">Building Sovereign Communities in 2026</div>
+            <div class="thread-title" style="font-family:'Oswald',sans-serif; font-size:20px; text-transform:uppercase; letter-spacing:0.02em;">P.A.I.D. — The Formula for Getting Paid</div>
           </div>
-          <div class="thread-author">u/AntoinePatton</div>
-          <div class="thread-body">We keep talking about building, but what does sovereign community infrastructure actually look like? I've been studying the models that are working and the patterns are clear. Here's what separates communities that thrive from those that die.</div>
+          <div class="thread-author">u/19Keys</div>
+          <div class="thread-body">Patience. Attitude. Intelligence. Discipline. These four pillars make up the P.A.I.D. Formula. Most people fail at money not because they lack opportunity — they lack one of these four. Patience to let compound growth work. Attitude to maintain conviction in the drought. Intelligence to recognize the right vehicles. Discipline to stay the course when emotion says quit.</div>
           <div class="thread-actions">
             <div class="thread-action">+</div>
             <div class="thread-action">&minus;</div>
             <div class="thread-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+            <button class="post-share-btn" onclick="sharePost(this)" title="Save as image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
           </div>
         </div>
 
-        <!-- ── PHOTO POST 2 ── -->
-        <div class="thread-card type-photo">
-          <div class="thread-photo-wrap">
-            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80" alt="Photo post">
-            <div class="thread-photo-content">
-              <div class="thread-header">
-                <div class="thread-avatar" style="background:linear-gradient(135deg, #F59E0B, #D97706)"></div>
-                <div class="thread-title">Reclaiming Cultural Sovereignty</div>
-              </div>
-              <div class="thread-author">u/YahkevedLevi</div>
-              <div class="thread-body">Culture is the operating system of a people. When you lose control of your cultural narrative, you lose control of everything.</div>
-              <div class="thread-actions">
-                <div class="thread-action">+</div>
-                <div class="thread-action">&minus;</div>
-                <div class="thread-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ── QUOTE POST 2 ── -->
+        <!-- ── QUOTE POST — Liberation Protocol ── -->
         <div class="thread-card type-quote">
           <div class="thread-header">
-            <div class="thread-avatar" style="background:linear-gradient(135deg, #10B981, #059669)"></div>
+            <div class="thread-avatar" style="background:linear-gradient(135deg, #D4A574, #C4956A)"></div>
           </div>
-          <div class="thread-title">The body has its own intelligence, its own rhythms. When you stop fighting it and start listening, everything changes.</div>
-          <div class="thread-author">u/SuperNatural</div>
+          <div class="thread-title">Liberation isn't an event. It's a protocol — a daily practice of freeing your mind from inherited limitations, outdated beliefs, and systems designed to keep you dependent.</div>
+          <div class="thread-author">u/19Keys — The Liberation Protocol</div>
           <div class="thread-body"></div>
           <div class="thread-actions">
             <div class="thread-action">+</div>
             <div class="thread-action">&minus;</div>
             <div class="thread-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+            <button class="post-share-btn" onclick="sharePost(this)" title="Save as image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+          </div>
+        </div>
+
+        <!-- ── PHOTO POST — The Enemy System ── -->
+        <div class="thread-card type-photo">
+          <div class="thread-photo-wrap">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80" alt="The Enemy System">
+            <div class="thread-photo-content">
+              <div class="thread-header">
+                <div class="thread-avatar" style="background:linear-gradient(135deg, #4D4D4D, #322D2A)"></div>
+                <div class="thread-title">Know Your Enemy System</div>
+              </div>
+              <div class="thread-author">u/19Keys</div>
+              <div class="thread-body">Every obstacle in your life operates within a system. The Enemy System teaches you to identify, categorize, and systematically dismantle the forces working against your progress. Stop fighting blind.</div>
+              <div class="thread-actions">
+                <div class="thread-action">+</div>
+                <div class="thread-action">&minus;</div>
+                <div class="thread-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+                <button class="post-share-btn" onclick="sharePost(this)" title="Save as image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── TEXT POST — Six Laws of Thought Leadership ── -->
+        <div class="thread-card type-text">
+          <div class="thread-header">
+            <div class="thread-avatar" style="background:linear-gradient(135deg, #4D4D4D, #322D2A)"></div>
+            <div class="thread-title">The Six Laws of Thought Leadership</div>
+          </div>
+          <div class="thread-author">u/19Keys</div>
+          <div class="thread-body">Thought leadership isn't about having followers. It's about having original thinking worth following. The Six Laws are the codified principles for becoming the person whose ideas shape industries, shift culture, and outlive you. You don't chase influence — you engineer it through intellectual authority.</div>
+          <div class="thread-actions">
+            <div class="thread-action">+</div>
+            <div class="thread-action">&minus;</div>
+            <div class="thread-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+            <button class="post-share-btn" onclick="sharePost(this)" title="Save as image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+          </div>
+        </div>
+
+        <!-- ── MATRIX TWEET — Write It Down Law ── -->
+        <div class="thread-card type-terminal color-metallic">
+          <div class="matrix-tweet">
+            <div class="matrix-avatar"><span class="matrix-avatar-text">19keys</span></div>
+            <div class="matrix-text">Write it down. The Write It Down Law: if it stays in your head, it dies in your head. The moment you commit thought to paper, you commit it to reality.<span class="matrix-cursor"></span></div>
+          </div>
+          <div class="thread-actions">
+            <div class="thread-action">+</div>
+            <div class="thread-action">&minus;</div>
+            <div class="thread-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+            <button class="matrix-share-btn" onclick="shareMatrixTweet(this)" title="Save as image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+          </div>
+        </div>
+
+        <!-- ── QUOTE POST — Zion Theory ── -->
+        <div class="thread-card type-quote">
+          <div class="thread-header">
+            <div class="thread-avatar" style="background:linear-gradient(135deg, #D4A574, #C4956A)"></div>
+          </div>
+          <div class="thread-title">Zion isn't a place. It's a state of collective consciousness — where a people move from scattered survival to unified sovereignty. This is Zion Theory.</div>
+          <div class="thread-author">u/19Keys — Zion Theory</div>
+          <div class="thread-body"></div>
+          <div class="thread-actions">
+            <div class="thread-action">+</div>
+            <div class="thread-action">&minus;</div>
+            <div class="thread-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+            <button class="post-share-btn" onclick="sharePost(this)" title="Save as image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+          </div>
+        </div>
+
+        <!-- ── TEXT POST — Fourfold Engineering System ── -->
+        <div class="thread-card type-text">
+          <div class="thread-header">
+            <div class="thread-avatar" style="background:linear-gradient(135deg, #4D4D4D, #322D2A)"></div>
+            <div class="thread-title">The Fourfold Engineering System</div>
+          </div>
+          <div class="thread-author">u/19Keys</div>
+          <div class="thread-body">To build anything of lasting value, you need four types of engineering working simultaneously: Self-Engineering (personal development), Social Engineering (relationship architecture), Systems Engineering (operational infrastructure), and Sovereign Engineering (ownership and autonomy). This is how empires are built — from the individual up.</div>
+          <div class="thread-actions">
+            <div class="thread-action">+</div>
+            <div class="thread-action">&minus;</div>
+            <div class="thread-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+            <button class="post-share-btn" onclick="sharePost(this)" title="Save as image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+          </div>
+        </div>
+
+        <!-- ── MATRIX TWEET — Cognitive Architecture ── -->
+        <div class="thread-card type-terminal">
+          <div class="matrix-tweet">
+            <div class="matrix-avatar"><span class="matrix-avatar-text">19keys</span></div>
+            <div class="matrix-text">Your mind has an architecture. Most people are living in a structure someone else designed. Cognitive Architecture is the practice of redesigning your own mind — from the foundation up.<span class="matrix-cursor"></span></div>
+          </div>
+          <div class="thread-actions">
+            <div class="thread-action">+</div>
+            <div class="thread-action">&minus;</div>
+            <div class="thread-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+            <button class="matrix-share-btn" onclick="shareMatrixTweet(this)" title="Save as image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+          </div>
+        </div>
+
+        <!-- ── TEXT POST — Morning Protocol ── -->
+        <div class="thread-card type-text">
+          <div class="thread-header">
+            <div class="thread-avatar" style="background:linear-gradient(135deg, #4D4D4D, #322D2A)"></div>
+            <div class="thread-title">The Morning Protocol: Engineer Your First Hour</div>
+          </div>
+          <div class="thread-author">u/19Keys</div>
+          <div class="thread-body">The Morning Protocol is not a routine — it's an engineering system for your first hour. How you start determines how you finish. Your first 60 minutes set the cognitive frequency for the remaining 23 hours. Program your mornings with intention and watch your entire operating system upgrade.</div>
+          <div class="thread-actions">
+            <div class="thread-action">+</div>
+            <div class="thread-action">&minus;</div>
+            <div class="thread-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+            <button class="post-share-btn" onclick="sharePost(this)" title="Save as image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+          </div>
+        </div>
+
+        <!-- ── QUOTE POST — Save Yourself ── -->
+        <div class="thread-card type-quote">
+          <div class="thread-header">
+            <div class="thread-avatar" style="background:linear-gradient(135deg, #D4A574, #C4956A)"></div>
+          </div>
+          <div class="thread-title">Nobody is coming to save you. That's not a threat — it's your greatest power. The moment you stop waiting for rescue is the moment you become unstoppable.</div>
+          <div class="thread-author">u/19Keys — from Save Yourself</div>
+          <div class="thread-body"></div>
+          <div class="thread-actions">
+            <div class="thread-action">+</div>
+            <div class="thread-action">&minus;</div>
+            <div class="thread-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+            <button class="post-share-btn" onclick="sharePost(this)" title="Save as image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+          </div>
+        </div>
+
+        <!-- ── MATRIX TWEET — Sovereignty ── -->
+        <div class="thread-card type-terminal color-beige">
+          <div class="matrix-tweet">
+            <div class="matrix-avatar"><span class="matrix-avatar-text">19keys</span></div>
+            <div class="matrix-text">Sovereignty isn't given. It's built. Brick by brick. System by system. Until no one can take from you what you've engineered for yourself.<span class="matrix-cursor"></span></div>
+          </div>
+          <div class="thread-actions">
+            <div class="thread-action">+</div>
+            <div class="thread-action">&minus;</div>
+            <div class="thread-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+            <button class="matrix-share-btn" onclick="shareMatrixTweet(this)" title="Save as image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
           </div>
         </div>
 
@@ -1623,16 +1779,17 @@
     <button class="reader-close" onclick="closeArticle()">&times;</button>
     <div class="article-reader">
       <div class="reader-tag">LONG READ</div>
-      <div class="reader-title" id="readerTitle">On the Future of Wealth: Why Everything You Know Is About to Change</div>
-      <div class="reader-byline">by <strong>19Keys</strong> · March 12, 2026 · 12 min read</div>
+      <div class="reader-title" id="readerTitle">The Cognitive Wealth Key: Why Your Mind Is Your Greatest Asset</div>
+      <div class="reader-byline">by <strong>19Keys</strong> · March 14, 2026 · 14 min read</div>
       <div class="reader-divider"></div>
       <div class="reader-body" id="readerBody">
-        <p>The old models of wealth creation are collapsing. What we're witnessing isn't just a market correction — it's a complete paradigm shift in how value is created, distributed, and preserved.</p>
-        <p>For centuries, wealth followed a predictable pattern: own land, control resources, accumulate capital. But we've entered an era where the most valuable assets aren't physical — they're intellectual, cultural, and relational.</p>
-        <p>The question isn't whether change is coming. It's whether you're positioned for the transition. The people who understand this shift aren't waiting for permission. They're building the infrastructure of the new economy right now.</p>
-        <p>Think about what's actually happening: creators are building audiences that rival media companies. Communities are developing their own currencies and governance systems. Intellectual property is becoming the most valuable asset class in history.</p>
-        <p>The wealth of the future won't be measured in dollars alone. It will be measured in influence, in trust, in the depth of your network, and in the quality of the ideas you can bring to market. The sovereign individual isn't a theory anymore — it's becoming an economic reality.</p>
-        <p>What this means practically: if you're still thinking about wealth in terms of a salary and a 401(k), you're operating on outdated software. The new wealth builders are thinking in terms of IP portfolios, community equity, and attention as currency.</p>
+        <p>Wealth isn't just financial — it's cognitive. The Cognitive Wealth Key is a framework I developed for engineering financial intelligence from the inside out. It starts with how you think about value, expands to how you create systems, and culminates in generational transfer of both assets and knowledge.</p>
+        <p>Most financial education teaches you what to do with money. The Cognitive Wealth Key teaches you how to think about money. There's a fundamental difference. One creates employees. The other creates architects of wealth.</p>
+        <p>The framework operates on three levels. First: Cognitive Recalibration — rewiring the inherited beliefs about money that were programmed into you before you could think for yourself. Second: Systems Architecture — building the operational infrastructure that generates wealth independent of your daily labor. Third: Generational Engineering — designing transfer mechanisms that ensure your wealth outlives you.</p>
+        <p>Here's what most people miss: wealth is a cognitive event before it's a financial one. Every dollar you'll ever earn passes through your mind first. If your mind is running on outdated software — scarcity thinking, consumer mentality, employee consciousness — then no amount of financial literacy will save you.</p>
+        <p>The P.A.I.D. Formula feeds directly into this. Patience, Attitude, Intelligence, Discipline — these aren't motivational words. They're engineering specifications. Patience is the temporal architecture of wealth. Attitude is the emotional infrastructure. Intelligence is the strategic framework. Discipline is the execution engine.</p>
+        <p>When you combine the Cognitive Wealth Key with the S.T.E. Model — Survive, Thrive, Evolve — you get a complete operating system for financial sovereignty. You survive the initial chaos of financial illiteracy. You thrive by building systems that compound. You evolve by teaching others to do the same.</p>
+        <p>The question I leave you with is this: are you building wealth, or are you just earning money? Because those are two completely different activities. One is a job. The other is an architecture. And only one of them will still be standing when you're gone.</p>
       </div>
     </div>
   </div>
@@ -1847,6 +2004,7 @@
           <div class="thread-action">+</div>
           <div class="thread-action">&minus;</div>
           <div class="thread-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          <button class="post-share-btn" onclick="sharePost(this)" title="Save as image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
         </div>
       `;
       return card;
@@ -1868,6 +2026,7 @@
           <div class="thread-action">+</div>
           <div class="thread-action">&minus;</div>
           <div class="thread-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          <button class="post-share-btn" onclick="sharePost(this)" title="Save as image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
         </div>
       `;
       return card;
@@ -2126,6 +2285,96 @@
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
+    }
+
+    // ══════════ SHARE / DOWNLOAD ANY POST ══════════
+
+    async function sharePost(btn) {
+      const card = btn.closest('.thread-card');
+      if (!card || btn.classList.contains('saving')) return;
+
+      btn.classList.add('saving');
+
+      // Determine post type for filename
+      const isQuote = card.classList.contains('type-quote');
+      const isArticle = card.classList.contains('type-article');
+      const isPhoto = card.classList.contains('type-photo');
+      const typeName = isQuote ? 'quote' : isArticle ? 'article' : isPhoto ? 'photo' : 'thread';
+      const fileName = `ziion-${typeName}.png`;
+
+      try {
+        // Build a styled wrapper for clean export
+        const wrapper = document.createElement('div');
+        const wrapperWidth = 600;
+        wrapper.style.cssText = `
+          position: fixed; top: -9999px; left: -9999px;
+          width: ${wrapperWidth}px; padding: 40px;
+          background: ${isQuote ? '#1a1712' : '#0F0E12'};
+          box-sizing: border-box;
+          font-family: 'Inter', -apple-system, sans-serif;
+        `;
+
+        // Clone the card content
+        const clone = card.cloneNode(true);
+        // Remove share buttons from clone
+        clone.querySelectorAll('.post-share-btn, .matrix-share-btn').forEach(b => b.remove());
+        // Remove read article button from clone
+        clone.querySelectorAll('.read-article-btn').forEach(b => b.remove());
+        // Reset interactive states
+        clone.style.transform = 'none';
+        clone.style.transition = 'none';
+        clone.style.margin = '0';
+
+        wrapper.appendChild(clone);
+
+        // Add ZIION watermark at bottom
+        const brand = document.createElement('div');
+        brand.style.cssText = `
+          text-align: center; margin-top: 20px; padding-top: 20px;
+          border-top: 1px solid rgba(255,255,255,0.06);
+          font-family: 'Inter', sans-serif; font-size: 10px;
+          font-weight: 800; letter-spacing: 6px;
+          color: rgba(255,255,255,0.12);
+          text-transform: uppercase;
+        `;
+        brand.textContent = 'ZIION';
+        wrapper.appendChild(brand);
+
+        document.body.appendChild(wrapper);
+
+        const canvas = await html2canvas(wrapper, {
+          backgroundColor: isQuote ? '#1a1712' : '#0F0E12',
+          scale: 2,
+          useCORS: true,
+          logging: false,
+        });
+
+        document.body.removeChild(wrapper);
+
+        const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+        const file = new File([blob], fileName, { type: 'image/png' });
+
+        // Try native share API first (mobile)
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          try {
+            await navigator.share({ files: [file], title: 'ZIION Thread' });
+            showToast('Shared \u2713');
+          } catch (shareErr) {
+            if (shareErr.name !== 'AbortError') {
+              downloadCanvas(canvas, fileName);
+              showToast('Image saved \u2713');
+            }
+          }
+        } else {
+          downloadCanvas(canvas, fileName);
+          showToast('Image saved \u2713');
+        }
+      } catch (err) {
+        console.error('Share error:', err);
+        showToast('Error \u2014 try again');
+      } finally {
+        btn.classList.remove('saving');
+      }
     }
 
     // Sidebar nav

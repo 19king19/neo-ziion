@@ -719,3 +719,63 @@ body.light-mode .mobile-menu-divider {
   .oc-title { font-size: 16px !important; }
   .cmd-terminal { font-size: 10px !important; height: 140px !important; }
 }
+
+/* ══════════════════════════════════════════
+   CONTENT OS — Mobile Responsive Rules
+   ══════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .cos-view-switcher {
+    padding: 6px 16px !important;
+    gap: 2px !important;
+  }
+  .cos-switch-btn {
+    flex: 1 !important;
+    text-align: center !important;
+    padding: 8px 12px !important;
+    font-size: 11px !important;
+    letter-spacing: 1.5px !important;
+  }
+  .cos-hero {
+    margin: 0 16px 24px !important;
+    padding: 24px !important;
+  }
+  .cos-hero-title { font-size: 22px !important; }
+  .cos-hero-sub { font-size: 13px !important; }
+  .cos-hero-stats {
+    flex-wrap: wrap !important;
+    gap: 20px !important;
+  }
+  .cos-stat-value { font-size: 18px !important; }
+  .cos-hero-actions {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+  .cos-hero-btn { width: 100% !important; text-align: center !important; }
+  .cos-layer-row .row-header {
+    padding: 16px 16px 8px !important;
+    gap: 12px !important;
+  }
+  .cos-layer-num {
+    width: 30px !important;
+    height: 30px !important;
+    font-size: 11px !important;
+  }
+  .cos-layer-title { font-size: 13px !important; }
+  .cos-module-card {
+    min-width: 160px !important;
+    width: 160px !important;
+  }
+  .cos-module-thumb { height: 90px !important; }
+  .cos-module-card .card-title { font-size: 12px !important; }
+  .cos-module-card .card-sub { font-size: 10px !important; }
+  .cos-layer-row .row-scroll { padding: 0 16px 12px !important; }
+}
+
+@media (max-width: 375px) {
+  .cos-hero { margin: 0 10px 20px !important; padding: 20px !important; }
+  .cos-hero-title { font-size: 18px !important; }
+  .cos-hero-stats { gap: 16px !important; }
+  .cos-stat-value { font-size: 16px !important; }
+  .cos-module-card { min-width: 140px !important; width: 140px !important; }
+  .cos-module-thumb { height: 80px !important; }
+}

@@ -2509,3 +2509,75 @@ body.light-mode .chapter-close-btn:hover {
   background: rgba(0,0,0,0.1) !important;
   color: #1a1a1a !important;
 }
+
+/* ══════════════════════════════════════════════════════
+   CONTENT OS — Light Mode Overrides
+   ══════════════════════════════════════════════════════ */
+
+/* ── View Switcher ── */
+body.light-mode .cos-view-switcher {
+  border-bottom-color: rgba(0,0,0,0.06) !important;
+}
+body.light-mode .cos-switch-btn {
+  color: #999 !important;
+}
+body.light-mode .cos-switch-btn:hover {
+  color: #555 !important;
+  background: rgba(0,0,0,0.03) !important;
+}
+body.light-mode .cos-switch-btn.active {
+  color: #3d8c40 !important;
+  background: rgba(61,140,64,0.06) !important;
+}
+
+/* ── COS Hero ── */
+body.light-mode .cos-hero {
+  background: linear-gradient(135deg, rgba(61,140,64,0.04) 0%, #fafaf8 60%) !important;
+  border-color: rgba(61,140,64,0.12) !important;
+}
+body.light-mode .cos-hero::before {
+  background: radial-gradient(circle, rgba(61,140,64,0.05) 0%, transparent 70%) !important;
+}
+body.light-mode .cos-hero-tag { color: #3d8c40 !important; }
+body.light-mode .cos-hero-title { color: #1a1a1a !important; }
+body.light-mode .cos-hero-sub { color: #777 !important; }
+body.light-mode .cos-stat-value { color: #1a1a1a !important; }
+body.light-mode .cos-stat-label { color: #aaa !important; }
+body.light-mode .cos-hero-btn.primary {
+  background: #3d8c40 !important;
+  color: #fff !important;
+}
+body.light-mode .cos-hero-btn.primary:hover { background: #2e7d32 !important; }
+body.light-mode .cos-hero-btn.secondary {
+  background: rgba(0,0,0,0.04) !important;
+  color: #555 !important;
+  border-color: rgba(0,0,0,0.08) !important;
+}
+
+/* ── Layer Rows ── */
+body.light-mode .cos-layer-num {
+  background: rgba(61,140,64,0.08) !important;
+  color: #3d8c40 !important;
+  border-color: rgba(61,140,64,0.12) !important;
+}
+body.light-mode .cos-layer-title { color: #1a1a1a !important; }
+body.light-mode .cos-layer-sub { color: #aaa !important; }
+
+/* ── Module Cards ── */
+body.light-mode .cos-module-card {
+  background: #fff !important;
+  border-color: rgba(0,0,0,0.06) !important;
+}
+body.light-mode .cos-module-card:hover {
+  border-color: rgba(61,140,64,0.2) !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08) !important;
+}
+body.light-mode .cos-module-thumb.grad-ingest { background: linear-gradient(135deg, rgba(61,140,64,0.08), #f8f8f6) !important; }
+body.light-mode .cos-module-thumb.grad-intel { background: linear-gradient(135deg, rgba(96,165,250,0.08), #f8f8f6) !important; }
+body.light-mode .cos-module-thumb.grad-prod { background: linear-gradient(135deg, rgba(251,146,60,0.08), #f8f8f6) !important; }
+body.light-mode .cos-module-thumb.grad-dist { background: linear-gradient(135deg, rgba(168,85,247,0.08), #f8f8f6) !important; }
+body.light-mode .cos-module-thumb.grad-money { background: linear-gradient(135deg, rgba(202,164,21,0.08), #f8f8f6) !important; }
+body.light-mode .cos-module-thumb.grad-exec { background: linear-gradient(135deg, rgba(61,140,64,0.1), #f8f8f6) !important; }
+body.light-mode .cos-module-thumb svg { stroke: #3d8c40 !important; }
+body.light-mode .cos-module-card .card-title { color: #1a1a1a !important; }
+body.light-mode .cos-module-card .card-sub { color: #999 !important; }

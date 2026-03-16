@@ -1,0 +1,22 @@
+# Sovereign Content OS — Dependencies
+# Install: pip install -r requirements.txt
+
+# Core
+anthropic>=0.39.0
+google-api-python-client>=2.100.0
+google-auth-httplib2>=0.2.0
+google-auth-oauthlib>=1.2.0
+openai-whisper>=20231117
+
+# Web server
+fastapi>=0.104.0
+uvicorn>=0.24.0
+
+# Scheduling
+schedule>=1.2.0
+
+# Utilities
+python-dotenv>=1.0.0
+pydantic>=2.5.0
+requests>=2.31.0
+yt-dlp>=2024.1.1

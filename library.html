@@ -591,6 +591,279 @@
     .library-content::-webkit-scrollbar-track { background: transparent; }
     .library-content::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
     .library-content::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+    /* ══════════════════════════════════════════════════════
+       CONTENT OS — Sovereign Pipeline Dashboard
+       ══════════════════════════════════════════════════════ */
+
+    /* ── View Switcher ── */
+    .cos-view-switcher {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 40px;
+      margin-bottom: 4px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .cos-switch-btn {
+      padding: 10px 24px;
+      border: none;
+      background: transparent;
+      color: rgba(255,255,255,0.4);
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .cos-switch-btn:hover {
+      color: rgba(255,255,255,0.7);
+      background: rgba(255,255,255,0.04);
+    }
+
+    .cos-switch-btn.active {
+      color: #D5FF5A;
+      background: rgba(213,255,90,0.08);
+    }
+
+    /* ── COS Hero Banner ── */
+    .cos-hero {
+      margin: 0 40px 32px;
+      padding: 40px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(213,255,90,0.06) 0%, rgba(15,14,18,0.95) 60%);
+      border: 1px solid rgba(213,255,90,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cos-hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(213,255,90,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .cos-hero-tag {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #D5FF5A;
+      margin-bottom: 12px;
+    }
+
+    .cos-hero-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .cos-hero-sub {
+      font-size: 14px;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 24px;
+      max-width: 600px;
+      line-height: 1.6;
+    }
+
+    .cos-hero-stats {
+      display: flex;
+      gap: 32px;
+      margin-bottom: 24px;
+    }
+
+    .cos-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .cos-stat-value {
+      font-size: 22px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .cos-stat-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+    }
+
+    .cos-hero-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .cos-hero-btn {
+      padding: 10px 24px;
+      border-radius: 8px;
+      border: none;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      letter-spacing: 0.5px;
+    }
+
+    .cos-hero-btn.primary {
+      background: #D5FF5A;
+      color: #0F0E12;
+    }
+
+    .cos-hero-btn.primary:hover {
+      background: #e8ff8c;
+      transform: translateY(-1px);
+    }
+
+    .cos-hero-btn.secondary {
+      background: rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.7);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .cos-hero-btn.secondary:hover {
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+    }
+
+    .cos-status-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    .cos-status-dot.online { background: #4ADE80; box-shadow: 0 0 8px rgba(74,222,128,0.5); }
+    .cos-status-dot.offline { background: #666; }
+
+    /* ── Layer Row ── */
+    .cos-layer-row .row-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 20px 40px 10px;
+    }
+
+    .cos-layer-num {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: rgba(213,255,90,0.1);
+      color: #D5FF5A;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      flex-shrink: 0;
+      border: 1px solid rgba(213,255,90,0.15);
+    }
+
+    .cos-layer-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .cos-layer-sub {
+      font-size: 12px;
+      color: rgba(255,255,255,0.35);
+      font-weight: 500;
+    }
+
+    /* ── Module Card ── */
+    .cos-module-card {
+      flex-shrink: 0;
+      width: 200px;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border-radius: 8px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .cos-module-card:hover {
+      transform: scale(1.05);
+      z-index: 2;
+      border-color: rgba(213,255,90,0.15);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+
+    .cos-module-thumb {
+      width: 100%;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      border-radius: 8px 8px 0 0;
+    }
+
+    .cos-module-thumb svg {
+      width: 36px;
+      height: 36px;
+      opacity: 0.7;
+    }
+
+    .cos-module-thumb.grad-ingest { background: linear-gradient(135deg, rgba(213,255,90,0.12) 0%, rgba(15,14,18,0.9) 100%); }
+    .cos-module-thumb.grad-intel { background: linear-gradient(135deg, rgba(96,165,250,0.12) 0%, rgba(15,14,18,0.9) 100%); }
+    .cos-module-thumb.grad-prod { background: linear-gradient(135deg, rgba(251,146,60,0.12) 0%, rgba(15,14,18,0.9) 100%); }
+    .cos-module-thumb.grad-dist { background: linear-gradient(135deg, rgba(168,85,247,0.12) 0%, rgba(15,14,18,0.9) 100%); }
+    .cos-module-thumb.grad-money { background: linear-gradient(135deg, rgba(250,204,21,0.12) 0%, rgba(15,14,18,0.9) 100%); }
+    .cos-module-thumb.grad-exec { background: linear-gradient(135deg, rgba(213,255,90,0.18) 0%, rgba(15,14,18,0.9) 100%); }
+
+    .cos-module-status {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .cos-module-status.idle { background: #444; }
+    .cos-module-status.active { background: #4ADE80; box-shadow: 0 0 8px rgba(74,222,128,0.5); }
+    .cos-module-status.pending { background: #F59E0B; box-shadow: 0 0 8px rgba(245,158,11,0.4); }
+    .cos-module-status.error { background: #EF4444; box-shadow: 0 0 8px rgba(239,68,68,0.4); }
+
+    .cos-module-card .card-body {
+      padding: 12px;
+    }
+
+    .cos-module-card .card-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .cos-module-card .card-sub {
+      font-size: 11px;
+      color: rgba(255,255,255,0.35);
+      font-weight: 500;
+    }
+
   </style>
 </head>
 <body>
@@ -711,6 +984,15 @@
 
     <!-- Library Content -->
     <div class="library-content">
+
+      <!-- View Switcher -->
+      <div class="cos-view-switcher">
+        <button class="cos-switch-btn active" onclick="switchLibraryView('browse', this)">Browse</button>
+        <button class="cos-switch-btn" onclick="switchLibraryView('contentOs', this)">Content OS</button>
+      </div>
+
+      <!-- ═══ BROWSE VIEW (existing Netflix grid) ═══ -->
+      <div id="browseView">
 
       <!-- Hero Banner -->
       <div class="hero-banner">
@@ -1292,10 +1574,399 @@
         <div id="searchResultsContainer"></div>
       </div>
 
+      </div><!-- end browseView -->
+
+      <!-- ═══ CONTENT OS VIEW (6-Layer Pipeline Dashboard) ═══ -->
+      <div id="contentOsView" style="display:none">
+
+        <!-- COS Hero Banner -->
+        <div class="cos-hero">
+          <div class="cos-hero-tag">Sovereign Content OS</div>
+          <div class="cos-hero-title">Autonomous Production Pipeline</div>
+          <div class="cos-hero-sub">6-layer content engine running on OpenClaw. Ingestion, intelligence, production, distribution, monetization — all executing 24/7.</div>
+          <div class="cos-hero-stats">
+            <div class="cos-stat">
+              <div class="cos-stat-value" id="cosStatAssets">—</div>
+              <div class="cos-stat-label">Raw Assets</div>
+            </div>
+            <div class="cos-stat">
+              <div class="cos-stat-value" id="cosStatProcessed">—</div>
+              <div class="cos-stat-label">Processed</div>
+            </div>
+            <div class="cos-stat">
+              <div class="cos-stat-value" id="cosStatOutputs">—</div>
+              <div class="cos-stat-label">Outputs</div>
+            </div>
+            <div class="cos-stat">
+              <div class="cos-stat-value"><span class="cos-status-dot offline"></span><span id="cosStatusText">Offline</span></div>
+              <div class="cos-stat-label">Mac Mini</div>
+            </div>
+          </div>
+          <div class="cos-hero-actions">
+            <button class="cos-hero-btn primary" onclick="refreshCosStatus()">↻ Refresh Status</button>
+            <button class="cos-hero-btn secondary">⚡ Chairman View</button>
+          </div>
+        </div>
+
+        <!-- ── LAYER 01: INGESTION COMMAND ── -->
+        <div class="content-row cos-layer-row">
+          <div class="row-header">
+            <div class="cos-layer-num">01</div>
+            <div>
+              <div class="cos-layer-title">Ingestion Command</div>
+              <div class="cos-layer-sub">The Raw Vault</div>
+            </div>
+          </div>
+          <div class="row-scroll">
+            <div class="cos-module-card">
+              <div class="cos-module-thumb grad-ingest">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#D5FF5A" stroke-width="1.5"><path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+                <div class="cos-module-status idle"></div>
+              </div>
+              <div class="card-body"><div class="card-title">Google Drive Sync</div><div class="card-sub">Auto-pull new files every 15 min</div></div>
+            </div>
+            <div class="cos-module-card">
+              <div class="cos-module-thumb grad-ingest">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#D5FF5A" stroke-width="1.5"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><polygon points="10 8 16 12 10 16 10 8" fill="#D5FF5A" stroke="none"/></svg>
+                <div class="cos-module-status idle"></div>
+              </div>
+              <div class="card-body"><div class="card-title">YouTube Analytics</div><div class="card-sub">Performance data + top content</div></div>
+            </div>
+            <div class="cos-module-card">
+              <div class="cos-module-thumb grad-ingest">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#D5FF5A" stroke-width="1.5"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                <div class="cos-module-status idle"></div>
+              </div>
+              <div class="card-body"><div class="card-title">Whisper Transcription</div><div class="card-sub">Audio/video → text pipeline</div></div>
+            </div>
+            <div class="cos-module-card">
+              <div class="cos-module-thumb grad-ingest">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#D5FF5A" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                <div class="cos-module-status idle"></div>
+              </div>
+              <div class="card-body"><div class="card-title">Content Fingerprinting</div><div class="card-sub">Hash + categorize all assets</div></div>
+            </div>
+            <div class="cos-module-card">
+              <div class="cos-module-thumb grad-ingest">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#D5FF5A" stroke-width="1.5"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg>
+                <div class="cos-module-status idle"></div>
+              </div>
+              <div class="card-body"><div class="card-title">Raw Archive</div><div class="card-sub">Immutable content vault</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── LAYER 02: INTELLIGENCE ENGINE ── -->
+        <div class="content-row cos-layer-row">
+          <div class="row-header">
+            <div class="cos-layer-num">02</div>
+            <div>
+              <div class="cos-layer-title">Intelligence Engine</div>
+              <div class="cos-layer-sub">The Brain</div>
+            </div>
+          </div>
+          <div class="row-scroll">
+            <div class="cos-module-card">
+              <div class="cos-module-thumb grad-intel">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="1.5"><path d="M12 2a8 8 0 018 8c0 3.5-2 6-4 7.5V19H8v-1.5C6 16 4 13.5 4 10a8 8 0 018-8z"/><line x1="9" y1="22" x2="15" y2="22"/></svg>
+                <div class="cos-module-status idle"></div>
+              </div>
+              <div class="card-body"><div class="card-title">Cognitive Twin</div><div class="card-sub">AI model of your voice + patterns</div></div>
+            </div>
+            <div class="cos-module-card">
+              <div class="cos-module-thumb grad-intel">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                <div class="cos-module-status idle"></div>
+              </div>
+              <div class="card-body"><div class="card-title">Prediction Extraction</div><div class="card-sub">Find future-claims in content</div></div>
+            </div>
+            <div class="cos-module-card">
+              <div class="cos-module-thumb grad-intel">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+                <div class="cos-module-status idle"></div>
+              </div>
+              <div class="card-body"><div class="card-title">Quote Hunting</div><div class="card-sub">Extract quotable moments</div></div>
+            </div>
+            <div class="cos-module-card">
+              <div class="cos-module-thumb grad-intel">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="1.5"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="18" r="3"/><line x1="9" y1="6" x2="15" y2="6"/><line x1="6" y1="9" x2="6" y2="15"/><line x1="18" y1="9" x2="18" y2="15"/><line x1="9" y1="18" x2="15" y2="18"/></svg>
+                <div class="cos-module-status idle"></div>
+              </div>
+              <div class="card-body"><div class="card-title">Theme Clustering</div><div class="card-sub">Group content by topic DNA</div></div>
+            </div>
+            <div class="cos-module-card">
+              <div class="cos-module-thumb grad-intel">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="1.5"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+                <div class="cos-module-status idle"></div>
+              </div>
+              <div class="card-body"><div class="card-title">Analytics Intelligence</div><div class="card-sub">What's working + why</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── LAYER 03: PRODUCTION FORGE ── -->
+        <div class="content-row cos-layer-row">
+          <div class="row-header">
+            <div class="cos-layer-num">03</div>
+            <div>
+              <div class="cos-layer-title">Production Forge</div>
+              <div class="cos-layer-sub">The Factory Floor</div>
+            </div>
+          </div>
+          <div class="row-scroll">
+            <div class="cos-module-card">
+              <div class="cos-module-thumb grad-prod">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#FB923C" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/></svg>
+                <div class="cos-module-status idle"></div>
+              </div>
+              <div class="card-body"><div class="card-title">Book Builder</div><div class="card-sub">Auto-compile chapters from talks</div></div>
+            </div>
+            <div class="cos-module-card">
+              <div class="cos-module-thumb grad-prod">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#FB923C" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><polygon points="10 8 16 12 10 16 10 8" fill="#FB923C" stroke="none"/></svg>
+                <div class="cos-module-status idle"></div>
+              </div>
+              <div class="card-body"><div class="card-title">Clip Factory</div><div class="card-sub">Auto-cut viral short clips</div></div>
+            </div>
+            <div class="cos-module-card">
+              <div class="cos-module-thumb grad-prod">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#FB923C" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                <div class="cos-module-status idle"></div>
+              </div>
+              <div class="card-body"><div class="card-title">3D Renderer</div><div class="card-sub">Three.js visual assets</div></div>
+            </div>
+            <div class="cos-module-card">
+              <div class="cos-module-thumb grad-prod">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#FB923C" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="3" x2="12" y2="21"/><line x1="3" y1="12" x2="21" y2="12"/></svg>
+                <div class="cos-module-status idle"></div>
+              </div>
+              <div class="card-body"><div class="card-title">Comic Converter</div><div class="card-sub">Talks → visual comic panels</div></div>
+            </div>
+            <div class="cos-module-card">
+              <div class="cos-module-thumb grad-prod">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#FB923C" stroke-width="1.5"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+                <div class="cos-module-status idle"></div>
+              </div>
+              <div class="card-body"><div class="card-title">Course Engine</div><div class="card-sub">Structured learning modules</div></div>
+            </div>
+            <div class="cos-module-card">
+              <div class="cos-module-thumb grad-prod">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#FB923C" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                <div class="cos-module-status idle"></div>
+              </div>
+              <div class="card-body"><div class="card-title">eBook Architect</div><div class="card-sub">PDF + EPUB auto-generation</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── LAYER 04: DISTRIBUTION GRID ── -->
+        <div class="content-row cos-layer-row">
+          <div class="row-header">
+            <div class="cos-layer-num">04</div>
+            <div>
+              <div class="cos-layer-title">Distribution Grid</div>
+              <div class="cos-layer-sub">The Publishing Network</div>
+            </div>
+          </div>
+          <div class="row-scroll">
+            <div class="cos-module-card">
+              <div class="cos-module-thumb grad-dist">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#A855F7" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                <div class="cos-module-status idle"></div>
+              </div>
+              <div class="card-body"><div class="card-title">Multi-Platform Scheduler</div><div class="card-sub">Publish across all channels</div></div>
+            </div>
+            <div class="cos-module-card">
+              <div class="cos-module-thumb grad-dist">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#A855F7" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+                <div class="cos-module-status idle"></div>
+              </div>
+              <div class="card-body"><div class="card-title">Clip of the Day</div><div class="card-sub">Daily auto-selected best clip</div></div>
+            </div>
+            <div class="cos-module-card">
+              <div class="cos-module-thumb grad-dist">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#A855F7" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                <div class="cos-module-status idle"></div>
+              </div>
+              <div class="card-body"><div class="card-title">Trend Interceptor</div><div class="card-sub">Match content to live trends</div></div>
+            </div>
+            <div class="cos-module-card">
+              <div class="cos-module-thumb grad-dist">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#A855F7" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                <div class="cos-module-status idle"></div>
+              </div>
+              <div class="card-body"><div class="card-title">Ziion-First Pipeline</div><div class="card-sub">Content hits ZIION before anywhere</div></div>
+            </div>
+            <div class="cos-module-card">
+              <div class="cos-module-thumb grad-dist">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#A855F7" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/></svg>
+                <div class="cos-module-status idle"></div>
+              </div>
+              <div class="card-body"><div class="card-title">Email Builder</div><div class="card-sub">Automated newsletter pipeline</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── LAYER 05: MONETIZATION ARCHITECTURE ── -->
+        <div class="content-row cos-layer-row">
+          <div class="row-header">
+            <div class="cos-layer-num">05</div>
+            <div>
+              <div class="cos-layer-title">Monetization Architecture</div>
+              <div class="cos-layer-sub">Revenue Engine</div>
+            </div>
+          </div>
+          <div class="row-scroll">
+            <div class="cos-module-card">
+              <div class="cos-module-thumb grad-money">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="1.5"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+                <div class="cos-module-status idle"></div>
+              </div>
+              <div class="card-body"><div class="card-title">Product Packaging</div><div class="card-sub">Bundle content into products</div></div>
+            </div>
+            <div class="cos-module-card">
+              <div class="cos-module-thumb grad-money">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="1.5"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+                <div class="cos-module-status idle"></div>
+              </div>
+              <div class="card-body"><div class="card-title">Funnel Router</div><div class="card-sub">Automated conversion paths</div></div>
+            </div>
+            <div class="cos-module-card">
+              <div class="cos-module-thumb grad-money">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <div class="cos-module-status idle"></div>
+              </div>
+              <div class="card-body"><div class="card-title">Licensing Tracker</div><div class="card-sub">IP usage + rights management</div></div>
+            </div>
+            <div class="cos-module-card">
+              <div class="cos-module-thumb grad-money">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="1.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+                <div class="cos-module-status idle"></div>
+              </div>
+              <div class="card-body"><div class="card-title">Revenue Attribution</div><div class="card-sub">Track $ per content piece</div></div>
+            </div>
+            <div class="cos-module-card">
+              <div class="cos-module-thumb grad-money">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                <div class="cos-module-status idle"></div>
+              </div>
+              <div class="card-body"><div class="card-title">Dynasty Club</div><div class="card-sub">Premium membership engine</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── LAYER 06: AUTONOMOUS EXECUTION ── -->
+        <div class="content-row cos-layer-row">
+          <div class="row-header">
+            <div class="cos-layer-num">06</div>
+            <div>
+              <div class="cos-layer-title">Autonomous Execution</div>
+              <div class="cos-layer-sub">Chairman's Interface</div>
+            </div>
+          </div>
+          <div class="row-scroll">
+            <div class="cos-module-card">
+              <div class="cos-module-thumb grad-exec">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#D5FF5A" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                <div class="cos-module-status idle"></div>
+              </div>
+              <div class="card-body"><div class="card-title">Daily Intelligence Brief</div><div class="card-sub">Morning summary of everything</div></div>
+            </div>
+            <div class="cos-module-card">
+              <div class="cos-module-thumb grad-exec">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#D5FF5A" stroke-width="1.5"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+                <div class="cos-module-status idle"></div>
+              </div>
+              <div class="card-body"><div class="card-title">Approval Queue</div><div class="card-sub">Review + approve outputs</div></div>
+            </div>
+            <div class="cos-module-card">
+              <div class="cos-module-thumb grad-exec">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#D5FF5A" stroke-width="1.5"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                <div class="cos-module-status idle"></div>
+              </div>
+              <div class="card-body"><div class="card-title">Voice Command</div><div class="card-sub">Control the pipeline by voice</div></div>
+            </div>
+            <div class="cos-module-card">
+              <div class="cos-module-thumb grad-exec">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#D5FF5A" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+                <div class="cos-module-status idle"></div>
+              </div>
+              <div class="card-body"><div class="card-title">Performance Dashboard</div><div class="card-sub">Real-time pipeline metrics</div></div>
+            </div>
+            <div class="cos-module-card">
+              <div class="cos-module-thumb grad-exec">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#D5FF5A" stroke-width="1.5"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+                <div class="cos-module-status idle"></div>
+              </div>
+              <div class="card-body"><div class="card-title">Memory Loop</div><div class="card-sub">Self-improving feedback system</div></div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end contentOsView -->
+
     </div><!-- end library-content -->
   </div><!-- end main-layout -->
 
   <script>
+    // ── Content OS View Switcher ──
+    function switchLibraryView(view, el) {
+      const browse = document.getElementById('browseView');
+      const cos = document.getElementById('contentOsView');
+      if (!browse || !cos) return;
+
+      document.querySelectorAll('.cos-switch-btn').forEach(b => b.classList.remove('active'));
+      if (el) el.classList.add('active');
+
+      if (view === 'contentOs') {
+        browse.style.display = 'none';
+        cos.style.display = 'block';
+      } else {
+        browse.style.display = 'block';
+        cos.style.display = 'none';
+      }
+
+      try { localStorage.setItem('ziion-library-view', view); } catch(e) {}
+    }
+
+    // Restore saved view on load
+    (function() {
+      try {
+        const saved = localStorage.getItem('ziion-library-view');
+        if (saved === 'contentOs') {
+          const btns = document.querySelectorAll('.cos-switch-btn');
+          if (btns.length >= 2) switchLibraryView('contentOs', btns[1]);
+        }
+      } catch(e) {}
+    })();
+
+    // Status refresh (connects to Mac Mini FastAPI when online)
+    function refreshCosStatus() {
+      const statusDot = document.querySelector('.cos-hero .cos-status-dot');
+      const statusText = document.getElementById('cosStatusText');
+
+      fetch('http://localhost:8819/api/status', { signal: AbortSignal.timeout(3000) })
+        .then(r => r.json())
+        .then(data => {
+          if (statusDot) { statusDot.classList.remove('offline'); statusDot.classList.add('online'); }
+          if (statusText) statusText.textContent = 'Online';
+          if (data.total_assets) document.getElementById('cosStatAssets').textContent = data.total_assets;
+          if (data.processed) document.getElementById('cosStatProcessed').textContent = data.processed;
+          if (data.outputs) document.getElementById('cosStatOutputs').textContent = data.outputs;
+          // Update module statuses
+          if (data.modules) {
+            document.querySelectorAll('.cos-module-status').forEach((dot, i) => {
+              const status = data.modules[i] || 'idle';
+              dot.className = 'cos-module-status ' + status;
+            });
+          }
+        })
+        .catch(() => {
+          if (statusDot) { statusDot.classList.remove('online'); statusDot.classList.add('offline'); }
+          if (statusText) statusText.textContent = 'Offline';
+        });
+    }
+
     // Genre filter
     function filterGenre(genre, el) {
       document.querySelectorAll('.genre-chip').forEach(c => c.classList.remove('active'));

@@ -429,13 +429,62 @@ body.light-mode .mobile-menu-divider {
     grid-template-columns: 1fr !important;
   }
 
-  /* ── World Page ── */
-  .world-grid {
+  /* ── World Page — Chapter Cards ── */
+  .chapter-grid {
     grid-template-columns: 1fr !important;
+    gap: 12px !important;
   }
 
-  .world-card {
+  .chapter-filter-bar {
+    overflow-x: auto !important;
+    flex-wrap: nowrap !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    padding-bottom: 12px !important;
+  }
+
+  .chapter-filter-bar::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .chapter-filter-btn {
+    flex-shrink: 0 !important;
+    font-size: 11px !important;
+    padding: 6px 12px !important;
+  }
+
+  .chapter-featured {
+    padding: 20px !important;
+  }
+
+  .chapter-featured-name {
+    font-size: 18px !important;
+  }
+
+  .chapter-card-top {
+    padding: 18px !important;
+    min-height: 130px !important;
+  }
+
+  .chapter-card-footer {
+    padding: 0 18px 16px 18px !important;
+  }
+
+  .chapter-detail-inner {
     padding: 16px !important;
+  }
+
+  .chapter-detail-grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+
+  .chapter-participate-row {
+    flex-direction: column !important;
+  }
+
+  .chapter-thread-post {
+    padding: 8px 0 !important;
   }
 
   /* ── Pulse Page ── */
@@ -628,6 +677,27 @@ body.light-mode .mobile-menu-divider {
   }
   .ip-modal-overlay {
     padding: 16px !important;
+  }
+
+  /* ── World Page — Chapter Cards (small phones) ── */
+  .world-content {
+    padding: 12px !important;
+  }
+  .world-title {
+    font-size: 22px !important;
+  }
+  .chapter-featured-name {
+    font-size: 16px !important;
+  }
+  .chapter-card-name {
+    font-size: 14px !important;
+  }
+  .chapter-card-icon {
+    font-size: 26px !important;
+  }
+  .chapter-join-cta {
+    font-size: 12px !important;
+    padding: 10px !important;
   }
 }
 

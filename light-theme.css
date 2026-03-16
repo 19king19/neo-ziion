@@ -2394,3 +2394,118 @@ body.light-mode .sys-card {
 body.light-mode .sys-card-title { color: #1a1a1a !important; border-color: rgba(0,0,0,0.06) !important; }
 body.light-mode .sys-label { color: #888 !important; }
 body.light-mode .sys-value { color: #333 !important; }
+
+/* ======================================== */
+/* WORLD PAGE — Chapter Cards Light Mode    */
+/* ======================================== */
+
+/* ── Page Header ── */
+body.light-mode .world-title { color: #1a1a1a !important; }
+body.light-mode .world-subtitle { color: #888 !important; }
+body.light-mode .world-stat { color: #888 !important; }
+body.light-mode .world-stat strong { color: #3d8c40 !important; }
+
+/* ── Filter Bar ── */
+body.light-mode .chapter-filter-bar { border-color: rgba(0,0,0,0.06) !important; }
+body.light-mode .chapter-filter-btn {
+  border-color: rgba(0,0,0,0.1) !important;
+  color: #888 !important;
+  background: transparent !important;
+}
+body.light-mode .chapter-filter-btn:hover {
+  border-color: rgba(0,0,0,0.25) !important;
+  color: #1a1a1a !important;
+}
+body.light-mode .chapter-filter-btn.active {
+  background: #3d8c40 !important;
+  color: #fff !important;
+  border-color: #3d8c40 !important;
+}
+
+/* ── Featured Banner ── */
+body.light-mode .chapter-featured {
+  background: linear-gradient(135deg, #f0f7e8, #fafaf8 50%, #f2f1ef 100%) !important;
+  border-color: rgba(61,140,64,0.2) !important;
+}
+body.light-mode .chapter-featured:hover {
+  border-color: rgba(61,140,64,0.4) !important;
+  box-shadow: 0 8px 32px rgba(61,140,64,0.08) !important;
+}
+body.light-mode .chapter-featured-name { color: #1a1a1a !important; }
+body.light-mode .chapter-featured-tagline { color: #666 !important; }
+body.light-mode .chapter-featured-badge {
+  background: rgba(61,140,64,0.1) !important;
+  color: #3d8c40 !important;
+}
+body.light-mode .chapter-featured-members { color: #888 !important; }
+
+/* ── Chapter Cards ── */
+body.light-mode .chapter-card {
+  border-color: rgba(0,0,0,0.08) !important;
+}
+body.light-mode .chapter-card:hover {
+  border-color: rgba(0,0,0,0.15) !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08) !important;
+}
+body.light-mode .chapter-card.expanded {
+  border-color: rgba(61,140,64,0.25) !important;
+}
+body.light-mode .chapter-card-name { color: #1a1a1a !important; }
+body.light-mode .chapter-card-tagline { color: #888 !important; }
+body.light-mode .chapter-card-members { color: #888 !important; }
+
+body.light-mode .chapter-card-btn {
+  background: rgba(61,140,64,0.08) !important;
+  color: #3d8c40 !important;
+  border-color: rgba(61,140,64,0.2) !important;
+}
+body.light-mode .chapter-card-btn:hover {
+  background: rgba(61,140,64,0.15) !important;
+}
+
+/* ── Card Gradient Overrides (light-friendly) ── */
+body.light-mode .grad-emerald { background: linear-gradient(145deg, #e8f5e0, #fafaf8 80%) !important; }
+body.light-mode .grad-violet { background: linear-gradient(145deg, #f0eef5, #fafaf8 80%) !important; }
+body.light-mode .grad-blue { background: linear-gradient(145deg, #e8f0e8, #fafaf8 80%) !important; }
+body.light-mode .grad-amber { background: linear-gradient(145deg, #f5f0e0, #fafaf8 80%) !important; }
+body.light-mode .grad-rose { background: linear-gradient(145deg, #f5eee8, #fafaf8 80%) !important; }
+body.light-mode .grad-cyan { background: linear-gradient(145deg, #e8f0e5, #fafaf8 80%) !important; }
+body.light-mode .grad-slate { background: linear-gradient(145deg, #eeeeee, #fafaf8 80%) !important; }
+body.light-mode .grad-orange { background: linear-gradient(145deg, #f5f0e0, #fafaf8 80%) !important; }
+body.light-mode .grad-indigo { background: linear-gradient(145deg, #eeeef0, #fafaf8 80%) !important; }
+body.light-mode .grad-teal { background: linear-gradient(145deg, #e8f0e0, #fafaf8 80%) !important; }
+body.light-mode .grad-pink { background: linear-gradient(145deg, #f5eae8, #fafaf8 80%) !important; }
+body.light-mode .grad-lime { background: linear-gradient(145deg, #f0f5e0, #fafaf8 80%) !important; }
+
+/* ── Expanded Detail ── */
+body.light-mode .chapter-detail { border-color: rgba(0,0,0,0.06) !important; }
+body.light-mode .chapter-section-title { color: #3d8c40 !important; }
+body.light-mode .chapter-section-text { color: #555 !important; }
+
+body.light-mode .chapter-participate-badge {
+  background: rgba(0,0,0,0.03) !important;
+  border-color: rgba(0,0,0,0.08) !important;
+  color: #555 !important;
+}
+
+/* ── Thread Posts ── */
+body.light-mode .chapter-thread-title { color: #aaa !important; border-color: rgba(0,0,0,0.06) !important; }
+body.light-mode .chapter-thread-post { border-color: rgba(0,0,0,0.04) !important; }
+body.light-mode .chapter-thread-avatar { background: linear-gradient(135deg, #ddd, #eee) !important; }
+body.light-mode .chapter-thread-author { color: #333 !important; }
+body.light-mode .chapter-thread-msg { color: #666 !important; }
+body.light-mode .chapter-thread-time { color: #bbb !important; }
+
+/* ── Join CTA + Close Button ── */
+body.light-mode .chapter-join-cta {
+  background: #3d8c40 !important;
+  color: #fff !important;
+}
+body.light-mode .chapter-close-btn {
+  background: rgba(0,0,0,0.06) !important;
+  color: #888 !important;
+}
+body.light-mode .chapter-close-btn:hover {
+  background: rgba(0,0,0,0.1) !important;
+  color: #1a1a1a !important;
+}

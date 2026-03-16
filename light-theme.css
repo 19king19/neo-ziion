@@ -2327,3 +2327,70 @@ body.light-mode .ip-btn-secondary {
   border-color: rgba(0,0,0,0.08) !important;
   color: #1a1a1a !important;
 }
+
+/* ======================================== */
+/* OPENCLAW BOT DASHBOARD — Light Mode      */
+/* ======================================== */
+body.light-mode .oc-section { background: #FFFFFF !important; border-color: rgba(0,0,0,0.08) !important; }
+body.light-mode .oc-title { color: #1a1a1a !important; }
+body.light-mode .oc-badge { background: rgba(61,140,64,0.12) !important; color: #3d8c40 !important; }
+body.light-mode .oc-badge-dot { background: #3d8c40 !important; }
+body.light-mode .oc-subtitle { color: #666 !important; }
+body.light-mode .oc-status-strip { background: rgba(0,0,0,0.02) !important; border-color: rgba(0,0,0,0.06) !important; }
+body.light-mode .oc-status-label { color: #888 !important; }
+body.light-mode .oc-status-value { color: #1a1a1a !important; }
+body.light-mode .oc-tabs { border-color: rgba(0,0,0,0.08) !important; }
+body.light-mode .oc-tab { color: #888 !important; }
+body.light-mode .oc-tab:hover { color: #1a1a1a !important; background: rgba(0,0,0,0.03) !important; }
+body.light-mode .oc-tab.active { color: #3d8c40 !important; border-color: #3d8c40 !important; }
+body.light-mode .cmd-btn {
+  background: rgba(0,0,0,0.02) !important;
+  border-color: rgba(0,0,0,0.08) !important;
+  color: #1a1a1a !important;
+}
+body.light-mode .cmd-btn:hover {
+  background: rgba(61,140,64,0.06) !important;
+  border-color: #3d8c40 !important;
+}
+body.light-mode .cmd-btn-desc { color: #888 !important; }
+body.light-mode .cmd-terminal {
+  background: #1a1a1a !important;
+  color: #4ade80 !important;
+  border-color: rgba(0,0,0,0.1) !important;
+}
+body.light-mode .cmd-prompt { color: #3d8c40 !important; }
+body.light-mode .cmd-output { color: #ccc !important; }
+body.light-mode .vault-folder-header {
+  color: #1a1a1a !important;
+  border-color: rgba(0,0,0,0.06) !important;
+}
+body.light-mode .vault-folder-count { color: #3d8c40 !important; }
+body.light-mode .vault-file-row { border-color: rgba(0,0,0,0.04) !important; }
+body.light-mode .vault-file-name { color: #333 !important; }
+body.light-mode .vault-file-size { color: #888 !important; }
+body.light-mode .ebook-row { border-color: rgba(0,0,0,0.06) !important; }
+body.light-mode .ebook-name { color: #1a1a1a !important; }
+body.light-mode .ebook-meta { color: #888 !important; }
+body.light-mode .ebook-tier.complete { background: rgba(74,222,128,0.1) !important; color: #16a34a !important; }
+body.light-mode .ebook-tier.near-complete { background: rgba(61,140,64,0.1) !important; color: #3d8c40 !important; }
+body.light-mode .ebook-tier.framework { background: rgba(245,158,11,0.1) !important; color: #d97706 !important; }
+body.light-mode .ebook-tier.raw { background: rgba(239,68,68,0.1) !important; color: #dc2626 !important; }
+body.light-mode .activity-item { border-color: rgba(0,0,0,0.04) !important; }
+body.light-mode .activity-text { color: #333 !important; }
+body.light-mode .activity-time { color: #aaa !important; }
+body.light-mode .oc-agent-card {
+  background: rgba(0,0,0,0.02) !important;
+  border-color: rgba(0,0,0,0.08) !important;
+}
+body.light-mode .oc-agent-name { color: #1a1a1a !important; }
+body.light-mode .oc-agent-role { color: #888 !important; }
+body.light-mode .oc-agent-stat-val { color: #1a1a1a !important; }
+body.light-mode .oc-agent-stat-lbl { color: #aaa !important; }
+body.light-mode .oc-agent-bar { background: rgba(0,0,0,0.06) !important; }
+body.light-mode .sys-card {
+  background: rgba(0,0,0,0.02) !important;
+  border-color: rgba(0,0,0,0.08) !important;
+}
+body.light-mode .sys-card-title { color: #1a1a1a !important; border-color: rgba(0,0,0,0.06) !important; }
+body.light-mode .sys-label { color: #888 !important; }
+body.light-mode .sys-value { color: #333 !important; }

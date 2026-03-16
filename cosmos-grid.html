@@ -1378,6 +1378,420 @@
       .stat-item { min-width: 100px; }
       .agents-grid { grid-template-columns: repeat(2, 1fr); }
     }
+
+    /* ============================================
+       OPENCLAW BOT DASHBOARD SECTION
+       ============================================ */
+
+    .oc-section {
+      margin-top: 32px;
+      padding-top: 32px;
+      border-top: 2px solid rgba(213,255,90,0.15);
+    }
+
+    .oc-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+
+    .oc-title {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 4px;
+      color: #D5FF5A;
+      text-transform: uppercase;
+    }
+
+    .oc-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: rgba(213,255,90,0.12);
+      color: #D5FF5A;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .oc-badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #D5FF5A;
+      animation: livePulse 2s infinite;
+    }
+
+    .oc-subtitle {
+      font-size: 12px;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 20px;
+      letter-spacing: 0.5px;
+    }
+
+    /* Bot Status Strip */
+    .oc-status-strip {
+      display: flex;
+      gap: 1px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .oc-status-item {
+      flex: 1;
+      padding: 14px 16px;
+      text-align: center;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .oc-status-item:not(:last-child) {
+      border-right: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .oc-status-label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 6px;
+    }
+
+    .oc-status-value {
+      font-size: 15px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.85);
+    }
+
+    .oc-status-value.green { color: #D5FF5A; }
+    .oc-status-value.blue { color: #60a5fa; }
+
+    .oc-status-sub {
+      font-size: 10px;
+      color: rgba(255,255,255,0.25);
+      margin-top: 4px;
+    }
+
+    /* OC Tabs (independent from existing dash-tabs) */
+    .oc-tabs {
+      display: flex;
+      gap: 4px;
+      padding: 4px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 12px;
+      margin-bottom: 16px;
+      overflow-x: auto;
+    }
+
+    .oc-tab {
+      padding: 10px 18px;
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.4);
+      background: transparent;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .oc-tab:hover {
+      color: rgba(255,255,255,0.7);
+      background: rgba(255,255,255,0.04);
+    }
+
+    .oc-tab.active {
+      color: #D5FF5A;
+      background: rgba(213,255,90,0.08);
+    }
+
+    .oc-panel {
+      display: none;
+    }
+
+    .oc-panel.active {
+      display: block;
+    }
+
+    /* Command Center */
+    .cmd-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .cmd-btn {
+      padding: 20px 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: border-color 0.3s, background 0.3s, transform 0.2s;
+      text-align: center;
+      font-family: inherit;
+      color: inherit;
+    }
+
+    .cmd-btn:hover {
+      border-color: rgba(213,255,90,0.3);
+      background: rgba(213,255,90,0.04);
+      transform: translateY(-2px);
+    }
+
+    .cmd-btn-icon { font-size: 28px; margin-bottom: 8px; }
+    .cmd-btn-label { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.85); margin-bottom: 4px; }
+    .cmd-btn-desc { font-size: 11px; color: rgba(255,255,255,0.35); line-height: 1.4; }
+
+    .cmd-terminal {
+      background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 16px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 12px;
+      color: rgba(213,255,90,0.7);
+      line-height: 1.8;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .cmd-line { display: flex; gap: 8px; }
+    .cmd-prompt { color: rgba(213,255,90,0.5); flex-shrink: 0; }
+    .cmd-output { color: rgba(255,255,255,0.4); }
+
+    /* Vault File Listing */
+    .vault-folder-header {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,0.3);
+      padding: 14px 0 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .vault-folder-count {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: rgba(213,255,90,0.08);
+      color: #D5FF5A;
+    }
+
+    .vault-file-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 8px;
+      transition: background 0.2s;
+      margin-bottom: 2px;
+    }
+
+    .vault-file-row:hover { background: rgba(255,255,255,0.03); }
+    .vault-file-name { font-size: 12px; color: rgba(255,255,255,0.7); font-weight: 500; }
+    .vault-file-size { font-size: 11px; color: rgba(255,255,255,0.3); font-weight: 500; }
+
+    /* Ebook Tier Badges */
+    .ebook-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 10px;
+      margin-bottom: 6px;
+      transition: background 0.2s;
+    }
+
+    .ebook-row:hover { background: rgba(255,255,255,0.04); }
+
+    .ebook-info { flex: 1; }
+    .ebook-name { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.85); margin-bottom: 2px; }
+    .ebook-meta { font-size: 11px; color: rgba(255,255,255,0.3); }
+
+    .ebook-tier {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+
+    .ebook-tier.complete { background: rgba(213,255,90,0.1); color: #D5FF5A; }
+    .ebook-tier.near-complete { background: rgba(34,197,94,0.1); color: #4ade80; }
+    .ebook-tier.framework { background: rgba(251,191,36,0.1); color: #fbbf24; }
+    .ebook-tier.raw { background: rgba(239,68,68,0.1); color: #f87171; }
+
+    /* Activity Log */
+    .activity-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 16px;
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 10px;
+      margin-bottom: 6px;
+      transition: background 0.2s;
+    }
+
+    .activity-item:hover { background: rgba(255,255,255,0.02); }
+
+    .activity-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-top: 5px;
+      flex-shrink: 0;
+    }
+
+    .activity-dot.success { background: #D5FF5A; }
+    .activity-dot.info { background: #60a5fa; }
+    .activity-dot.warning { background: #fbbf24; }
+
+    .activity-text { flex: 1; font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.4; }
+    .activity-time { font-size: 11px; color: rgba(255,255,255,0.25); white-space: nowrap; flex-shrink: 0; }
+
+    /* OC Agents Grid */
+    .oc-agents-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .oc-agent-card {
+      padding: 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      transition: border-color 0.3s, transform 0.2s;
+    }
+
+    .oc-agent-card:hover {
+      border-color: rgba(213,255,90,0.2);
+      transform: translateY(-2px);
+    }
+
+    .oc-agent-top { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+
+    .oc-agent-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .oc-agent-name { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.85); }
+    .oc-agent-role { font-size: 11px; color: rgba(255,255,255,0.35); }
+
+    .oc-agent-stats {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 10px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.4);
+    }
+
+    .oc-agent-stats span { font-weight: 600; color: rgba(255,255,255,0.7); }
+
+    .oc-agent-bar {
+      height: 4px;
+      border-radius: 2px;
+      background: rgba(255,255,255,0.06);
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .oc-agent-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 0.6s ease;
+    }
+
+    .oc-agent-status {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: inline-block;
+    }
+
+    .oc-agent-status.ready { background: rgba(213,255,90,0.1); color: #D5FF5A; }
+    .oc-agent-status.active { background: rgba(96,165,250,0.1); color: #60a5fa; }
+    .oc-agent-status.idle { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.4); }
+
+    /* System Info Cards */
+    .sys-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .sys-card {
+      padding: 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+    }
+
+    .sys-card-title {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 12px;
+    }
+
+    .sys-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .sys-row:last-child { border-bottom: none; }
+    .sys-label { font-size: 12px; color: rgba(255,255,255,0.45); }
+    .sys-value { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.85); }
+    .sys-value.green { color: #D5FF5A; }
+
+    @media (max-width: 768px) {
+      .cmd-grid { grid-template-columns: repeat(2, 1fr); }
+      .sys-grid { grid-template-columns: 1fr; }
+      .oc-agents-grid { grid-template-columns: repeat(2, 1fr); }
+      .oc-status-strip { flex-wrap: wrap; }
+      .oc-status-item { min-width: 140px; flex: 1 1 45%; }
+      .oc-tabs { gap: 2px; }
+      .oc-tab { padding: 8px 12px; font-size: 11px; }
+    }
+
+    @media (max-width: 480px) {
+      .cmd-grid { grid-template-columns: 1fr; }
+      .oc-agents-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -2012,6 +2426,404 @@
           </div>
         </div>
       </div>
+      <!-- OpenClaw Command Center -->
+      <div class="oc-section">
+        <div class="oc-header">
+          <div class="oc-title">
+            <span class="oc-badge-dot"></span>
+            OPENCLAW
+            <span class="oc-badge">ONLINE</span>
+          </div>
+          <div class="oc-subtitle">Sovereign AI Bot — Connected to Mac Mini</div>
+        </div>
+
+        <div class="oc-status-strip">
+          <div class="oc-status-item">
+            <div class="oc-status-label">Status</div>
+            <div class="oc-status-value" style="color:#4ade80">● ONLINE <span id="ocUptime" style="color:#888;font-size:11px">00:00:00</span></div>
+          </div>
+          <div class="oc-status-item">
+            <div class="oc-status-label">Mac Mini</div>
+            <div class="oc-status-value">Connected — <span style="color:#D5FF5A">keyskeys@192.168.1.198</span></div>
+          </div>
+          <div class="oc-status-item">
+            <div class="oc-status-label">Vault</div>
+            <div class="oc-status-value">51 files / 3.3 MB / ~519K words</div>
+          </div>
+          <div class="oc-status-item">
+            <div class="oc-status-label">Ping</div>
+            <div class="oc-status-value"><span id="ocPing">12</span>ms</div>
+          </div>
+        </div>
+
+        <div class="oc-tabs">
+          <button class="oc-tab active" data-oc-tab="command">Command Center</button>
+          <button class="oc-tab" data-oc-tab="vault">IP Vault</button>
+          <button class="oc-tab" data-oc-tab="ebooks">Ebook Projects</button>
+          <button class="oc-tab" data-oc-tab="activity">Activity Log</button>
+          <button class="oc-tab" data-oc-tab="agents">Agents</button>
+          <button class="oc-tab" data-oc-tab="system">System</button>
+        </div>
+
+        <!-- Command Center Panel -->
+        <div class="oc-panel active" data-oc-panel="command">
+          <div class="cmd-grid">
+            <button class="cmd-btn" onclick="simulateAction('generate-ebook')">
+              <div class="cmd-btn-icon">📘</div>
+              <div class="cmd-btn-label">Generate Ebook</div>
+              <div class="cmd-btn-desc">Build from vault content</div>
+            </button>
+            <button class="cmd-btn" onclick="simulateAction('scan-ip')">
+              <div class="cmd-btn-icon">🔍</div>
+              <div class="cmd-btn-label">Scan IP</div>
+              <div class="cmd-btn-desc">Analyze vault for gaps</div>
+            </button>
+            <button class="cmd-btn" onclick="simulateAction('sync-vault')">
+              <div class="cmd-btn-icon">🔄</div>
+              <div class="cmd-btn-label">Sync Vault</div>
+              <div class="cmd-btn-desc">Rsync to Mac Mini</div>
+            </button>
+            <button class="cmd-btn" onclick="simulateAction('triage-notes')">
+              <div class="cmd-btn-icon">📋</div>
+              <div class="cmd-btn-label">Triage Notes</div>
+              <div class="cmd-btn-desc">Sort Apple Notes IP</div>
+            </button>
+            <button class="cmd-btn" onclick="simulateAction('run-assessment')">
+              <div class="cmd-btn-icon">📊</div>
+              <div class="cmd-btn-label">Run Assessment</div>
+              <div class="cmd-btn-desc">Score IP readiness</div>
+            </button>
+            <button class="cmd-btn" onclick="simulateAction('export-report')">
+              <div class="cmd-btn-icon">📤</div>
+              <div class="cmd-btn-label">Export Report</div>
+              <div class="cmd-btn-desc">Generate status PDF</div>
+            </button>
+          </div>
+          <div class="cmd-terminal" id="ocTerminal">
+            <div class="cmd-line"><span class="cmd-prompt">openclaw@macmini:~$</span> <span class="cmd-output" id="ocTermOutput">ready — type a command or click an action above</span></div>
+          </div>
+        </div>
+
+        <!-- IP Vault Panel -->
+        <div class="oc-panel" data-oc-panel="vault">
+          <div class="vault-folder-header">📁 Pages-Extracted <span class="vault-folder-count">23 files</span></div>
+          <div class="vault-file-row"><span class="vault-file-name">paradigm_shift.txt</span><span class="vault-file-size">11,423 words</span></div>
+          <div class="vault-file-row"><span class="vault-file-name">philosophy_chunks.txt</span><span class="vault-file-size">10,742 words</span></div>
+          <div class="vault-file-row"><span class="vault-file-name">keyism_notes.txt</span><span class="vault-file-size">87,746 words</span></div>
+          <div class="vault-file-row"><span class="vault-file-name">save_yourself.txt</span><span class="vault-file-size">7,683 words</span></div>
+          <div class="vault-file-row"><span class="vault-file-name">ICEMAN_INHERITANCE.txt</span><span class="vault-file-size">82,752 words</span></div>
+          <div class="vault-file-row"><span class="vault-file-name">COGNITION_IS_THE_NEW_CAPITAL.txt</span><span class="vault-file-size">3,470 words</span></div>
+          <div class="vault-file-row"><span class="vault-file-name">how_your_mind_actually_works.txt</span><span class="vault-file-size">3,345 words</span></div>
+          <div class="vault-file-row"><span class="vault-file-name">COGSEC.txt</span><span class="vault-file-size">5,370 words</span></div>
+          <div class="vault-file-row"><span class="vault-file-name">ANTI-FUTURISM.txt</span><span class="vault-file-size">3,277 words</span></div>
+          <div class="vault-file-row"><span class="vault-file-name">Big_thesis.txt</span><span class="vault-file-size">3,986 words</span></div>
+          <div class="vault-file-row" style="color:#666;font-style:italic"><span class="vault-file-name">+ 13 more files...</span><span class="vault-file-size">~42K words</span></div>
+
+          <div class="vault-folder-header">📁 PDFs-Extracted <span class="vault-folder-count">8 files</span></div>
+          <div class="vault-file-row"><span class="vault-file-name">Anunnaki_Book_3_Full.txt</span><span class="vault-file-size">~90,000 words</span></div>
+          <div class="vault-file-row"><span class="vault-file-name">Paradigm_Keys_Solution_Based.txt</span><span class="vault-file-size">~13,000 words</span></div>
+          <div class="vault-file-row"><span class="vault-file-name">Full_Book_08082021.txt</span><span class="vault-file-size">~12,000 words</span></div>
+          <div class="vault-file-row"><span class="vault-file-name">Big_Thesis.txt</span><span class="vault-file-size">~4,000 words</span></div>
+          <div class="vault-file-row"><span class="vault-file-name">Anti_Futurism.txt</span><span class="vault-file-size">~3,500 words</span></div>
+          <div class="vault-file-row" style="color:#666;font-style:italic"><span class="vault-file-name">+ 3 more files...</span><span class="vault-file-size">~3K words</span></div>
+
+          <div class="vault-folder-header">📁 WordDocs-Extracted <span class="vault-folder-count">4 files</span></div>
+          <div class="vault-file-row"><span class="vault-file-name">Introduction.txt</span><span class="vault-file-size">~11,000 words</span></div>
+          <div class="vault-file-row"><span class="vault-file-name">Unlocking_the_19keys_Revised.txt</span><span class="vault-file-size">~9,000 words</span></div>
+          <div class="vault-file-row"><span class="vault-file-name">19Cs_Complete_2026.txt</span><span class="vault-file-size">~6,500 words</span></div>
+          <div class="vault-file-row"><span class="vault-file-name">INFINITE_WEALTH_STRATEGIES_1.txt</span><span class="vault-file-size">~6,000 words</span></div>
+
+          <div class="vault-folder-header">📁 IP-Engine-Ebooks <span class="vault-folder-count">10 files</span></div>
+          <div class="vault-file-row"><span class="vault-file-name">COGNITIVE_WEALTH_KEY_FULL_CURRICULUM.md</span><span class="vault-file-size">~7,100 words</span></div>
+          <div class="vault-file-row"><span class="vault-file-name">anti-futurism-v2_COMPLETE_EBOOK.md</span><span class="vault-file-size">~7,000 words</span></div>
+          <div class="vault-file-row"><span class="vault-file-name">COGSEC_COMPLETE_EBOOK.md</span><span class="vault-file-size">~3,500 words</span></div>
+          <div class="vault-file-row"><span class="vault-file-name">19KEYS_IP_MOAT_EXECUTION_PLAN.md</span><span class="vault-file-size">~2,200 words</span></div>
+          <div class="vault-file-row"><span class="vault-file-name">Forensic_Intelligence_Protocol.md</span><span class="vault-file-size">~1,700 words</span></div>
+          <div class="vault-file-row" style="color:#666;font-style:italic"><span class="vault-file-name">+ 5 .docx versions</span><span class="vault-file-size">—</span></div>
+
+          <div class="vault-folder-header">📁 Markdown-Content <span class="vault-folder-count">3 files</span></div>
+          <div class="vault-file-row"><span class="vault-file-name">19Keys_Global_Statesman_Architecture.md</span><span class="vault-file-size">~4,700 words</span></div>
+          <div class="vault-file-row"><span class="vault-file-name">19KEYS_IP_MOAT_EXECUTION_PLAN.md</span><span class="vault-file-size">source md</span></div>
+          <div class="vault-file-row"><span class="vault-file-name">black-lions-philosophy.md</span><span class="vault-file-size">~400 words</span></div>
+
+          <div class="vault-folder-header">📁 Transcripts <span class="vault-folder-count">3 files</span></div>
+          <div class="vault-file-row"><span class="vault-file-name">dee 1 hlc transcript.txt</span><span class="vault-file-size">185K</span></div>
+          <div class="vault-file-row"><span class="vault-file-name">19keys-hlc-raw-edit-therapist.txt</span><span class="vault-file-size">139K</span></div>
+          <div class="vault-file-row"><span class="vault-file-name">cornell hlc.txt</span><span class="vault-file-size">80K</span></div>
+        </div>
+
+        <!-- Ebook Projects Panel -->
+        <div class="oc-panel" data-oc-panel="ebooks">
+          <div class="ebook-row">
+            <div class="ebook-info"><div class="ebook-name">Cognitive Wealth Key</div><div class="ebook-meta">Full Curriculum — ~7,100 words</div></div>
+            <span class="ebook-tier complete">Complete</span>
+          </div>
+          <div class="ebook-row">
+            <div class="ebook-info"><div class="ebook-name">COGSEC</div><div class="ebook-meta">Cognitive Security — ~3,500 words</div></div>
+            <span class="ebook-tier complete">Complete</span>
+          </div>
+          <div class="ebook-row">
+            <div class="ebook-info"><div class="ebook-name">Anti-Futurism v2</div><div class="ebook-meta">Counter-narrative framework — ~7,000 words</div></div>
+            <span class="ebook-tier complete">Complete</span>
+          </div>
+          <div class="ebook-row">
+            <div class="ebook-info"><div class="ebook-name">Forensic Intelligence Protocol</div><div class="ebook-meta">Investigation framework — ~1,700 words</div></div>
+            <span class="ebook-tier complete">Complete</span>
+          </div>
+          <div class="ebook-row">
+            <div class="ebook-info"><div class="ebook-name">IP Moat Execution Plan</div><div class="ebook-meta">Strategic IP protection — ~2,200 words</div></div>
+            <span class="ebook-tier complete">Complete</span>
+          </div>
+          <div class="ebook-row">
+            <div class="ebook-info"><div class="ebook-name">Paradigm Keys</div><div class="ebook-meta">Solution-Based Mind Reprogramming — ~13,000 words</div></div>
+            <span class="ebook-tier near-complete">Near Complete</span>
+          </div>
+          <div class="ebook-row">
+            <div class="ebook-info"><div class="ebook-name">Unlocking the 19 Keys</div><div class="ebook-meta">Revised manuscript — ~9,000 words</div></div>
+            <span class="ebook-tier near-complete">Near Complete</span>
+          </div>
+          <div class="ebook-row">
+            <div class="ebook-info"><div class="ebook-name">The 19 Cs of Content</div><div class="ebook-meta">2026 edition — ~6,500 words</div></div>
+            <span class="ebook-tier near-complete">Near Complete</span>
+          </div>
+          <div class="ebook-row">
+            <div class="ebook-info"><div class="ebook-name">Infinite Wealth Strategies</div><div class="ebook-meta">Volume 1 — ~6,000 words</div></div>
+            <span class="ebook-tier near-complete">Near Complete</span>
+          </div>
+          <div class="ebook-row">
+            <div class="ebook-info"><div class="ebook-name">Cognition Is The New Capital</div><div class="ebook-meta">Core cognition framework — ~3,470 words</div></div>
+            <span class="ebook-tier framework">Framework</span>
+          </div>
+          <div class="ebook-row">
+            <div class="ebook-info"><div class="ebook-name">Save Yourself</div><div class="ebook-meta">The Art of Listening — ~7,683 words</div></div>
+            <span class="ebook-tier framework">Framework</span>
+          </div>
+          <div class="ebook-row">
+            <div class="ebook-info"><div class="ebook-name">Big Thesis</div><div class="ebook-meta">Macro IP framework — ~4,000 words</div></div>
+            <span class="ebook-tier framework">Framework</span>
+          </div>
+          <div class="ebook-row">
+            <div class="ebook-info"><div class="ebook-name">Global Statesman Architecture</div><div class="ebook-meta">Leadership architecture — ~4,700 words</div></div>
+            <span class="ebook-tier framework">Framework</span>
+          </div>
+          <div class="ebook-row">
+            <div class="ebook-info"><div class="ebook-name">The Attention Anomaly</div><div class="ebook-meta">Attention economy — ~1,800 words</div></div>
+            <span class="ebook-tier framework">Framework</span>
+          </div>
+          <div class="ebook-row">
+            <div class="ebook-info"><div class="ebook-name">Keyism</div><div class="ebook-meta">Counter-philosophical dialogues — 87,746 words</div></div>
+            <span class="ebook-tier raw">Raw Content</span>
+          </div>
+          <div class="ebook-row">
+            <div class="ebook-info"><div class="ebook-name">HLC Transcripts</div><div class="ebook-meta">3 interviews — ~80,000 words</div></div>
+            <span class="ebook-tier raw">Raw Content</span>
+          </div>
+        </div>
+
+        <!-- Activity Log Panel -->
+        <div class="oc-panel" data-oc-panel="activity">
+          <div class="activity-item"><span class="activity-dot success"></span><span class="activity-text">Vault synced to Mac Mini — 51 files transferred</span><span class="activity-time">Today 2:14 PM</span></div>
+          <div class="activity-item"><span class="activity-dot success"></span><span class="activity-text">Pages extraction complete — 23 files, 251K words</span><span class="activity-time">Today 1:52 PM</span></div>
+          <div class="activity-item"><span class="activity-dot success"></span><span class="activity-text">PDF extraction complete — 8 files processed</span><span class="activity-time">Today 1:48 PM</span></div>
+          <div class="activity-item"><span class="activity-dot warning"></span><span class="activity-text">Sensitive file removed — Goldewater_Training_Manual.txt</span><span class="activity-time">Today 1:45 PM</span></div>
+          <div class="activity-item"><span class="activity-dot success"></span><span class="activity-text">SSH connection established — keyskeys@192.168.1.198</span><span class="activity-time">Today 1:30 PM</span></div>
+          <div class="activity-item"><span class="activity-dot info"></span><span class="activity-text">MASTER_CATALOG.md generated — 16 ebook projects mapped</span><span class="activity-time">Today 1:28 PM</span></div>
+          <div class="activity-item"><span class="activity-dot success"></span><span class="activity-text">OpenClaw bot initialized on Mac Mini</span><span class="activity-time">Today 12:00 PM</span></div>
+          <div class="activity-item"><span class="activity-dot info"></span><span class="activity-text">IP-Ebook-Vault directory structure created</span><span class="activity-time">Today 11:45 AM</span></div>
+          <div class="activity-item"><span class="activity-dot warning"></span><span class="activity-text">Company_Total.docx skipped — financial data detected</span><span class="activity-time">Today 11:30 AM</span></div>
+          <div class="activity-item"><span class="activity-dot success"></span><span class="activity-text">Apple Notes scan complete — 17 high-relevance notes identified</span><span class="activity-time">Today 11:15 AM</span></div>
+        </div>
+
+        <!-- Agents Panel -->
+        <div class="oc-panel" data-oc-panel="agents">
+          <div class="oc-agents-grid">
+            <div class="oc-agent-card">
+              <div class="oc-agent-header">
+                <span class="oc-agent-icon">🎯</span>
+                <div>
+                  <div class="oc-agent-name">Business Strategy</div>
+                  <div class="oc-agent-role">Strategic Operations Lead</div>
+                </div>
+              </div>
+              <div class="oc-agent-stats">
+                <div class="oc-agent-stat"><span class="oc-agent-stat-val">7</span><span class="oc-agent-stat-lbl">Files</span></div>
+                <div class="oc-agent-stat"><span class="oc-agent-stat-val">2</span><span class="oc-agent-stat-lbl">Done</span></div>
+                <div class="oc-agent-stat"><span class="oc-agent-stat-val">24%</span><span class="oc-agent-stat-lbl">Score</span></div>
+              </div>
+              <div class="oc-agent-bar"><div class="oc-agent-bar-fill" style="width:24%;background:#ef4444"></div></div>
+              <div class="oc-agent-status" style="color:#ef4444">● Critical</div>
+            </div>
+            <div class="oc-agent-card">
+              <div class="oc-agent-header">
+                <span class="oc-agent-icon">🎬</span>
+                <div>
+                  <div class="oc-agent-name">Content Engine</div>
+                  <div class="oc-agent-role">Content Systems Architect</div>
+                </div>
+              </div>
+              <div class="oc-agent-stats">
+                <div class="oc-agent-stat"><span class="oc-agent-stat-val">11</span><span class="oc-agent-stat-lbl">Files</span></div>
+                <div class="oc-agent-stat"><span class="oc-agent-stat-val">3</span><span class="oc-agent-stat-lbl">Done</span></div>
+                <div class="oc-agent-stat"><span class="oc-agent-stat-val">64%</span><span class="oc-agent-stat-lbl">Score</span></div>
+              </div>
+              <div class="oc-agent-bar"><div class="oc-agent-bar-fill" style="width:64%;background:#f59e0b"></div></div>
+              <div class="oc-agent-status" style="color:#f59e0b">● In Progress</div>
+            </div>
+            <div class="oc-agent-card">
+              <div class="oc-agent-header">
+                <span class="oc-agent-icon">🧠</span>
+                <div>
+                  <div class="oc-agent-name">CWK Architect</div>
+                  <div class="oc-agent-role">Product & Curriculum Lead</div>
+                </div>
+              </div>
+              <div class="oc-agent-stats">
+                <div class="oc-agent-stat"><span class="oc-agent-stat-val">9</span><span class="oc-agent-stat-lbl">Files</span></div>
+                <div class="oc-agent-stat"><span class="oc-agent-stat-val">3</span><span class="oc-agent-stat-lbl">Done</span></div>
+                <div class="oc-agent-stat"><span class="oc-agent-stat-val">28%</span><span class="oc-agent-stat-lbl">Score</span></div>
+              </div>
+              <div class="oc-agent-bar"><div class="oc-agent-bar-fill" style="width:28%;background:#ef4444"></div></div>
+              <div class="oc-agent-status" style="color:#ef4444">● Critical</div>
+            </div>
+            <div class="oc-agent-card">
+              <div class="oc-agent-header">
+                <span class="oc-agent-icon">🏗️</span>
+                <div>
+                  <div class="oc-agent-name">Frameworks</div>
+                  <div class="oc-agent-role">IP Completion Architect</div>
+                </div>
+              </div>
+              <div class="oc-agent-stats">
+                <div class="oc-agent-stat"><span class="oc-agent-stat-val">26</span><span class="oc-agent-stat-lbl">Files</span></div>
+                <div class="oc-agent-stat"><span class="oc-agent-stat-val">5</span><span class="oc-agent-stat-lbl">Done</span></div>
+                <div class="oc-agent-stat"><span class="oc-agent-stat-val">52%</span><span class="oc-agent-stat-lbl">Score</span></div>
+              </div>
+              <div class="oc-agent-bar"><div class="oc-agent-bar-fill" style="width:52%;background:#f59e0b"></div></div>
+              <div class="oc-agent-status" style="color:#f59e0b">● In Progress</div>
+            </div>
+            <div class="oc-agent-card">
+              <div class="oc-agent-header">
+                <span class="oc-agent-icon">📖</span>
+                <div>
+                  <div class="oc-agent-name">Manuscripts</div>
+                  <div class="oc-agent-role">Developmental Editor</div>
+                </div>
+              </div>
+              <div class="oc-agent-stats">
+                <div class="oc-agent-stat"><span class="oc-agent-stat-val">8</span><span class="oc-agent-stat-lbl">Files</span></div>
+                <div class="oc-agent-stat"><span class="oc-agent-stat-val">4</span><span class="oc-agent-stat-lbl">Done</span></div>
+                <div class="oc-agent-stat"><span class="oc-agent-stat-val">71%</span><span class="oc-agent-stat-lbl">Score</span></div>
+              </div>
+              <div class="oc-agent-bar"><div class="oc-agent-bar-fill" style="width:71%;background:#D5FF5A"></div></div>
+              <div class="oc-agent-status" style="color:#D5FF5A">● Active</div>
+            </div>
+            <div class="oc-agent-card">
+              <div class="oc-agent-header">
+                <span class="oc-agent-icon">📑</span>
+                <div>
+                  <div class="oc-agent-name">Ebook Generator</div>
+                  <div class="oc-agent-role">Publishing Pipeline</div>
+                </div>
+              </div>
+              <div class="oc-agent-stats">
+                <div class="oc-agent-stat"><span class="oc-agent-stat-val">10</span><span class="oc-agent-stat-lbl">Files</span></div>
+                <div class="oc-agent-stat"><span class="oc-agent-stat-val">5</span><span class="oc-agent-stat-lbl">Done</span></div>
+                <div class="oc-agent-stat"><span class="oc-agent-stat-val">100%</span><span class="oc-agent-stat-lbl">Score</span></div>
+              </div>
+              <div class="oc-agent-bar"><div class="oc-agent-bar-fill" style="width:100%;background:#4ade80"></div></div>
+              <div class="oc-agent-status" style="color:#4ade80">● Complete</div>
+            </div>
+            <div class="oc-agent-card">
+              <div class="oc-agent-header">
+                <span class="oc-agent-icon">🎨</span>
+                <div>
+                  <div class="oc-agent-name">Decks Designer</div>
+                  <div class="oc-agent-role">Presentation Architect</div>
+                </div>
+              </div>
+              <div class="oc-agent-stats">
+                <div class="oc-agent-stat"><span class="oc-agent-stat-val">4</span><span class="oc-agent-stat-lbl">Files</span></div>
+                <div class="oc-agent-stat"><span class="oc-agent-stat-val">1</span><span class="oc-agent-stat-lbl">Done</span></div>
+                <div class="oc-agent-stat"><span class="oc-agent-stat-val">38%</span><span class="oc-agent-stat-lbl">Score</span></div>
+              </div>
+              <div class="oc-agent-bar"><div class="oc-agent-bar-fill" style="width:38%;background:#ef4444"></div></div>
+              <div class="oc-agent-status" style="color:#ef4444">● Critical</div>
+            </div>
+            <div class="oc-agent-card">
+              <div class="oc-agent-header">
+                <span class="oc-agent-icon">🔍</span>
+                <div>
+                  <div class="oc-agent-name">Research Analyst</div>
+                  <div class="oc-agent-role">Evidence Library Builder</div>
+                </div>
+              </div>
+              <div class="oc-agent-stats">
+                <div class="oc-agent-stat"><span class="oc-agent-stat-val">5</span><span class="oc-agent-stat-lbl">Files</span></div>
+                <div class="oc-agent-stat"><span class="oc-agent-stat-val">1</span><span class="oc-agent-stat-lbl">Done</span></div>
+                <div class="oc-agent-stat"><span class="oc-agent-stat-val">85%</span><span class="oc-agent-stat-lbl">Score</span></div>
+              </div>
+              <div class="oc-agent-bar"><div class="oc-agent-bar-fill" style="width:85%;background:#D5FF5A"></div></div>
+              <div class="oc-agent-status" style="color:#D5FF5A">● Active</div>
+            </div>
+            <div class="oc-agent-card">
+              <div class="oc-agent-header">
+                <span class="oc-agent-icon">📋</span>
+                <div>
+                  <div class="oc-agent-name">Notes & Outline</div>
+                  <div class="oc-agent-role">IP Triage Officer</div>
+                </div>
+              </div>
+              <div class="oc-agent-stats">
+                <div class="oc-agent-stat"><span class="oc-agent-stat-val">13</span><span class="oc-agent-stat-lbl">Files</span></div>
+                <div class="oc-agent-stat"><span class="oc-agent-stat-val">1</span><span class="oc-agent-stat-lbl">Done</span></div>
+                <div class="oc-agent-stat"><span class="oc-agent-stat-val">15%</span><span class="oc-agent-stat-lbl">Score</span></div>
+              </div>
+              <div class="oc-agent-bar"><div class="oc-agent-bar-fill" style="width:15%;background:#ef4444"></div></div>
+              <div class="oc-agent-status" style="color:#ef4444">● Critical</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- System Panel -->
+        <div class="oc-panel" data-oc-panel="system">
+          <div class="sys-grid">
+            <div class="sys-card">
+              <div class="sys-card-title">Mac Mini Connection</div>
+              <div class="sys-row"><span class="sys-label">Host</span><span class="sys-value">Keyss-Mac-mini-4</span></div>
+              <div class="sys-row"><span class="sys-label">User</span><span class="sys-value">keyskeys</span></div>
+              <div class="sys-row"><span class="sys-label">IP</span><span class="sys-value">192.168.1.198</span></div>
+              <div class="sys-row"><span class="sys-label">Auth</span><span class="sys-value">SSH Key (ed25519)</span></div>
+              <div class="sys-row"><span class="sys-label">Status</span><span class="sys-value" style="color:#4ade80">Connected</span></div>
+            </div>
+            <div class="sys-card">
+              <div class="sys-card-title">Disk Usage</div>
+              <div class="sys-row"><span class="sys-label">Vault Size</span><span class="sys-value">3.3 MB</span></div>
+              <div class="sys-row"><span class="sys-label">Total Files</span><span class="sys-value">51</span></div>
+              <div class="sys-row"><span class="sys-label">Total Words</span><span class="sys-value">~519,000</span></div>
+              <div class="sys-row"><span class="sys-label">Ebook Projects</span><span class="sys-value">16</span></div>
+              <div class="sys-row"><span class="sys-label">Complete</span><span class="sys-value" style="color:#4ade80">5 ebooks</span></div>
+            </div>
+            <div class="sys-card">
+              <div class="sys-card-title">Bot Config</div>
+              <div class="sys-row"><span class="sys-label">Engine</span><span class="sys-value">OpenClaw v1.0</span></div>
+              <div class="sys-row"><span class="sys-label">Model</span><span class="sys-value">Claude Opus</span></div>
+              <div class="sys-row"><span class="sys-label">Mode</span><span class="sys-value">Sovereign</span></div>
+              <div class="sys-row"><span class="sys-label">Agents</span><span class="sys-value">9 active</span></div>
+              <div class="sys-row"><span class="sys-label">Health</span><span class="sys-value" id="ocHealth" style="color:#D5FF5A">98%</span></div>
+            </div>
+            <div class="sys-card">
+              <div class="sys-card-title">Network</div>
+              <div class="sys-row"><span class="sys-label">Protocol</span><span class="sys-value">SSH / rsync</span></div>
+              <div class="sys-row"><span class="sys-label">Last Sync</span><span class="sys-value">Today 2:14 PM</span></div>
+              <div class="sys-row"><span class="sys-label">Transferred</span><span class="sys-value">3.3 MB (52 files)</span></div>
+              <div class="sys-row"><span class="sys-label">Errors</span><span class="sys-value" style="color:#4ade80">0</span></div>
+              <div class="sys-row"><span class="sys-label">Uptime</span><span class="sys-value" id="ocSysUptime">—</span></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
     </div>
 
     <!-- Right Sidebar -->
@@ -2842,5 +3654,161 @@
   })();
   </script>
   <script src="mobile-nav.js"></script>
+
+  <!-- OpenClaw Bot Scripts -->
+  <script>
+  (function() {
+    // =============================================
+    // OPENCLAW TAB SWITCHING (independent from dash tabs)
+    // =============================================
+    const ocTabs = document.querySelectorAll('.oc-tab');
+    const ocPanels = document.querySelectorAll('.oc-panel');
+
+    ocTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const target = tab.dataset.ocTab;
+        ocTabs.forEach(t => t.classList.remove('active'));
+        ocPanels.forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        const panel = document.querySelector(`[data-oc-panel="${target}"]`);
+        if (panel) panel.classList.add('active');
+      });
+    });
+
+    // =============================================
+    // BOT STATUS SIMULATION
+    // =============================================
+    const startTime = Date.now();
+    const uptimeEl = document.getElementById('ocUptime');
+    const pingEl = document.getElementById('ocPing');
+    const healthEl = document.getElementById('ocHealth');
+    const sysUptimeEl = document.getElementById('ocSysUptime');
+
+    function updateUptime() {
+      const elapsed = Date.now() - startTime;
+      const hrs = Math.floor(elapsed / 3600000).toString().padStart(2, '0');
+      const mins = Math.floor((elapsed % 3600000) / 60000).toString().padStart(2, '0');
+      const secs = Math.floor((elapsed % 60000) / 1000).toString().padStart(2, '0');
+      const str = `${hrs}:${mins}:${secs}`;
+      if (uptimeEl) uptimeEl.textContent = str;
+      if (sysUptimeEl) sysUptimeEl.textContent = str;
+    }
+
+    function updatePing() {
+      if (pingEl) {
+        const base = 12;
+        const jitter = Math.floor(Math.random() * 8) - 3;
+        pingEl.textContent = Math.max(5, base + jitter);
+      }
+    }
+
+    function updateHealth() {
+      if (healthEl) {
+        const vals = [96, 97, 98, 99, 100];
+        healthEl.textContent = vals[Math.floor(Math.random() * vals.length)] + '%';
+      }
+    }
+
+    setInterval(updateUptime, 1000);
+    setInterval(updatePing, 3000);
+    setInterval(updateHealth, 10000);
+    updateUptime();
+
+    // =============================================
+    // TERMINAL COMMAND SIMULATION
+    // =============================================
+    const terminal = document.getElementById('ocTerminal');
+    const termOutput = document.getElementById('ocTermOutput');
+
+    const commandOutputs = {
+      'generate-ebook': [
+        'openclaw@macmini:~$ openclaw generate --target "Paradigm Keys"',
+        '[SCAN] Reading vault: /Users/keyskeys/Documents/IP-Ebook-Vault/',
+        '[FOUND] paradigm_shift.txt (11,423 words)',
+        '[FOUND] Paradigm_Keys_Solution_Based.txt (~13,000 words)',
+        '[FOUND] philosophy_chunks.txt (10,742 words)',
+        '[BUILD] Merging 3 sources → 35,165 words',
+        '[FORMAT] Generating chapter structure...',
+        '[DONE] Ebook draft ready → Paradigm_Keys_DRAFT.md ✓'
+      ],
+      'scan-ip': [
+        'openclaw@macmini:~$ openclaw scan --vault',
+        '[SCAN] Analyzing 51 files across 6 directories...',
+        '[TIER 1] 5 complete ebooks detected',
+        '[TIER 2] 4 near-complete manuscripts',
+        '[TIER 3] 5 strong frameworks need expansion',
+        '[TIER 4] 2 massive raw content sets (167K words)',
+        '[GAP] Revolution Manifesto needs 5,000+ words',
+        '[GAP] Apple Notes: 9 high-value seeds not file-ized',
+        '[DONE] IP readiness score: 72/100 ✓'
+      ],
+      'sync-vault': [
+        'openclaw@macmini:~$ rsync -avz ~/Documents/IP-Ebook-Vault/ keyskeys@192.168.1.198:~/Documents/IP-Ebook-Vault/',
+        'sending incremental file list',
+        'Pages-Extracted/paradigm_shift.txt',
+        'Pages-Extracted/keyism_notes.txt',
+        'PDFs-Extracted/Full_Book_08082021.txt',
+        'IP-Engine-Ebooks/COGSEC_COMPLETE_EBOOK.md',
+        'sent 3.3MB  received 1,204 bytes  2.2MB/s',
+        '[DONE] 51 files synced to Mac Mini ✓'
+      ],
+      'triage-notes': [
+        'openclaw@macmini:~$ openclaw triage --source "Apple Notes"',
+        '[SCAN] Reading 17 high-relevance notes...',
+        '[ROUTE] "mastery of the mind" → Book 1: Paradigm Keys',
+        '[ROUTE] "The ME Environment" → Book 3: Cognition Capital',
+        '[ROUTE] "Ancient" → Book 9: Keyism',
+        '[ROUTE] "High lvl Cypher" → Content Operations',
+        '[ROUTE] "From" → Book 12: Infinite Wealth',
+        '[SKIP] "Jdilla21$" — potential credential, excluded',
+        '[DONE] 16 notes routed, 1 excluded ✓'
+      ],
+      'run-assessment': [
+        'openclaw@macmini:~$ openclaw assess --all-projects',
+        '[ASSESS] Running readiness scores on 16 projects...',
+        '  CWK Full Curriculum ............ 100% ████████████',
+        '  COGSEC ......................... 100% ████████████',
+        '  Anti-Futurism v2 ............... 100% ████████████',
+        '  Paradigm Keys ..................  85% ██████████░░',
+        '  Unlocking 19 Keys ..............  80% █████████░░░',
+        '  Keyism (raw) ...................  30% ███░░░░░░░░░',
+        '  Revolution Manifesto ...........  10% █░░░░░░░░░░░',
+        '[DONE] Overall IP readiness: 72% ✓'
+      ],
+      'export-report': [
+        'openclaw@macmini:~$ openclaw export --format pdf',
+        '[BUILD] Compiling IP status report...',
+        '[DATA] 16 ebook projects',
+        '[DATA] 51 vault files / 519K words',
+        '[DATA] 9 active agents',
+        '[DATA] 5 complete, 4 near-complete, 5 frameworks',
+        '[RENDER] Generating PDF...',
+        '[DONE] Report saved → IP_Status_Report_2026-03-14.pdf ✓'
+      ]
+    };
+
+    window.simulateAction = function(action) {
+      if (!terminal) return;
+      const lines = commandOutputs[action] || ['openclaw@macmini:~$ unknown command'];
+      terminal.innerHTML = '';
+
+      lines.forEach((line, i) => {
+        setTimeout(() => {
+          const div = document.createElement('div');
+          div.className = 'cmd-line';
+          if (i === 0) {
+            const parts = line.split('$ ');
+            div.innerHTML = `<span class="cmd-prompt">${parts[0]}$</span> ${parts[1] || ''}`;
+          } else {
+            div.innerHTML = `<span class="cmd-output">${line}</span>`;
+          }
+          terminal.appendChild(div);
+          terminal.scrollTop = terminal.scrollHeight;
+        }, i * 400);
+      });
+    };
+  })();
+  </script>
+
 </body>
 </html>

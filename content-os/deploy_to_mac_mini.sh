@@ -55,6 +55,31 @@ echo ""
 echo "▸ Step 6: Verifying Obsidian vault structure..."
 ssh "$MAC_MINI" "ls -la $REMOTE_DIR/obsidian_vault/ 2>/dev/null || echo '  ⚠ Vault directory not found'"
 
+# ── Step 7: Install Cron Jobs ──
+echo ""
+echo "▸ Step 7: Setting up cron jobs..."
+ssh "$MAC_MINI" "bash -s" << 'CRON_EOF'
+# Remove old content-os cron entries
+crontab -l 2>/dev/null | grep -v 'sovereign-content-os' | crontab -
+
+# Add new cron jobs
+(crontab -l 2>/dev/null; cat << 'ENTRIES'
+# ── Sovereign Content OS — Scheduled Jobs ──
+# Nightly consolidation at 2:00 AM
+0 2 * * * cd /Users/keyskeys/sovereign-content-os && /usr/bin/python3 -c "from layer_06_autonomous.nightly_consolidation import run_consolidation; run_consolidation()" >> /Users/keyskeys/sovereign-content-os/cron.log 2>&1
+# Heartbeat monitor — ensure orchestrator is running (every 5 min)
+*/5 * * * * cd /Users/keyskeys/sovereign-content-os && /usr/bin/python3 -c "from layer_06_autonomous.heartbeat_monitor import run_heartbeat; run_heartbeat()" >> /Users/keyskeys/sovereign-content-os/heartbeat_cron.log 2>&1
+ENTRIES
+) | crontab -
+echo "  ✓ Cron jobs installed"
+CRON_EOF
+
+# ── Step 8: Create search index directory ──
+echo ""
+echo "▸ Step 8: Creating search index directory..."
+ssh "$MAC_MINI" "mkdir -p $REMOTE_DIR/search_index $REMOTE_DIR/codex_tasks"
+echo "  ✓ Index directories created"
+
 echo ""
 echo "══════════════════════════════════════════"
 echo "  DEPLOYMENT COMPLETE"
@@ -62,6 +87,9 @@ echo ""
 echo "  Next steps:"
 echo "  1. SSH into Mac Mini: ssh $MAC_MINI"
 echo "  2. Fill in API keys: nano $REMOTE_DIR/config/.env"
-echo "  3. Start daemon: cd $REMOTE_DIR && python3 orchestrator.py"
-echo "  4. Verify status: curl http://localhost:8819/api/health"
+echo "  3. Add Twitter keys if posting: nano $REMOTE_DIR/config/.env"
+echo "  4. Start daemon: cd $REMOTE_DIR && python3 orchestrator.py"
+echo "  5. Verify status: curl http://localhost:8819/api/health"
+echo "  6. Test search: curl http://localhost:8819/api/search?q=sovereignty"
+echo "  7. Check heartbeat: curl http://localhost:8819/api/heartbeat"
 echo "══════════════════════════════════════════"

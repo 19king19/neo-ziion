@@ -38,6 +38,11 @@ from layer_02_intelligence.quote_extractor import extract_quotes
 from layer_02_intelligence.theme_clusterer import cluster_themes
 from layer_03_vault.vault_publisher import VaultPublisher
 from layer_04_ingestion.brain_ingest import run_ingestion
+from layer_05_distribution.twitter_agent import run_twitter_schedule
+from layer_06_autonomous.nightly_consolidation import run_consolidation
+from layer_06_autonomous.heartbeat_monitor import run_heartbeat
+from layer_06_autonomous.semantic_search import build_search_index, search_vault
+from layer_06_autonomous.codex_delegator import run_delegation_check
 
 # ── Logging Setup ──
 logging.basicConfig(
@@ -196,6 +201,70 @@ def job_brain_ingest():
         logger.error(f'Brain ingest job failed: {e}')
 
 
+def job_twitter():
+    """Scheduled: Autonomous Twitter/X posting."""
+    update_status('twitter', 'active', 'Posting to X...')
+    try:
+        result = run_twitter_schedule()
+        posted = result.get('posted', 0)
+        update_status('twitter', 'idle', f'{posted} posts sent')
+    except Exception as e:
+        update_status('twitter', 'error', str(e))
+        logger.error(f'Twitter job failed: {e}')
+
+
+def job_nightly_consolidation():
+    """Scheduled: 2 AM nightly session → vault sync."""
+    update_status('consolidation', 'active', 'Consolidating sessions...')
+    try:
+        stats = run_consolidation()
+        notes = stats.get('notes_created', 0)
+        update_status('consolidation', 'idle', f'{notes} notes consolidated')
+    except Exception as e:
+        update_status('consolidation', 'error', str(e))
+        logger.error(f'Nightly consolidation failed: {e}')
+
+
+def job_heartbeat():
+    """Scheduled: Health check all services."""
+    try:
+        result = run_heartbeat()
+        unhealthy = sum(1 for s in result.get('services', {}).values()
+                        if s.get('status') != 'healthy')
+        if unhealthy > 0:
+            update_status('heartbeat', 'pending', f'{unhealthy} services unhealthy')
+        else:
+            update_status('heartbeat', 'idle', 'All systems healthy')
+    except Exception as e:
+        update_status('heartbeat', 'error', str(e))
+        logger.error(f'Heartbeat check failed: {e}')
+
+
+def job_search_index():
+    """Scheduled: Rebuild semantic search index."""
+    update_status('search', 'active', 'Indexing vault...')
+    try:
+        stats = build_search_index()
+        indexed = stats.get('total_indexed', 0)
+        update_status('search', 'idle', f'{indexed} notes indexed')
+    except Exception as e:
+        update_status('search', 'error', str(e))
+        logger.error(f'Search index rebuild failed: {e}')
+
+
+def job_delegation_check():
+    """Scheduled: Collect results from delegated Codex tasks."""
+    try:
+        result = run_delegation_check()
+        collected = result.get('collected', 0)
+        if collected > 0:
+            update_status('codex', 'idle', f'{collected} tasks completed')
+            logger.info(f'Collected {collected} completed Codex tasks')
+    except Exception as e:
+        update_status('codex', 'error', str(e))
+        logger.error(f'Delegation check failed: {e}')
+
+
 def run_all_once():
     """Run all pipeline layers once (useful for testing)."""
     logger.info('═══ Running all layers once ═══')
@@ -205,6 +274,9 @@ def run_all_once():
     job_intelligence()
     job_vault_publish()
     job_brain_ingest()
+    job_search_index()
+    job_delegation_check()
+    job_heartbeat()
     logger.info('═══ All layers complete ═══')
 
 
@@ -232,7 +304,7 @@ def run_daemon():
     server_thread.start()
     logger.info(f'Status server started on port {STATUS_PORT}')
 
-    # Schedule jobs
+    # Schedule jobs — Core Pipeline
     schedule.every(GDRIVE_SYNC_INTERVAL).minutes.do(job_gdrive_sync)
     schedule.every(GDRIVE_SYNC_INTERVAL).minutes.do(job_whisper)  # Run after gdrive
     schedule.every(YT_ANALYTICS_INTERVAL).minutes.do(job_youtube)
@@ -240,13 +312,27 @@ def run_daemon():
     schedule.every(INTELLIGENCE_INTERVAL).minutes.do(job_vault_publish)
     schedule.every(INTELLIGENCE_INTERVAL).minutes.do(job_brain_ingest)
 
+    # Schedule jobs — Distribution
+    schedule.every(4).hours.do(job_twitter)  # 3x/day max, every 4 hours
+
+    # Schedule jobs — Autonomous Layer
+    schedule.every(1).minutes.do(job_heartbeat)  # Every minute
+    schedule.every(60).minutes.do(job_search_index)  # Rebuild index hourly
+    schedule.every(5).minutes.do(job_delegation_check)  # Check for completed Codex tasks
+    schedule.every().day.at('02:00').do(job_nightly_consolidation)  # 2 AM daily
+
     logger.info(f'Schedules set:')
-    logger.info(f'  GDrive sync:   every {GDRIVE_SYNC_INTERVAL} min')
-    logger.info(f'  Whisper:       every {GDRIVE_SYNC_INTERVAL} min')
-    logger.info(f'  YouTube:       every {YT_ANALYTICS_INTERVAL} min')
-    logger.info(f'  Intelligence:  every {INTELLIGENCE_INTERVAL} min')
-    logger.info(f'  Vault publish: every {INTELLIGENCE_INTERVAL} min')
-    logger.info(f'  Brain ingest:  every {INTELLIGENCE_INTERVAL} min')
+    logger.info(f'  GDrive sync:     every {GDRIVE_SYNC_INTERVAL} min')
+    logger.info(f'  Whisper:         every {GDRIVE_SYNC_INTERVAL} min')
+    logger.info(f'  YouTube:         every {YT_ANALYTICS_INTERVAL} min')
+    logger.info(f'  Intelligence:    every {INTELLIGENCE_INTERVAL} min')
+    logger.info(f'  Vault publish:   every {INTELLIGENCE_INTERVAL} min')
+    logger.info(f'  Brain ingest:    every {INTELLIGENCE_INTERVAL} min')
+    logger.info(f'  Twitter/X:       every 4 hours')
+    logger.info(f'  Heartbeat:       every 1 min')
+    logger.info(f'  Search index:    every 60 min')
+    logger.info(f'  Codex check:     every 5 min')
+    logger.info(f'  Consolidation:   daily at 2:00 AM')
 
     # Run all immediately on startup
     run_all_once()

@@ -141,6 +141,72 @@ def get_vault():
     }
 
 
+@app.get('/api/search')
+def search_notes(q: str = '', limit: int = 10, folder: str = ''):
+    """Semantic search across the Obsidian vault."""
+    if not q:
+        return {'results': [], 'query': '', 'error': 'No query provided'}
+    try:
+        from layer_06_autonomous.semantic_search import search_vault
+        results = search_vault(q, limit=limit)
+        # Optional folder filter
+        if folder:
+            results = [r for r in results if folder.lower() in r.get('folder', '').lower()]
+        return {'results': results, 'query': q, 'total': len(results)}
+    except Exception as e:
+        return {'results': [], 'query': q, 'error': str(e)}
+
+
+@app.get('/api/heartbeat')
+def get_heartbeat():
+    """Return current heartbeat / system health status."""
+    try:
+        heartbeat_file = Path(__file__).parent / 'HEARTBEAT.md'
+        heartbeat_log = Path(__file__).parent / 'heartbeat_log.json'
+
+        result = {'status': 'unknown'}
+
+        if heartbeat_log.exists():
+            log_data = json.loads(heartbeat_log.read_text())
+            checks = log_data.get('checks', [])
+            if checks:
+                result['last_check'] = checks[-1]
+            result['total_checks'] = len(checks)
+            result['total_restarts'] = len(log_data.get('restarts', []))
+
+        if heartbeat_file.exists():
+            result['heartbeat_file'] = heartbeat_file.read_text()[:500]
+            result['status'] = 'active'
+
+        return result
+    except Exception as e:
+        return {'status': 'error', 'error': str(e)}
+
+
+@app.get('/api/twitter')
+def get_twitter_stats():
+    """Return Twitter/X posting stats."""
+    try:
+        log_file = Path(__file__).parent / 'twitter_post_log.json'
+        if log_file.exists():
+            return json.loads(log_file.read_text())
+        return {'posts': [], 'total_posted': 0}
+    except Exception as e:
+        return {'error': str(e)}
+
+
+@app.get('/api/delegation')
+def get_delegation_stats():
+    """Return Codex delegation stats."""
+    try:
+        log_file = Path(__file__).parent / 'delegation_log.json'
+        if log_file.exists():
+            return json.loads(log_file.read_text())
+        return {'total_delegated': 0, 'total_completed': 0}
+    except Exception as e:
+        return {'error': str(e)}
+
+
 if __name__ == '__main__':
     import uvicorn
     from config.settings import STATUS_PORT, STATUS_HOST

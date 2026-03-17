@@ -9,7 +9,7 @@ from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from config.settings import STATUS_FILE, VAULT_RAW, VAULT_TRANSCRIPTS, VAULT_INTELLIGENCE
+from config.settings import STATUS_FILE, VAULT_RAW, VAULT_TRANSCRIPTS, VAULT_INTELLIGENCE, OBSIDIAN_VAULT_PATH
 
 app = FastAPI(title='Sovereign Content OS', version='1.0.0')
 
@@ -83,6 +83,62 @@ def get_themes():
     if theme_map.exists():
         return json.loads(theme_map.read_text())
     return {'clusters': [], 'total_themes': 0}
+
+
+@app.get('/api/vault')
+def get_vault():
+    """Return the Obsidian vault structure and notes for the IP Vault page."""
+    vault_path = OBSIDIAN_VAULT_PATH
+    if not vault_path.exists():
+        return {'status': 'empty', 'folders': [], 'notes': []}
+
+    folders = []
+    notes = []
+
+    for item in sorted(vault_path.iterdir()):
+        if item.name.startswith('.') or item.name.startswith('_'):
+            continue
+        if item.is_dir():
+            folder_notes = []
+            for note_file in sorted(item.glob('*.md')):
+                content = note_file.read_text(encoding='utf-8')
+                # Parse frontmatter
+                frontmatter = {}
+                body = content
+                if content.startswith('---'):
+                    parts = content.split('---', 2)
+                    if len(parts) >= 3:
+                        import yaml
+                        try:
+                            frontmatter = yaml.safe_load(parts[1]) or {}
+                        except Exception:
+                            frontmatter = {}
+                        body = parts[2].strip()
+
+                note_data = {
+                    'id': f"{item.name}/{note_file.stem}",
+                    'title': note_file.stem,
+                    'folder': item.name,
+                    'content': body,
+                    'frontmatter': frontmatter,
+                    'tags': frontmatter.get('tags', []),
+                    'path': str(note_file.relative_to(vault_path))
+                }
+                folder_notes.append(note_data)
+                notes.append(note_data)
+
+            folders.append({
+                'name': item.name,
+                'count': len(folder_notes),
+                'notes': [n['id'] for n in folder_notes]
+            })
+
+    return {
+        'status': 'live',
+        'total_notes': len(notes),
+        'folders': folders,
+        'notes': notes
+    }
 
 
 if __name__ == '__main__':

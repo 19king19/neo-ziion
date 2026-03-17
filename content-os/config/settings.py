@@ -36,6 +36,9 @@ VAULT_RAW.mkdir(parents=True, exist_ok=True)
 VAULT_TRANSCRIPTS.mkdir(parents=True, exist_ok=True)
 VAULT_INTELLIGENCE.mkdir(parents=True, exist_ok=True)
 
+# ── Obsidian Vault ──
+OBSIDIAN_VAULT_PATH = Path(os.getenv('OBSIDIAN_VAULT_PATH', str(BASE_DIR / 'obsidian_vault')))
+
 # ── Status Server ──
 STATUS_PORT = int(os.getenv('STATUS_PORT', '8819'))
 STATUS_HOST = os.getenv('STATUS_HOST', '0.0.0.0')

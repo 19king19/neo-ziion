@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZIION — IP Vault</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="light-theme.css?v=2">
+  <link rel="stylesheet" href="mobile.css">
+  <style>
+    /* ── Password Gate ── */
+    .gate-overlay { position:fixed; inset:0; z-index:99999; background:#0a0a0a; display:flex; flex-direction:column; align-items:center; justify-content:center; transition: opacity 0.8s cubic-bezier(0.4,0,0.2,1), transform 0.8s cubic-bezier(0.4,0,0.2,1); }
+    .gate-overlay.unlocked { opacity:0; transform:scale(1.02); pointer-events:none; }
+    .gate-vignette { position:absolute; inset:0; background:radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.6) 100%); pointer-events:none; }
+    .gate-content { position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; }
+    .gate-logo { font-family:'Inter',sans-serif; font-size:28px; font-weight:200; letter-spacing:16px; color:rgba(255,255,255,0.12); margin-bottom:60px; text-indent:16px; text-transform:uppercase; }
+    .gate-divider { width:40px; height:1px; background:rgba(255,255,255,0.06); margin-bottom:32px; }
+    .gate-input-wrap { display:flex; flex-direction:column; align-items:center; gap:16px; }
+    .gate-label { font-size:8px; font-weight:400; text-transform:uppercase; letter-spacing:4px; color:rgba(255,255,255,0.08); }
+    .gate-input { background:transparent; border:none; border-bottom:1px solid rgba(255,255,255,0.06); border-radius:0; padding:12px 20px; font-family:'Inter',sans-serif; font-size:20px; font-weight:200; color:rgba(255,255,255,0.3); text-align:center; letter-spacing:12px; width:140px; outline:none; transition:border-color 0.5s ease, color 0.5s ease; -webkit-text-security:disc; }
+    .gate-input:focus { border-bottom-color:rgba(255,255,255,0.12); color:rgba(255,255,255,0.5); }
+    .gate-input.shake { animation:gateShake 0.4s ease; border-bottom-color:rgba(255,60,60,0.2); }
+    .gate-hint { font-size:8px; font-weight:300; color:rgba(255,255,255,0.04); margin-top:48px; letter-spacing:3px; text-transform:lowercase; }
+    @keyframes gateShake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
+
+    /* ── Reset ── */
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      background: #0F0E12;
+      color: #fff;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      overflow-x: hidden;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ── Header ── */
+    .header { position:sticky; top:0; z-index:100; background:rgba(15,14,18,0.85); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border-bottom:1px solid rgba(255,255,255,0.06); padding:0 24px; height:64px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+    .header-left { display:flex; align-items:center; gap:16px; }
+    .logo-text { font-size:18px; font-weight:800; letter-spacing:6px; text-transform:uppercase; color:#fff; text-decoration:none; }
+    .header-right { display:flex; align-items:center; gap:12px; }
+    .header-icon { width:36px; height:36px; display:flex; align-items:center; justify-content:center; border-radius:8px; cursor:pointer; transition:background 0.15s; color:rgba(255,255,255,0.5); }
+    .header-icon:hover { background:rgba(255,255,255,0.08); color:#fff; }
+    .avatar { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg, #4D4D4D, #322D2A); cursor:pointer; }
+    .theme-toggle { width:36px; height:36px; display:flex; align-items:center; justify-content:center; border-radius:8px; cursor:pointer; transition:background 0.15s; color:rgba(255,255,255,0.5); }
+    .theme-toggle:hover { background:rgba(255,255,255,0.08); color:#fff; }
+    .theme-toggle svg { width:18px; height:18px; }
+
+    /* ── Main Layout ── */
+    .main-layout { display:flex; flex:1; overflow:hidden; }
+
+    /* ── Left Sidebar (Vault Navigation) ── */
+    .vault-sidebar {
+      width: 280px;
+      flex-shrink: 0;
+      background: #131218;
+      border-right: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: transform 0.3s ease, width 0.3s ease;
+    }
+
+    .vault-sidebar-header {
+      padding: 20px 16px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .vault-name {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #D5FF5A;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .vault-name-icon {
+      width: 18px;
+      height: 18px;
+      background: rgba(213,255,90,0.12);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .vault-search {
+      width: 100%;
+      height: 36px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px;
+      padding: 0 12px;
+      font-size: 13px;
+      font-family: inherit;
+      color: rgba(255,255,255,0.6);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .vault-search::placeholder { color: rgba(255,255,255,0.2); }
+    .vault-search:focus { border-color: rgba(213,255,90,0.3); box-shadow: 0 0 0 2px rgba(213,255,90,0.08); }
+
+    .vault-tree {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px 0;
+    }
+
+    .vault-tree::-webkit-scrollbar { width: 4px; }
+    .vault-tree::-webkit-scrollbar-track { background: transparent; }
+    .vault-tree::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
+
+    .vault-folder {
+      user-select: none;
+    }
+
+    .vault-folder-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      cursor: pointer;
+      transition: background 0.15s;
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .vault-folder-header:hover { background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.8); }
+
+    .vault-folder-header .folder-chevron {
+      width: 14px;
+      height: 14px;
+      transition: transform 0.2s;
+      opacity: 0.3;
+      flex-shrink: 0;
+    }
+
+    .vault-folder.open > .vault-folder-header .folder-chevron { transform: rotate(90deg); opacity: 0.5; }
+
+    .vault-folder-header .folder-emoji {
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .vault-folder-header .folder-name { flex: 1; }
+
+    .vault-folder-header .folder-count {
+      font-size: 10px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.04);
+      padding: 1px 6px;
+      border-radius: 8px;
+      min-width: 20px;
+      text-align: center;
+    }
+
+    .vault-folder-children {
+      display: none;
+      padding-left: 20px;
+    }
+
+    .vault-folder.open > .vault-folder-children { display: block; }
+
+    .vault-note-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px 6px 24px;
+      cursor: pointer;
+      font-size: 13px;
+      color: rgba(255,255,255,0.35);
+      transition: background 0.15s, color 0.15s;
+      border-radius: 0;
+    }
+
+    .vault-note-item:hover { background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.7); }
+    .vault-note-item.active { background: rgba(213,255,90,0.06); color: #D5FF5A; }
+
+    .vault-note-item .note-icon {
+      width: 14px;
+      height: 14px;
+      opacity: 0.3;
+      flex-shrink: 0;
+    }
+
+    .vault-note-item.active .note-icon { opacity: 0.7; }
+
+    /* ── Main Content Area ── */
+    .vault-content-wrap {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      justify-content: center;
+      scroll-behavior: smooth;
+    }
+
+    .vault-content-wrap::-webkit-scrollbar { width: 6px; }
+    .vault-content-wrap::-webkit-scrollbar-track { background: transparent; }
+    .vault-content-wrap::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 3px; }
+
+    .vault-content {
+      width: 100%;
+      max-width: 800px;
+      padding: 48px 40px 120px;
+    }
+
+    /* ── Frontmatter ── */
+    .vault-frontmatter {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .vault-fm-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.04);
+      color: rgba(255,255,255,0.35);
+    }
+
+    .vault-fm-pill .fm-key {
+      color: rgba(255,255,255,0.2);
+      margin-right: 2px;
+    }
+
+    /* ── Note Content ── */
+    .vault-note { line-height: 1.7; }
+
+    .vault-note h1 {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #fff;
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+
+    .vault-note h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      margin-top: 40px;
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+
+    .vault-note h3 {
+      font-size: 17px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.85);
+      margin-top: 32px;
+      margin-bottom: 10px;
+    }
+
+    .vault-note p {
+      font-size: 15px;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 16px;
+      line-height: 1.7;
+    }
+
+    .vault-note ul, .vault-note ol {
+      padding-left: 24px;
+      margin-bottom: 16px;
+    }
+
+    .vault-note li {
+      font-size: 15px;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 6px;
+      line-height: 1.6;
+    }
+
+    .vault-note code {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 13px;
+      background: rgba(255,255,255,0.06);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #D5FF5A;
+    }
+
+    .vault-note pre {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px;
+      padding: 16px 20px;
+      overflow-x: auto;
+      margin-bottom: 16px;
+    }
+
+    .vault-note pre code {
+      background: none;
+      padding: 0;
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .vault-note hr {
+      border: none;
+      height: 1px;
+      background: rgba(255,255,255,0.06);
+      margin: 32px 0;
+    }
+
+    .vault-note strong { color: rgba(255,255,255,0.8); font-weight: 600; }
+    .vault-note em { color: rgba(255,255,255,0.45); }
+
+    /* ── Blockquote ── */
+    .vault-blockquote {
+      border-left: 3px solid #D5FF5A;
+      padding: 12px 20px;
+      margin: 16px 0;
+      background: rgba(213,255,90,0.03);
+      border-radius: 0 8px 8px 0;
+    }
+
+    .vault-blockquote p {
+      font-style: italic;
+      color: rgba(255,255,255,0.6);
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .vault-blockquote .bq-source {
+      font-style: normal;
+      font-size: 12px;
+      color: rgba(255,255,255,0.25);
+      margin-top: 8px;
+      display: block;
+    }
+
+    /* ── Tags ── */
+    .vault-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: rgba(213,255,90,0.08);
+      color: #D5FF5A;
+      cursor: pointer;
+      transition: background 0.15s;
+      text-decoration: none;
+    }
+
+    .vault-tag:hover { background: rgba(213,255,90,0.15); }
+
+    /* ── Wikilinks ── */
+    .vault-wikilink {
+      color: #D5FF5A;
+      text-decoration: none;
+      cursor: pointer;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s;
+      font-weight: 500;
+    }
+
+    .vault-wikilink:hover { border-bottom-color: #D5FF5A; }
+
+    /* ── Callout Boxes ── */
+    .vault-callout {
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin: 16px 0;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .vault-callout-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .vault-callout-body {
+      font-size: 14px;
+      color: rgba(255,255,255,0.4);
+      line-height: 1.6;
+    }
+
+    /* ── Right Sidebar ── */
+    .vault-right-sidebar {
+      width: 240px;
+      flex-shrink: 0;
+      border-left: 1px solid rgba(255,255,255,0.06);
+      padding: 24px 16px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .vault-right-sidebar::-webkit-scrollbar { width: 4px; }
+    .vault-right-sidebar::-webkit-scrollbar-track { background: transparent; }
+    .vault-right-sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 2px; }
+
+    .right-section-title {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,0.2);
+      margin-bottom: 12px;
+    }
+
+    /* Backlinks */
+    .backlink-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      color: rgba(255,255,255,0.35);
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .backlink-item:hover { background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.7); }
+
+    .backlink-icon { width: 12px; height: 12px; opacity: 0.3; flex-shrink: 0; }
+
+    /* Mini Graph */
+    .mini-graph {
+      width: 100%;
+      height: 160px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mini-graph canvas { width: 100%; height: 100%; }
+
+    /* TOC */
+    .toc-item {
+      display: block;
+      padding: 4px 0;
+      font-size: 13px;
+      color: rgba(255,255,255,0.3);
+      text-decoration: none;
+      cursor: pointer;
+      transition: color 0.15s;
+    }
+
+    .toc-item:hover { color: rgba(255,255,255,0.7); }
+    .toc-item.toc-h3 { padding-left: 16px; font-size: 12px; }
+
+    /* ── Mobile Sidebar Toggle ── */
+    .sidebar-toggle {
+      display: none;
+      position: fixed;
+      bottom: 80px;
+      left: 16px;
+      z-index: 200;
+      width: 44px;
+      height: 44px;
+      background: #1A1922;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: rgba(255,255,255,0.6);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    }
+
+    .sidebar-toggle svg { width: 20px; height: 20px; }
+
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 149;
+      background: rgba(0,0,0,0.6);
+    }
+
+    /* ── Empty State ── */
+    .vault-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 40px;
+      text-align: center;
+    }
+
+    .vault-empty-icon {
+      width: 64px;
+      height: 64px;
+      background: rgba(213,255,90,0.06);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      color: #D5FF5A;
+      opacity: 0.4;
+    }
+
+    .vault-empty h3 {
+      font-size: 18px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 8px;
+    }
+
+    .vault-empty p {
+      font-size: 14px;
+      color: rgba(255,255,255,0.2);
+      max-width: 360px;
+    }
+
+    /* ── Status Bar ── */
+    .vault-status {
+      padding: 8px 16px;
+      border-top: 1px solid rgba(255,255,255,0.04);
+      font-size: 11px;
+      color: rgba(255,255,255,0.15);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .vault-status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #D5FF5A;
+      box-shadow: 0 0 6px rgba(213,255,90,0.4);
+    }
+
+    .vault-status.offline .vault-status-dot {
+      background: #555;
+      box-shadow: none;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 1100px) {
+      .vault-right-sidebar { display: none; }
+    }
+
+    @media (max-width: 768px) {
+      .vault-sidebar {
+        position: fixed;
+        left: 0;
+        top: 64px;
+        bottom: 0;
+        z-index: 150;
+        transform: translateX(-100%);
+        box-shadow: 4px 0 24px rgba(0,0,0,0.5);
+      }
+
+      .vault-sidebar.mobile-open {
+        transform: translateX(0);
+      }
+
+      .sidebar-toggle { display: flex; }
+      .sidebar-overlay.visible { display: block; }
+
+      .vault-content {
+        padding: 32px 20px 120px;
+      }
+
+      .vault-note h1 { font-size: 26px; }
+      .vault-note h2 { font-size: 19px; }
+    }
+
+    /* ── Light Mode Overrides ── */
+    body.light-mode { background: #FAFAF8 !important; color: #1a1a1a !important; }
+    body.light-mode .header { background: rgba(250,250,248,0.9) !important; border-bottom-color: rgba(0,0,0,0.06) !important; }
+    body.light-mode .logo-text { color: #1a1a1a !important; }
+    body.light-mode .header-icon { color: rgba(0,0,0,0.4) !important; }
+    body.light-mode .header-icon:hover { background: rgba(0,0,0,0.05) !important; color: #1a1a1a !important; }
+    body.light-mode .theme-toggle { color: rgba(0,0,0,0.4) !important; }
+    body.light-mode .theme-toggle:hover { background: rgba(0,0,0,0.05) !important; color: #1a1a1a !important; }
+    body.light-mode .avatar { background: linear-gradient(135deg, #d4d4d4, #e8e8e8) !important; }
+
+    body.light-mode .vault-sidebar { background: #F2F1EF !important; border-right-color: rgba(0,0,0,0.06) !important; }
+    body.light-mode .vault-name { color: #3d8c40 !important; }
+    body.light-mode .vault-name-icon { background: rgba(61,140,64,0.1) !important; }
+    body.light-mode .vault-search { background: rgba(0,0,0,0.03) !important; border-color: rgba(0,0,0,0.08) !important; color: #1a1a1a !important; }
+    body.light-mode .vault-search::placeholder { color: rgba(0,0,0,0.25) !important; }
+    body.light-mode .vault-search:focus { border-color: rgba(61,140,64,0.3) !important; box-shadow: 0 0 0 2px rgba(61,140,64,0.08) !important; }
+    body.light-mode .vault-sidebar-header { border-bottom-color: rgba(0,0,0,0.04) !important; }
+    body.light-mode .vault-folder-header { color: rgba(0,0,0,0.5) !important; }
+    body.light-mode .vault-folder-header:hover { background: rgba(0,0,0,0.03) !important; color: rgba(0,0,0,0.8) !important; }
+    body.light-mode .vault-folder-header .folder-count { background: rgba(0,0,0,0.04) !important; color: rgba(0,0,0,0.25) !important; }
+    body.light-mode .vault-note-item { color: rgba(0,0,0,0.4) !important; }
+    body.light-mode .vault-note-item:hover { background: rgba(0,0,0,0.03) !important; color: rgba(0,0,0,0.7) !important; }
+    body.light-mode .vault-note-item.active { background: rgba(61,140,64,0.06) !important; color: #3d8c40 !important; }
+
+    body.light-mode .vault-content-wrap { background: #FAFAF8 !important; }
+    body.light-mode .vault-content-wrap::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.08) !important; }
+    body.light-mode .vault-frontmatter { border-bottom-color: rgba(0,0,0,0.06) !important; }
+    body.light-mode .vault-fm-pill { background: rgba(0,0,0,0.04) !important; color: rgba(0,0,0,0.45) !important; }
+    body.light-mode .vault-fm-pill .fm-key { color: rgba(0,0,0,0.25) !important; }
+    body.light-mode .vault-note h1 { color: #1a1a1a !important; }
+    body.light-mode .vault-note h2 { color: #1a1a1a !important; }
+    body.light-mode .vault-note h3 { color: rgba(0,0,0,0.75) !important; }
+    body.light-mode .vault-note p { color: rgba(0,0,0,0.6) !important; }
+    body.light-mode .vault-note li { color: rgba(0,0,0,0.6) !important; }
+    body.light-mode .vault-note strong { color: rgba(0,0,0,0.8) !important; }
+    body.light-mode .vault-note em { color: rgba(0,0,0,0.5) !important; }
+    body.light-mode .vault-note code { background: rgba(0,0,0,0.05) !important; color: #3d8c40 !important; }
+    body.light-mode .vault-note pre { background: rgba(0,0,0,0.02) !important; border-color: rgba(0,0,0,0.06) !important; }
+    body.light-mode .vault-note pre code { color: rgba(0,0,0,0.5) !important; }
+    body.light-mode .vault-note hr { background: rgba(0,0,0,0.06) !important; }
+    body.light-mode .vault-blockquote { border-left-color: #3d8c40 !important; background: rgba(61,140,64,0.04) !important; }
+    body.light-mode .vault-blockquote p { color: rgba(0,0,0,0.6) !important; }
+    body.light-mode .vault-blockquote .bq-source { color: rgba(0,0,0,0.3) !important; }
+    body.light-mode .vault-tag { background: rgba(61,140,64,0.08) !important; color: #3d8c40 !important; }
+    body.light-mode .vault-tag:hover { background: rgba(61,140,64,0.14) !important; }
+    body.light-mode .vault-wikilink { color: #3d8c40 !important; }
+    body.light-mode .vault-wikilink:hover { border-bottom-color: #3d8c40 !important; }
+    body.light-mode .vault-callout { border-color: rgba(0,0,0,0.06) !important; background: rgba(0,0,0,0.02) !important; }
+    body.light-mode .vault-callout-title { color: rgba(0,0,0,0.6) !important; }
+    body.light-mode .vault-callout-body { color: rgba(0,0,0,0.45) !important; }
+
+    body.light-mode .vault-right-sidebar { border-left-color: rgba(0,0,0,0.06) !important; }
+    body.light-mode .right-section-title { color: rgba(0,0,0,0.25) !important; }
+    body.light-mode .backlink-item { color: rgba(0,0,0,0.4) !important; }
+    body.light-mode .backlink-item:hover { background: rgba(0,0,0,0.03) !important; color: rgba(0,0,0,0.7) !important; }
+    body.light-mode .mini-graph { background: rgba(0,0,0,0.02) !important; border-color: rgba(0,0,0,0.04) !important; }
+    body.light-mode .toc-item { color: rgba(0,0,0,0.35) !important; }
+    body.light-mode .toc-item:hover { color: rgba(0,0,0,0.7) !important; }
+
+    body.light-mode .vault-status { border-top-color: rgba(0,0,0,0.04) !important; color: rgba(0,0,0,0.2) !important; }
+    body.light-mode .vault-status-dot { background: #3d8c40 !important; box-shadow: 0 0 6px rgba(61,140,64,0.3) !important; }
+
+    body.light-mode .sidebar-toggle { background: #fff !important; border-color: rgba(0,0,0,0.1) !important; color: rgba(0,0,0,0.5) !important; box-shadow: 0 4px 16px rgba(0,0,0,0.08) !important; }
+
+    body.light-mode .gate-overlay { background: #FAFAF8 !important; }
+    body.light-mode .gate-logo { color: rgba(0,0,0,0.06) !important; }
+    body.light-mode .gate-divider { background: rgba(0,0,0,0.06) !important; }
+    body.light-mode .gate-label { color: rgba(0,0,0,0.1) !important; }
+    body.light-mode .gate-input { border-bottom-color: rgba(0,0,0,0.08) !important; color: rgba(0,0,0,0.4) !important; }
+    body.light-mode .gate-input:focus { border-bottom-color: rgba(0,0,0,0.15) !important; }
+    body.light-mode .gate-hint { color: rgba(0,0,0,0.04) !important; }
+  </style>
+</head>
+<body>
+
+  <!-- Password Gate -->
+  <div class="gate-overlay" id="gateOverlay">
+    <div class="gate-vignette"></div>
+    <div class="gate-content">
+      <div class="gate-logo">ziion</div>
+      <div class="gate-divider"></div>
+      <div class="gate-input-wrap">
+        <div class="gate-label">access code</div>
+        <input class="gate-input" id="gateInput" type="text" maxlength="4" autofocus autocomplete="off" inputmode="numeric">
+      </div>
+      <div class="gate-hint">private preview</div>
+    </div>
+  </div>
+  <script>
+    (function(){
+      const code='19', overlay=document.getElementById('gateOverlay'), input=document.getElementById('gateInput');
+      if(sessionStorage.getItem('ziion_unlocked')==='true') overlay.style.display='none';
+      input.addEventListener('input', function(){
+        if(this.value===code){ sessionStorage.setItem('ziion_unlocked','true'); overlay.classList.add('unlocked'); setTimeout(()=>overlay.style.display='none',700); }
+        else if(this.value.length>=code.length){ this.classList.add('shake'); setTimeout(()=>{this.classList.remove('shake');this.value='';},500); }
+      });
+    })();
+  </script>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <a class="logo-text" href="cosmos-grid.html">ZIION</a>
+    </div>
+    <div class="header-right">
+      <div class="header-icon" title="Notifications">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      </div>
+      <div id="themeToggle" class="theme-toggle" title="Switch to light mode">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </div>
+      <div class="avatar"></div>
+    </div>
+  </div>
+
+  <!-- Main Layout -->
+  <div class="main-layout">
+
+    <!-- Left Sidebar: Vault Navigation -->
+    <div class="vault-sidebar" id="vaultSidebar">
+      <div class="vault-sidebar-header">
+        <div class="vault-name">
+          <div class="vault-name-icon">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#D5FF5A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          SOVEREIGN IP VAULT
+        </div>
+        <input type="text" class="vault-search" id="vaultSearch" placeholder="Search vault..." oninput="searchVault(this.value)">
+      </div>
+
+      <div class="vault-tree" id="vaultTree">
+        <!-- Populated by JS -->
+      </div>
+
+      <div class="vault-status" id="vaultStatus">
+        <div class="vault-status-dot"></div>
+        <span id="vaultStatusText">Demo mode</span>
+      </div>
+    </div>
+
+    <!-- Sidebar Overlay (mobile) -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <!-- Main Content -->
+    <div class="vault-content-wrap">
+      <div class="vault-content" id="vaultContent">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+
+    <!-- Right Sidebar -->
+    <div class="vault-right-sidebar" id="rightSidebar">
+      <div>
+        <div class="right-section-title">Table of Contents</div>
+        <div id="tocList"><!-- Populated by JS --></div>
+      </div>
+      <div>
+        <div class="right-section-title">Backlinks</div>
+        <div id="backlinksList"><!-- Populated by JS --></div>
+      </div>
+      <div>
+        <div class="right-section-title">Graph</div>
+        <div class="mini-graph" id="miniGraph">
+          <canvas id="graphCanvas"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Sidebar Toggle -->
+  <div class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+  </div>
+
+  <!-- Theme Toggle Script -->
+  <script src="theme-toggle.js"></script>
+
+  <!-- Vault Engine -->
+  <script>
+  (function() {
+    'use strict';
+
+    // ═══════════════════════════════════════════
+    //  DEMO VAULT DATA
+    // ═══════════════════════════════════════════
+
+    const DEMO_VAULT = {
+      folders: [
+        {
+          name: 'Dashboard',
+          emoji: '\u{1F4CA}',
+          notes: [
+            {
+              id: 'dashboard-moc',
+              title: 'Dashboard MOC',
+              path: 'Dashboard/Dashboard MOC.md',
+              frontmatter: { type: 'MOC', created: '2025-12-01', tags: ['dashboard', 'index', 'sovereign'] },
+              content: `This is the **Map of Content** for the Sovereign IP Vault. From here you can navigate to every major section of the knowledge base.\n\n## Active Sections\n\n- [[Predictions]] \u2014 19 Keys market and culture forecasts\n- [[Quotes]] \u2014 Curated wisdom from episodes, interviews, and writings\n- [[Themes]] \u2014 Recurring ideas across all content\n- [[Content Analysis]] \u2014 Breakdown of top-performing episodes\n- [[YouTube Analytics]] \u2014 Channel growth and engagement data\n- [[Content Ideas]] \u2014 Pipeline of upcoming topics\n\n## Vault Stats\n\n| Metric | Count |\n|---|---|\n| Total Notes | 47 |\n| Predictions | 12 |\n| Quotes | 38 |\n| Themes | 8 |\n| Content Ideas | 15 |\n\n---\n\n> This vault is the intellectual property engine of the Sovereign Empire. Every idea captured here compounds over time.`,
+              backlinks: ['Predictions', 'Quotes', 'Themes']
+            }
+          ]
+        },
+        {
+          name: 'Predictions',
+          emoji: '\u{1F52E}',
+          notes: [
+            {
+              id: 'pred-ownership-economy',
+              title: 'The Ownership Economy Will Replace the Creator Economy',
+              path: 'Predictions/Ownership Economy.md',
+              frontmatter: { type: 'prediction', created: '2025-11-15', status: 'active', confidence: 'high', tags: ['ownership', 'economy', 'creator-economy'] },
+              content: `## Thesis\n\nThe creator economy as we know it is a **sharecropping model**. Creators build audiences on platforms they don't own, using tools they don't control, generating revenue streams that can be turned off overnight.\n\nThe next evolution is the **ownership economy** \u2014 where creators own:\n- Their distribution channels\n- Their audience data\n- Their monetization infrastructure\n- Their intellectual property\n\n## Evidence\n\n- Platform algorithm changes destroying overnight revenue\n- Rise of community-owned platforms and tokens\n- Increasing creator burnout from content treadmill\n- Web3 infrastructure maturing for real ownership\n\n## Timeline\n\nThis shift will accelerate through 2026-2028 as more creators realize that **building on rented land** is not a sustainable business model.\n\n## Connected Ideas\n\n[[Digital Sovereignty]] | [[Platform Risk]] | [[Building Generational Wealth]]`,
+              backlinks: ['Dashboard MOC', 'Digital Sovereignty', 'Platform Risk']
+            },
+            {
+              id: 'pred-ai-content',
+              title: 'AI Will Make Authentic Voices 10x More Valuable',
+              path: 'Predictions/AI Authentic Voice.md',
+              frontmatter: { type: 'prediction', created: '2025-12-08', status: 'active', confidence: 'high', tags: ['AI', 'authenticity', 'content'] },
+              content: `## Thesis\n\nAs AI-generated content floods every platform, **authentic human perspective** becomes the scarce resource. People who have real experiences, genuine opinions, and unique worldviews will command premium attention.\n\n## Why This Matters for 19 Keys\n\nThe brand is built on **lived experience and genuine wisdom**. This cannot be replicated by AI. As the noise increases, the signal becomes more valuable.\n\n## Implications\n\n- Double down on personal storytelling\n- Raw, unfiltered perspectives will outperform polished AI content\n- Community built on trust will be the moat\n- First-person knowledge > aggregated information\n\n> "In a world of infinite content, the only thing that matters is who you trust." \u2014 19 Keys\n\n[[Content Strategy]] | [[Brand Moat]] | [[Trust Economy]]`,
+              backlinks: ['Dashboard MOC', 'Content Strategy']
+            },
+            {
+              id: 'pred-community-wealth',
+              title: 'Community-Owned Media Companies Will Outperform Traditional Studios',
+              path: 'Predictions/Community Media.md',
+              frontmatter: { type: 'prediction', created: '2026-01-10', status: 'developing', confidence: 'medium', tags: ['community', 'media', 'ownership'] },
+              content: `## Thesis\n\nTraditional media companies extract value from audiences. The next generation of media companies will be **owned by their communities** and share value back to the people who make them successful.\n\n## Model\n\n1. Creator builds audience through authentic content\n2. Community gets ownership stake in the media company\n3. Revenue is shared based on contribution and participation\n4. Everyone is incentivized to grow the brand together\n\n## Early Signals\n\n- Fan-owned sports teams outperforming in engagement\n- DAOs funding creative projects\n- Subscription communities generating more revenue than ad models\n- Audience members becoming brand ambassadors when they have stake\n\n## The Sovereign Empire Model\n\nThis is exactly what we are building. The empire belongs to the community.\n\n[[Sovereign Empire]] | [[Community Ownership]] | [[Revenue Models]]`,
+              backlinks: ['Dashboard MOC', 'Sovereign Empire']
+            }
+          ]
+        },
+        {
+          name: 'Quotes',
+          emoji: '\u{1F4AC}',
+          notes: [
+            {
+              id: 'quote-ownership',
+              title: 'On Ownership',
+              path: 'Quotes/On Ownership.md',
+              frontmatter: { type: 'quote-collection', created: '2025-10-20', tags: ['ownership', 'sovereignty', 'wealth'] },
+              content: `## Collected Wisdom on Ownership\n\n> "If you don't own it, you don't control it. If you don't control it, it's not really yours."\n\n---\n\n> "Every piece of content you create is intellectual property. Treat it like the asset it is."\n\n---\n\n> "The difference between a job and a business is ownership. The difference between a business and an empire is legacy."\n\n---\n\n> "Stop building on rented land. Own your platform, own your audience, own your future."\n\n---\n\n> "Ownership is the only real form of security. Everything else is permission that can be revoked."\n\n[[Sovereignty]] | [[Wealth Building]] | [[Digital Assets]]`,
+              backlinks: ['Dashboard MOC', 'Sovereignty']
+            },
+            {
+              id: 'quote-sovereignty',
+              title: 'On Sovereignty',
+              path: 'Quotes/On Sovereignty.md',
+              frontmatter: { type: 'quote-collection', created: '2025-11-05', tags: ['sovereignty', 'freedom', 'self-determination'] },
+              content: `## Collected Wisdom on Sovereignty\n\n> "Sovereignty is not given. It is built, brick by brick, decision by decision."\n\n---\n\n> "A sovereign mind cannot be colonized. Protect your thoughts before you protect your wealth."\n\n---\n\n> "True freedom is not the absence of responsibility. It is the presence of self-determination."\n\n---\n\n> "You cannot be sovereign and dependent at the same time. Choose one."\n\n[[Ownership]] | [[Mental Freedom]] | [[Self-Determination]]`,
+              backlinks: ['On Ownership', 'Dashboard MOC']
+            },
+            {
+              id: 'quote-wealth',
+              title: 'On Wealth Building',
+              path: 'Quotes/On Wealth Building.md',
+              frontmatter: { type: 'quote-collection', created: '2025-11-22', tags: ['wealth', 'finance', 'generational'] },
+              content: `## Collected Wisdom on Wealth Building\n\n> "Wealth is not about how much you make. It's about how much you keep, grow, and pass down."\n\n---\n\n> "Generational wealth starts with generational thinking. Stop playing the short game."\n\n---\n\n> "Your network is your net worth, but your knowledge is your true currency."\n\n---\n\n> "The best investment you can make is in assets that work while you sleep. Content is that asset."\n\n---\n\n> "Build systems, not just income streams. Systems survive you. Income streams die with you."\n\n[[Financial Literacy]] | [[Generational Thinking]] | [[Asset Building]]`,
+              backlinks: ['On Ownership', 'Dashboard MOC']
+            },
+            {
+              id: 'quote-knowledge',
+              title: 'On Knowledge & Learning',
+              path: 'Quotes/On Knowledge.md',
+              frontmatter: { type: 'quote-collection', created: '2025-12-01', tags: ['knowledge', 'education', 'growth'] },
+              content: `## Collected Wisdom on Knowledge\n\n> "Information is everywhere. Wisdom is knowing which information actually matters."\n\n---\n\n> "Read to think, not to memorize. The goal is transformation, not accumulation."\n\n---\n\n> "The most dangerous person in the room is the one who knows what they know AND what they don't know."\n\n[[Self-Education]] | [[Wisdom]] | [[Critical Thinking]]`,
+              backlinks: ['Dashboard MOC']
+            },
+            {
+              id: 'quote-community',
+              title: 'On Community',
+              path: 'Quotes/On Community.md',
+              frontmatter: { type: 'quote-collection', created: '2026-01-15', tags: ['community', 'tribe', 'collective'] },
+              content: `## Collected Wisdom on Community\n\n> "A community is not an audience. An audience watches. A community builds."\n\n---\n\n> "Find your tribe, then build something together that none of you could build alone."\n\n---\n\n> "The strength of the pack is the wolf, and the strength of the wolf is the pack."\n\n[[Sovereign Empire]] | [[Collective Power]] | [[Tribe Building]]`,
+              backlinks: ['Dashboard MOC', 'Community Media']
+            }
+          ]
+        },
+        {
+          name: 'Themes',
+          emoji: '\u{1F9E0}',
+          notes: [
+            {
+              id: 'theme-sovereignty',
+              title: 'Digital Sovereignty',
+              path: 'Themes/Digital Sovereignty.md',
+              frontmatter: { type: 'theme', created: '2025-10-01', status: 'core', tags: ['sovereignty', 'digital', 'ownership', 'core-theme'] },
+              content: `## Overview\n\nDigital Sovereignty is the foundational theme of the Sovereign Empire. It represents the idea that individuals and communities should **own and control their digital presence, data, and economic output**.\n\n## Core Principles\n\n1. **Own your platform** \u2014 Don't build exclusively on rented land\n2. **Own your data** \u2014 Your audience information is your most valuable asset\n3. **Own your distribution** \u2014 Email lists, apps, and direct channels over algorithm-dependent feeds\n4. **Own your monetization** \u2014 Direct revenue over ad-share models\n5. **Own your IP** \u2014 Every piece of content is intellectual property\n\n## Why It Matters\n\nIn the current digital landscape, most creators and businesses are **digital sharecroppers**. They create value on platforms that capture most of the upside.\n\nDigital sovereignty flips this model. It puts the creator at the center and builds infrastructure around their needs, not the platform's.\n\n## Related Notes\n\n- [[The Ownership Economy Will Replace the Creator Economy]]\n- [[On Ownership]]\n- [[On Sovereignty]]\n- [[Platform Risk]]\n\n## Appearances\n\nThis theme appears in **23 episodes**, **8 interviews**, and is the #1 most-discussed topic across all content.`,
+              backlinks: ['Ownership Economy', 'On Ownership', 'On Sovereignty', 'Dashboard MOC']
+            },
+            {
+              id: 'theme-generational',
+              title: 'Generational Thinking',
+              path: 'Themes/Generational Thinking.md',
+              frontmatter: { type: 'theme', created: '2025-10-15', status: 'core', tags: ['generational', 'legacy', 'long-term', 'core-theme'] },
+              content: `## Overview\n\nGenerational thinking is the practice of making decisions not just for today, but for the next 2-3 generations. It is the mindset shift from **consumer to builder**, from **spender to investor**, from **individual to dynasty**.\n\n## Key Concepts\n\n### Time Horizon\nMost people operate on a 30-day time horizon. Generational thinkers operate on a 30-year horizon.\n\n### Asset Accumulation\nEvery decision is filtered through: "Will this create an asset that outlasts me?"\n\n### Knowledge Transfer\nWealth without wisdom is a single-generation phenomenon. The vault itself is an act of generational thinking \u2014 capturing knowledge so it compounds over time.\n\n## Connected\n\n[[On Wealth Building]] | [[Digital Sovereignty]] | [[Sovereign Empire]]`,
+              backlinks: ['On Wealth Building', 'Dashboard MOC']
+            }
+          ]
+        },
+        {
+          name: 'Content Analysis',
+          emoji: '\u{1F4DD}',
+          notes: [
+            {
+              id: 'analysis-placeholder',
+              title: 'Content Analysis Overview',
+              path: 'Content Analysis/Overview.md',
+              frontmatter: { type: 'analysis', created: '2026-02-01', tags: ['content', 'analysis', 'overview'] },
+              content: `## Content Analysis\n\nThis section will contain detailed breakdowns of top-performing content, audience engagement patterns, and strategic insights.\n\n### Coming Soon\n\n- Episode performance rankings\n- Audience sentiment analysis\n- Topic resonance scores\n- Cross-platform performance comparison\n\n> Connect the vault to the analytics pipeline to populate this section automatically.`,
+              backlinks: ['Dashboard MOC']
+            }
+          ]
+        },
+        {
+          name: 'YouTube Analytics',
+          emoji: '\u{1F4FA}',
+          notes: [
+            {
+              id: 'yt-placeholder',
+              title: 'YouTube Analytics Dashboard',
+              path: 'YouTube Analytics/Dashboard.md',
+              frontmatter: { type: 'analytics', created: '2026-02-01', tags: ['youtube', 'analytics', 'growth'] },
+              content: `## YouTube Analytics\n\nThis section will sync with YouTube Studio data to provide vault-native analytics.\n\n### Planned Metrics\n\n- Subscriber growth curve\n- Watch time trends\n- Top 10 videos by engagement\n- Audience demographics\n- Revenue breakdown\n\n### Integration\n\nOnce the API bridge is active, this note will auto-update with the latest channel data.\n\n\`\`\`\nStatus: Awaiting API connection\nEndpoint: localhost:8819/api/youtube\n\`\`\``,
+              backlinks: ['Dashboard MOC']
+            }
+          ]
+        },
+        {
+          name: 'Content Ideas',
+          emoji: '\u{1F4A1}',
+          notes: [
+            {
+              id: 'ideas-pipeline',
+              title: 'Content Pipeline',
+              path: 'Content Ideas/Pipeline.md',
+              frontmatter: { type: 'pipeline', created: '2026-01-20', tags: ['ideas', 'pipeline', 'content'] },
+              content: `## Content Pipeline\n\nActive ideas being developed for upcoming content.\n\n### High Priority\n\n- [ ] **The Digital Sharecropping Problem** \u2014 Why most creators are building on rented land\n- [ ] **Ownership as a Spiritual Practice** \u2014 Connecting sovereignty to purpose\n- [ ] **The Community Wealth Playbook** \u2014 Step-by-step guide to community ownership\n\n### Medium Priority\n\n- [ ] **AI and the Future of Authentic Voice** \u2014 Why human perspective becomes premium\n- [ ] **Building Your IP Vault** \u2014 How to capture and compound intellectual property\n- [ ] **The 30-Year Decision Framework** \u2014 Generational thinking in practice\n\n### Ideas Backlog\n\n- Platform risk case studies\n- Interview with community-owned business founders\n- Wealth building for the digital age series\n- Knowledge management as competitive advantage\n\n[[Content Strategy]] | [[Themes]] | [[Dashboard MOC]]`,
+              backlinks: ['Dashboard MOC']
+            }
+          ]
+        }
+      ]
+    };
+
+    // ═══════════════════════════════════════════
+    //  STATE
+    // ═══════════════════════════════════════════
+
+    let vaultData = null;
+    let currentNote = null;
+    let isLiveMode = false;
+
+    // ═══════════════════════════════════════════
+    //  INITIALIZATION
+    // ═══════════════════════════════════════════
+
+    document.addEventListener('DOMContentLoaded', function() {
+      loadVaultIndex();
+    });
+
+    async function loadVaultIndex() {
+      try {
+        const res = await fetch('http://localhost:8819/api/vault', { signal: AbortSignal.timeout(3000) });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.folders && data.folders.length > 0) {
+            vaultData = data;
+            isLiveMode = true;
+            updateStatus('Connected', true);
+            renderTree();
+            if (vaultData.folders[0].notes.length > 0) {
+              navigateToNote(vaultData.folders[0].notes[0].id);
+            }
+            return;
+          }
+        }
+      } catch (e) {
+        // Fallback to demo
+      }
+      vaultData = DEMO_VAULT;
+      isLiveMode = false;
+      updateStatus('Demo mode', false);
+      renderTree();
+      navigateToNote('dashboard-moc');
+    }
+
+    // ═══════════════════════════════════════════
+    //  SIDEBAR TREE
+    // ═══════════════════════════════════════════
+
+    function renderTree() {
+      const container = document.getElementById('vaultTree');
+      container.innerHTML = '';
+
+      vaultData.folders.forEach(function(folder) {
+        const folderEl = document.createElement('div');
+        folderEl.className = 'vault-folder open';
+        folderEl.setAttribute('data-folder', folder.name);
+
+        const headerEl = document.createElement('div');
+        headerEl.className = 'vault-folder-header';
+        headerEl.innerHTML =
+          '<svg class="folder-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>' +
+          '<span class="folder-emoji">' + folder.emoji + '</span>' +
+          '<span class="folder-name">' + folder.name + '</span>' +
+          '<span class="folder-count">' + folder.notes.length + '</span>';
+        headerEl.addEventListener('click', function() {
+          folderEl.classList.toggle('open');
+        });
+
+        const childrenEl = document.createElement('div');
+        childrenEl.className = 'vault-folder-children';
+
+        folder.notes.forEach(function(note) {
+          const noteEl = document.createElement('div');
+          noteEl.className = 'vault-note-item';
+          noteEl.setAttribute('data-note-id', note.id);
+          noteEl.innerHTML =
+            '<svg class="note-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>' +
+            '<span>' + note.title + '</span>';
+          noteEl.addEventListener('click', function() {
+            navigateToNote(note.id);
+          });
+          childrenEl.appendChild(noteEl);
+        });
+
+        folderEl.appendChild(headerEl);
+        folderEl.appendChild(childrenEl);
+        container.appendChild(folderEl);
+      });
+    }
+
+    // ═══════════════════════════════════════════
+    //  NOTE RENDERING
+    // ═══════════════════════════════════════════
+
+    function findNote(noteId) {
+      for (var i = 0; i < vaultData.folders.length; i++) {
+        for (var j = 0; j < vaultData.folders[i].notes.length; j++) {
+          if (vaultData.folders[i].notes[j].id === noteId) {
+            return vaultData.folders[i].notes[j];
+          }
+        }
+      }
+      return null;
+    }
+
+    function navigateToNote(noteId) {
+      var note = findNote(noteId);
+      if (!note) return;
+
+      currentNote = note;
+
+      // Update active states in sidebar
+      document.querySelectorAll('.vault-note-item').forEach(function(el) {
+        el.classList.toggle('active', el.getAttribute('data-note-id') === noteId);
+      });
+
+      renderNote(note);
+      renderRightSidebar(note);
+
+      // Close mobile sidebar
+      if (window.innerWidth <= 768) {
+        closeSidebar();
+      }
+
+      // Scroll content to top
+      document.querySelector('.vault-content-wrap').scrollTop = 0;
+    }
+
+    function renderNote(note) {
+      var container = document.getElementById('vaultContent');
+      var html = '';
+
+      // Frontmatter pills
+      if (note.frontmatter) {
+        html += '<div class="vault-frontmatter">';
+        var fm = note.frontmatter;
+        if (fm.type) {
+          html += '<span class="vault-fm-pill"><span class="fm-key">type</span> ' + escHtml(fm.type) + '</span>';
+        }
+        if (fm.created) {
+          html += '<span class="vault-fm-pill"><span class="fm-key">date</span> ' + escHtml(fm.created) + '</span>';
+        }
+        if (fm.status) {
+          html += '<span class="vault-fm-pill"><span class="fm-key">status</span> ' + escHtml(fm.status) + '</span>';
+        }
+        if (fm.confidence) {
+          html += '<span class="vault-fm-pill"><span class="fm-key">confidence</span> ' + escHtml(fm.confidence) + '</span>';
+        }
+        if (fm.tags && fm.tags.length) {
+          fm.tags.forEach(function(tag) {
+            html += '<a class="vault-tag" onclick="searchVault(\'' + escHtml(tag) + '\')">#' + escHtml(tag) + '</a>';
+          });
+        }
+        html += '</div>';
+      }
+
+      // Note body
+      html += '<div class="vault-note">';
+      html += '<h1>' + escHtml(note.title) + '</h1>';
+      html += renderMarkdown(note.content);
+      html += '</div>';
+
+      container.innerHTML = html;
+    }
+
+    function renderMarkdown(text) {
+      if (!text) return '';
+
+      var lines = text.split('\n');
+      var html = '';
+      var inList = false;
+      var inOrderedList = false;
+      var inCode = false;
+      var codeContent = '';
+      var inBlockquote = false;
+      var bqContent = '';
+
+      for (var i = 0; i < lines.length; i++) {
+        var line = lines[i];
+
+        // Code blocks
+        if (line.trim().startsWith('```')) {
+          if (inCode) {
+            html += '<pre><code>' + escHtml(codeContent.trim()) + '</code></pre>';
+            codeContent = '';
+            inCode = false;
+          } else {
+            if (inList) { html += '</ul>'; inList = false; }
+            if (inOrderedList) { html += '</ol>'; inOrderedList = false; }
+            flushBlockquote();
+            inCode = true;
+          }
+          continue;
+        }
+
+        if (inCode) {
+          codeContent += line + '\n';
+          continue;
+        }
+
+        // Blockquotes
+        if (line.trim().startsWith('>')) {
+          if (inList) { html += '</ul>'; inList = false; }
+          if (inOrderedList) { html += '</ol>'; inOrderedList = false; }
+          var bqText = line.trim().substring(1).trim();
+          if (!inBlockquote) {
+            inBlockquote = true;
+            bqContent = bqText;
+          } else {
+            bqContent += '\n' + bqText;
+          }
+          continue;
+        } else if (inBlockquote) {
+          flushBlockquote();
+        }
+
+        // Headings
+        if (line.startsWith('## ')) {
+          if (inList) { html += '</ul>'; inList = false; }
+          if (inOrderedList) { html += '</ol>'; inOrderedList = false; }
+          html += '<h2>' + inlineFormat(line.substring(3)) + '</h2>';
+          continue;
+        }
+        if (line.startsWith('### ')) {
+          if (inList) { html += '</ul>'; inList = false; }
+          if (inOrderedList) { html += '</ol>'; inOrderedList = false; }
+          html += '<h3>' + inlineFormat(line.substring(4)) + '</h3>';
+          continue;
+        }
+
+        // Horizontal rule
+        if (line.trim() === '---') {
+          if (inList) { html += '</ul>'; inList = false; }
+          if (inOrderedList) { html += '</ol>'; inOrderedList = false; }
+          html += '<hr>';
+          continue;
+        }
+
+        // Tables
+        if (line.trim().startsWith('|') && line.trim().endsWith('|')) {
+          if (inList) { html += '</ul>'; inList = false; }
+          if (inOrderedList) { html += '</ol>'; inOrderedList = false; }
+          // Collect table rows
+          var tableRows = [line];
+          while (i + 1 < lines.length && lines[i + 1].trim().startsWith('|') && lines[i + 1].trim().endsWith('|')) {
+            i++;
+            tableRows.push(lines[i]);
+          }
+          html += renderTable(tableRows);
+          continue;
+        }
+
+        // Unordered list
+        if (line.trim().startsWith('- ')) {
+          if (inOrderedList) { html += '</ol>'; inOrderedList = false; }
+          if (!inList) { html += '<ul>'; inList = true; }
+          html += '<li>' + inlineFormat(line.trim().substring(2)) + '</li>';
+          continue;
+        }
+
+        // Checkbox list
+        if (line.trim().startsWith('- [ ] ') || line.trim().startsWith('- [x] ')) {
+          if (inOrderedList) { html += '</ol>'; inOrderedList = false; }
+          if (!inList) { html += '<ul style="list-style:none;padding-left:8px">'; inList = true; }
+          var checked = line.trim().startsWith('- [x]');
+          var checkText = line.trim().substring(6);
+          html += '<li>' + (checked ? '\u2705' : '\u2B1C') + ' ' + inlineFormat(checkText) + '</li>';
+          continue;
+        }
+
+        // Ordered list
+        var olMatch = line.trim().match(/^(\d+)\.\s(.+)/);
+        if (olMatch) {
+          if (inList) { html += '</ul>'; inList = false; }
+          if (!inOrderedList) { html += '<ol>'; inOrderedList = true; }
+          html += '<li>' + inlineFormat(olMatch[2]) + '</li>';
+          continue;
+        }
+
+        // Close lists on empty or non-list lines
+        if (inList) { html += '</ul>'; inList = false; }
+        if (inOrderedList) { html += '</ol>'; inOrderedList = false; }
+
+        // Empty line
+        if (line.trim() === '') continue;
+
+        // Paragraph
+        html += '<p>' + inlineFormat(line) + '</p>';
+      }
+
+      if (inList) html += '</ul>';
+      if (inOrderedList) html += '</ol>';
+      if (inCode) html += '<pre><code>' + escHtml(codeContent.trim()) + '</code></pre>';
+      flushBlockquote();
+
+      return html;
+
+      function flushBlockquote() {
+        if (!inBlockquote) return;
+        // Check if source attribution exists (pattern: -- source or \u2014 source)
+        var parts = bqContent.split('\n');
+        var source = '';
+        var quoteText = parts;
+        var lastPart = parts[parts.length - 1];
+        if (lastPart && (lastPart.startsWith('\u2014 ') || lastPart.startsWith('-- '))) {
+          source = lastPart.replace(/^(\u2014|--)\s*/, '');
+          quoteText = parts.slice(0, -1);
+        }
+        html += '<div class="vault-blockquote"><p>' + inlineFormat(quoteText.join(' ')) + '</p>';
+        if (source) html += '<span class="bq-source">\u2014 ' + escHtml(source) + '</span>';
+        html += '</div>';
+        inBlockquote = false;
+        bqContent = '';
+      }
+    }
+
+    function inlineFormat(text) {
+      // Wikilinks: [[Note Title]]
+      text = text.replace(/\[\[([^\]]+)\]\]/g, function(m, p1) {
+        var noteId = findNoteIdByTitle(p1);
+        if (noteId) {
+          return '<a class="vault-wikilink" onclick="navigateToNote(\'' + noteId + '\')">' + escHtml(p1) + '</a>';
+        }
+        return '<a class="vault-wikilink" style="opacity:0.4;cursor:default">' + escHtml(p1) + '</a>';
+      });
+
+      // Bold
+      text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+
+      // Italic
+      text = text.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+
+      // Inline code
+      text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+      return text;
+    }
+
+    function renderTable(rows) {
+      if (rows.length < 2) return '';
+      var html = '<table style="width:100%;border-collapse:collapse;margin:16px 0;font-size:14px">';
+
+      // Header
+      var headerCells = rows[0].split('|').filter(function(c) { return c.trim() !== ''; });
+      html += '<thead><tr>';
+      headerCells.forEach(function(cell) {
+        html += '<th style="text-align:left;padding:8px 12px;border-bottom:2px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.5);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:1px">' + escHtml(cell.trim()) + '</th>';
+      });
+      html += '</tr></thead><tbody>';
+
+      // Skip separator row (row index 1)
+      for (var r = 2; r < rows.length; r++) {
+        var cells = rows[r].split('|').filter(function(c) { return c.trim() !== ''; });
+        html += '<tr>';
+        cells.forEach(function(cell) {
+          html += '<td style="padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.04);color:rgba(255,255,255,0.45)">' + escHtml(cell.trim()) + '</td>';
+        });
+        html += '</tr>';
+      }
+
+      html += '</tbody></table>';
+      return html;
+    }
+
+    function findNoteIdByTitle(title) {
+      for (var i = 0; i < vaultData.folders.length; i++) {
+        for (var j = 0; j < vaultData.folders[i].notes.length; j++) {
+          if (vaultData.folders[i].notes[j].title === title) {
+            return vaultData.folders[i].notes[j].id;
+          }
+        }
+      }
+      return null;
+    }
+
+    function escHtml(str) {
+      var div = document.createElement('div');
+      div.appendChild(document.createTextNode(str));
+      return div.innerHTML;
+    }
+
+    // ═══════════════════════════════════════════
+    //  RIGHT SIDEBAR
+    // ═══════════════════════════════════════════
+
+    function renderRightSidebar(note) {
+      // TOC
+      var tocEl = document.getElementById('tocList');
+      var tocHtml = '';
+      if (note.content) {
+        var headingRegex = /^(#{2,3})\s(.+)/gm;
+        var match;
+        while ((match = headingRegex.exec(note.content)) !== null) {
+          var level = match[1].length;
+          var text = match[2];
+          tocHtml += '<a class="toc-item' + (level === 3 ? ' toc-h3' : '') + '">' + escHtml(text) + '</a>';
+        }
+      }
+      tocEl.innerHTML = tocHtml || '<span style="font-size:12px;color:rgba(255,255,255,0.15)">No headings</span>';
+
+      // Backlinks
+      var blEl = document.getElementById('backlinksList');
+      var blHtml = '';
+      if (note.backlinks && note.backlinks.length) {
+        note.backlinks.forEach(function(bl) {
+          var noteId = findNoteIdByTitle(bl);
+          blHtml += '<div class="backlink-item"' + (noteId ? ' onclick="navigateToNote(\'' + noteId + '\')"' : '') + '>' +
+            '<svg class="backlink-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>' +
+            '<span>' + escHtml(bl) + '</span></div>';
+        });
+      }
+      blEl.innerHTML = blHtml || '<span style="font-size:12px;color:rgba(255,255,255,0.15)">No backlinks</span>';
+
+      // Mini graph
+      renderMiniGraph(note);
+    }
+
+    // ═══════════════════════════════════════════
+    //  MINI GRAPH
+    // ═══════════════════════════════════════════
+
+    function renderMiniGraph(note) {
+      var canvas = document.getElementById('graphCanvas');
+      if (!canvas) return;
+      var ctx = canvas.getContext('2d');
+      var rect = canvas.parentElement.getBoundingClientRect();
+      canvas.width = rect.width * 2;
+      canvas.height = rect.height * 2;
+      canvas.style.width = rect.width + 'px';
+      canvas.style.height = rect.height + 'px';
+      ctx.scale(2, 2);
+
+      var w = rect.width;
+      var h = rect.height;
+      ctx.clearRect(0, 0, w, h);
+
+      // Build nodes
+      var nodes = [];
+      var centerX = w / 2;
+      var centerY = h / 2;
+
+      // Center node (current)
+      nodes.push({ x: centerX, y: centerY, label: note.title.substring(0, 12), isCurrent: true });
+
+      // Connected nodes
+      var connections = (note.backlinks || []).slice(0, 6);
+      var angleStep = (2 * Math.PI) / Math.max(connections.length, 1);
+      var radius = Math.min(w, h) * 0.32;
+
+      connections.forEach(function(bl, idx) {
+        var angle = angleStep * idx - Math.PI / 2;
+        nodes.push({
+          x: centerX + Math.cos(angle) * radius,
+          y: centerY + Math.sin(angle) * radius,
+          label: bl.substring(0, 10),
+          isCurrent: false
+        });
+      });
+
+      // Draw edges
+      ctx.strokeStyle = 'rgba(213,255,90,0.12)';
+      ctx.lineWidth = 1;
+      for (var i = 1; i < nodes.length; i++) {
+        ctx.beginPath();
+        ctx.moveTo(nodes[0].x, nodes[0].y);
+        ctx.lineTo(nodes[i].x, nodes[i].y);
+        ctx.stroke();
+      }
+
+      // Draw nodes
+      nodes.forEach(function(n) {
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.isCurrent ? 5 : 3, 0, Math.PI * 2);
+        ctx.fillStyle = n.isCurrent ? '#D5FF5A' : 'rgba(213,255,90,0.4)';
+        ctx.fill();
+
+        if (n.isCurrent) {
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, 8, 0, Math.PI * 2);
+          ctx.strokeStyle = 'rgba(213,255,90,0.15)';
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+
+        // Label
+        ctx.fillStyle = n.isCurrent ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.2)';
+        ctx.font = (n.isCurrent ? '9' : '8') + 'px Inter, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(n.label, n.x, n.y + (n.isCurrent ? 16 : 12));
+      });
+    }
+
+    // ═══════════════════════════════════════════
+    //  SEARCH
+    // ═══════════════════════════════════════════
+
+    window.searchVault = function(query) {
+      query = query.toLowerCase().trim();
+      var noteItems = document.querySelectorAll('.vault-note-item');
+      var folders = document.querySelectorAll('.vault-folder');
+
+      if (!query) {
+        noteItems.forEach(function(el) { el.style.display = ''; });
+        folders.forEach(function(el) { el.style.display = ''; });
+        return;
+      }
+
+      folders.forEach(function(folder) {
+        var folderName = folder.getAttribute('data-folder').toLowerCase();
+        var childNotes = folder.querySelectorAll('.vault-note-item');
+        var hasVisible = false;
+
+        childNotes.forEach(function(noteEl) {
+          var noteId = noteEl.getAttribute('data-note-id');
+          var note = findNote(noteId);
+          var matches = false;
+          if (note) {
+            matches = note.title.toLowerCase().includes(query) ||
+                      (note.content && note.content.toLowerCase().includes(query)) ||
+                      (note.frontmatter && note.frontmatter.tags && note.frontmatter.tags.some(function(t) { return t.toLowerCase().includes(query); })) ||
+                      folderName.includes(query);
+          }
+          noteEl.style.display = matches ? '' : 'none';
+          if (matches) hasVisible = true;
+        });
+
+        folder.style.display = hasVisible ? '' : 'none';
+        if (hasVisible) folder.classList.add('open');
+      });
+    };
+
+    // ═══════════════════════════════════════════
+    //  SIDEBAR TOGGLE (MOBILE)
+    // ═══════════════════════════════════════════
+
+    window.toggleSidebar = function() {
+      var sidebar = document.getElementById('vaultSidebar');
+      var overlay = document.getElementById('sidebarOverlay');
+      var isOpen = sidebar.classList.contains('mobile-open');
+
+      if (isOpen) {
+        closeSidebar();
+      } else {
+        sidebar.classList.add('mobile-open');
+        overlay.classList.add('visible');
+      }
+    };
+
+    function closeSidebar() {
+      document.getElementById('vaultSidebar').classList.remove('mobile-open');
+      document.getElementById('sidebarOverlay').classList.remove('visible');
+    }
+
+    // ═══════════════════════════════════════════
+    //  STATUS
+    // ═══════════════════════════════════════════
+
+    function updateStatus(text, connected) {
+      var statusEl = document.getElementById('vaultStatus');
+      var statusText = document.getElementById('vaultStatusText');
+      statusText.textContent = text;
+      if (connected) {
+        statusEl.classList.remove('offline');
+      } else {
+        statusEl.classList.add('offline');
+      }
+    }
+
+    // Make navigateToNote globally accessible
+    window.navigateToNote = navigateToNote;
+
+  })();
+  </script>
+</body>
+</html>

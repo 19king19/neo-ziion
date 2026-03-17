@@ -36,6 +36,7 @@ from layer_01_ingestion.yt_analytics import pull_analytics
 from layer_02_intelligence.claude_analyzer import run_analysis
 from layer_02_intelligence.quote_extractor import extract_quotes
 from layer_02_intelligence.theme_clusterer import cluster_themes
+from layer_03_vault.vault_publisher import VaultPublisher
 
 # ── Logging Setup ──
 logging.basicConfig(
@@ -169,6 +170,19 @@ def job_intelligence():
         update_status('themes', 'error', str(e))
 
 
+def job_vault_publish():
+    """Scheduled: Publish intelligence to Obsidian vault."""
+    update_status('vault', 'active', 'Publishing to Obsidian vault...')
+    try:
+        publisher = VaultPublisher()
+        stats = publisher.publish_all()
+        total = stats.get('total', 0)
+        update_status('vault', 'idle', f'{total} notes published')
+    except Exception as e:
+        update_status('vault', 'error', str(e))
+        logger.error(f'Vault publish job failed: {e}')
+
+
 def run_all_once():
     """Run all pipeline layers once (useful for testing)."""
     logger.info('═══ Running all layers once ═══')
@@ -176,6 +190,7 @@ def run_all_once():
     job_whisper()
     job_youtube()
     job_intelligence()
+    job_vault_publish()
     logger.info('═══ All layers complete ═══')
 
 
@@ -208,12 +223,14 @@ def run_daemon():
     schedule.every(GDRIVE_SYNC_INTERVAL).minutes.do(job_whisper)  # Run after gdrive
     schedule.every(YT_ANALYTICS_INTERVAL).minutes.do(job_youtube)
     schedule.every(INTELLIGENCE_INTERVAL).minutes.do(job_intelligence)
+    schedule.every(INTELLIGENCE_INTERVAL).minutes.do(job_vault_publish)
 
     logger.info(f'Schedules set:')
-    logger.info(f'  GDrive sync: every {GDRIVE_SYNC_INTERVAL} min')
-    logger.info(f'  Whisper:     every {GDRIVE_SYNC_INTERVAL} min')
-    logger.info(f'  YouTube:     every {YT_ANALYTICS_INTERVAL} min')
+    logger.info(f'  GDrive sync:  every {GDRIVE_SYNC_INTERVAL} min')
+    logger.info(f'  Whisper:      every {GDRIVE_SYNC_INTERVAL} min')
+    logger.info(f'  YouTube:      every {YT_ANALYTICS_INTERVAL} min')
     logger.info(f'  Intelligence: every {INTELLIGENCE_INTERVAL} min')
+    logger.info(f'  Vault publish: every {INTELLIGENCE_INTERVAL} min')
 
     # Run all immediately on startup
     run_all_once()

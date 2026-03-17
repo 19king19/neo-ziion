@@ -2423,8 +2423,9 @@
         canvas.style.height = H + 'px';
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         cx = W / 2;
-        cy = H / 2 - 8;
-        scale = Math.min(W, H) * 0.065;
+        cy = H / 2 + 4;
+        // Heart spans ~32 units tall (-17 to +15); fit within canvas height with padding
+        scale = H / 36;
       }
 
       // Parametric heart: x = 16sin^3(t), y = 13cos(t) - 5cos(2t) - 2cos(3t) - cos(4t)
@@ -2441,8 +2442,8 @@
           var fill = Math.cbrt(Math.random());
           var tx = hx * fill;
           var ty = hy * fill;
-          // Slight scatter for organic feel
-          var scatter = 0.4 + Math.random() * 0.6;
+          // Slight scatter for organic feel (tight to preserve shape)
+          var scatter = 0.3 + Math.random() * 0.4;
           tx += (Math.random() - 0.5) * scatter;
           ty += (Math.random() - 0.5) * scatter;
           particles.push({
@@ -2481,10 +2482,10 @@
         for (var i = 0; i < particles.length; i++) {
           var p = particles[i];
 
-          // Organic drift
+          // Organic drift (subtle so shape stays defined)
           p.driftPhase += p.driftSpeed;
-          var dx = Math.sin(p.driftPhase) * 0.3;
-          var dy = Math.cos(p.driftPhase * 0.7 + i) * 0.25;
+          var dx = Math.sin(p.driftPhase) * 0.2;
+          var dy = Math.cos(p.driftPhase * 0.7 + i) * 0.18;
 
           // Pulse pushes particles outward from center proportionally
           var px = p.tx * pulse + dx;

@@ -2248,6 +2248,10 @@
       if (view === 'contentOs') {
         browse.style.display = 'none';
         cos.style.display = 'block';
+        // Kick particle heart + neural net now that container is visible
+        setTimeout(function() {
+          if (window._startParticleHeart) window._startParticleHeart();
+        }, 50);
       } else {
         browse.style.display = 'block';
         cos.style.display = 'none';
@@ -2540,11 +2544,25 @@
         }, 500);
       };
 
-      resize();
-      window.addEventListener('resize', resize);
-      initParticles();
-      updateBPM();
-      requestAnimationFrame(drawHeart);
+      var started = false;
+      function startHeart() {
+        if (started) { resize(); return; }
+        var wrap = canvas.parentElement;
+        if (!wrap || wrap.clientWidth < 10 || wrap.clientHeight < 10) return; // still hidden
+        resize();
+        initParticles();
+        updateBPM();
+        requestAnimationFrame(drawHeart);
+        started = true;
+      }
+
+      window.addEventListener('resize', function() { if (started) resize(); });
+
+      // Expose so view switcher can trigger it
+      window._startParticleHeart = startHeart;
+
+      // Try now (works if contentOs was already visible via localStorage restore)
+      startHeart();
     })();
 
     // ── Neural Network Visualization Engine ──

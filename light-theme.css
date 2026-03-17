@@ -2583,6 +2583,23 @@ body.light-mode .cos-hb-bar-tick.ok { background: rgba(61,140,64,0.35) !importan
 body.light-mode .cos-hb-micro-stat { color: #bbb !important; }
 body.light-mode .cos-hb-micro-stat span { color: #3d8c40 !important; }
 
+/* ── Neural Network ── */
+body.light-mode .cos-neural-net {
+  background: rgba(255,255,255,0.8) !important;
+  border-color: rgba(61,140,64,0.1) !important;
+}
+body.light-mode .cos-neural-net::before {
+  background: radial-gradient(ellipse at 50% 30%, rgba(61,140,64,0.04) 0%, transparent 70%) !important;
+}
+body.light-mode .cos-nn-title { color: #3d8c40 !important; }
+body.light-mode .cos-nn-stats { color: #bbb !important; }
+body.light-mode .cos-nn-stats span { color: #3d8c40 !important; }
+body.light-mode .nn-connection { stroke: rgba(0,0,0,0.04) !important; }
+body.light-mode .nn-connection.lit { stroke: rgba(61,140,64,0.12) !important; }
+body.light-mode .nn-node-ring { opacity: 0.12 !important; }
+body.light-mode .nn-label { fill: rgba(0,0,0,0.2) !important; }
+body.light-mode .nn-layer-line { stroke: rgba(0,0,0,0.04) !important; }
+
 /* ── Layer Rows ── */
 body.light-mode .cos-layer-num {
   background: rgba(61,140,64,0.08) !important;

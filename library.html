@@ -994,6 +994,91 @@
       font-weight: 500;
     }
 
+    /* ── Neural Network Visualization ── */
+    .cos-neural-net {
+      margin: 24px 0 16px;
+      padding: 20px 20px 12px;
+      background: rgba(15,14,18,0.6);
+      border: 1px solid rgba(213,255,90,0.08);
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cos-neural-net::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 30%, rgba(213,255,90,0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cos-nn-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 1;
+    }
+    .cos-nn-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #D5FF5A;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+    .cos-nn-stats {
+      display: flex;
+      gap: 16px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.35);
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+    .cos-nn-stats span {
+      color: #D5FF5A;
+      font-weight: 600;
+    }
+    #nnCanvas {
+      width: 100%;
+      height: auto;
+      display: block;
+      position: relative;
+      z-index: 1;
+    }
+    .nn-connection {
+      stroke: rgba(255,255,255,0.035);
+      stroke-width: 0.8;
+      fill: none;
+      transition: stroke 0.6s ease, stroke-width 0.6s ease;
+    }
+    .nn-connection.lit {
+      stroke-width: 1.5;
+    }
+    .nn-node-ring {
+      fill: none;
+      stroke-width: 1;
+      opacity: 0.15;
+      transition: opacity 0.5s ease;
+    }
+    .nn-node-ring.glow {
+      opacity: 0.5;
+    }
+    .nn-node {
+      transition: r 0.4s ease, opacity 0.4s ease;
+    }
+    .nn-label {
+      font-size: 8.5px;
+      fill: rgba(255,255,255,0.2);
+      text-anchor: middle;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      letter-spacing: 1.2px;
+      font-weight: 600;
+    }
+    .nn-layer-line {
+      stroke: rgba(255,255,255,0.03);
+      stroke-width: 0.5;
+      stroke-dasharray: 3 4;
+    }
+
   </style>
 </head>
 <body>
@@ -1780,6 +1865,35 @@
             </div>
           </div>
 
+          <!-- Neural Network Visualization -->
+          <div class="cos-neural-net" id="cosNeuralNet">
+            <div class="cos-nn-header">
+              <div class="cos-nn-title">⚡ Neural Network</div>
+              <div class="cos-nn-stats">
+                <div><span id="nnActiveNodes">0</span>/31 active</div>
+                <div><span id="nnSignalRate">0</span> signals/min</div>
+                <div>Complexity: <span id="nnComplexity">0</span>%</div>
+              </div>
+            </div>
+            <svg id="nnCanvas" viewBox="0 0 900 280" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <filter id="nnGlow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur stdDeviation="3" result="blur"/>
+                  <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+                <filter id="nnPulseGlow" x="-100%" y="-100%" width="300%" height="300%">
+                  <feGaussianBlur stdDeviation="5" result="blur"/>
+                  <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+              </defs>
+              <g id="nnLayerLines"></g>
+              <g id="nnConnections"></g>
+              <g id="nnNodes"></g>
+              <g id="nnPulses"></g>
+              <g id="nnLabels"></g>
+            </svg>
+          </div>
+
           <div class="cos-hero-actions">
             <button class="cos-hero-btn primary" onclick="refreshCosStatus()">↻ Refresh Status</button>
             <button class="cos-hero-btn secondary">⚡ Chairman View</button>
@@ -2131,12 +2245,13 @@
           if (data.total_assets) document.getElementById('cosStatAssets').textContent = data.total_assets;
           if (data.processed) document.getElementById('cosStatProcessed').textContent = data.processed;
           if (data.outputs) document.getElementById('cosStatOutputs').textContent = data.outputs;
-          // Update module statuses
+          // Update module statuses + neural network
           if (data.modules) {
             document.querySelectorAll('.cos-module-status').forEach((dot, i) => {
               const status = data.modules[i] || 'idle';
               dot.className = 'cos-module-status ' + status;
             });
+            if (window.updateNNFromStatus) window.updateNNFromStatus(data.modules);
           }
         })
         .catch(() => {
@@ -2245,6 +2360,208 @@
     renderUptimeBar();
     refreshHeartbeat();
     setInterval(refreshHeartbeat, 30000);
+
+    // ── Neural Network Visualization Engine ──
+    (function() {
+      var svg = document.getElementById('nnCanvas');
+      if (!svg) return;
+      var NS = 'http://www.w3.org/2000/svg';
+
+      // 6 layers matching the 31 module cards
+      var layers = [
+        { x: 75,  ys: [32, 82, 132, 182, 232], color: '#a3e635', label: 'INGEST' },
+        { x: 225, ys: [32, 82, 132, 182, 232], color: '#60a5fa', label: 'INTEL' },
+        { x: 375, ys: [20, 64, 108, 152, 196, 240], color: '#fb923c', label: 'FORGE' },
+        { x: 525, ys: [32, 82, 132, 182, 232], color: '#c084fc', label: 'DIST' },
+        { x: 675, ys: [32, 82, 132, 182, 232], color: '#facc15', label: 'MONEY' },
+        { x: 825, ys: [32, 82, 132, 182, 232], color: '#D5FF5A', label: 'AUTO' }
+      ];
+
+      var connections = [];
+      var nnNodes = [];
+      var pulses = [];
+      var pulseCount = 0;
+      var lastCountReset = Date.now();
+      var MAX_PULSES = 18;
+
+      function buildNetwork() {
+        var connG = document.getElementById('nnConnections');
+        var nodeG = document.getElementById('nnNodes');
+        var labelG = document.getElementById('nnLabels');
+        var lineG = document.getElementById('nnLayerLines');
+
+        // Vertical guide lines for each layer
+        layers.forEach(function(L) {
+          var gl = document.createElementNS(NS, 'line');
+          gl.setAttribute('x1', L.x); gl.setAttribute('y1', 10);
+          gl.setAttribute('x2', L.x); gl.setAttribute('y2', 255);
+          gl.setAttribute('class', 'nn-layer-line');
+          lineG.appendChild(gl);
+        });
+
+        // Draw connections between adjacent layers
+        for (var i = 0; i < layers.length - 1; i++) {
+          var L = layers[i], R = layers[i + 1];
+          for (var j = 0; j < L.ys.length; j++) {
+            var prop = j / (L.ys.length - 1);
+            var tIdx = Math.round(prop * (R.ys.length - 1));
+            var targets = [tIdx];
+            if (tIdx > 0) targets.push(tIdx - 1);
+            if (tIdx < R.ys.length - 1) targets.push(tIdx + 1);
+            // Extra random connection for density
+            if (Math.random() > 0.55 && R.ys.length > 3) {
+              var extra = Math.floor(Math.random() * R.ys.length);
+              if (targets.indexOf(extra) === -1) targets.push(extra);
+            }
+            for (var t = 0; t < targets.length; t++) {
+              var line = document.createElementNS(NS, 'line');
+              line.setAttribute('x1', L.x); line.setAttribute('y1', L.ys[j]);
+              line.setAttribute('x2', R.x); line.setAttribute('y2', R.ys[targets[t]]);
+              line.setAttribute('class', 'nn-connection');
+              connG.appendChild(line);
+              connections.push({
+                x1: L.x, y1: L.ys[j], x2: R.x, y2: R.ys[targets[t]],
+                color: L.color, el: line
+              });
+            }
+          }
+        }
+
+        // Draw nodes (31 total)
+        layers.forEach(function(layer) {
+          layer.ys.forEach(function(y) {
+            // Outer ring
+            var ring = document.createElementNS(NS, 'circle');
+            ring.setAttribute('cx', layer.x); ring.setAttribute('cy', y);
+            ring.setAttribute('r', 11); ring.setAttribute('class', 'nn-node-ring');
+            ring.setAttribute('stroke', layer.color);
+            nodeG.appendChild(ring);
+            // Inner dot
+            var dot = document.createElementNS(NS, 'circle');
+            dot.setAttribute('cx', layer.x); dot.setAttribute('cy', y);
+            dot.setAttribute('r', 5); dot.setAttribute('fill', layer.color);
+            dot.setAttribute('opacity', '0.35'); dot.setAttribute('class', 'nn-node');
+            dot.setAttribute('filter', 'url(#nnGlow)');
+            nodeG.appendChild(dot);
+            nnNodes.push({ x: layer.x, y: y, color: layer.color, el: dot, ring: ring, active: false });
+          });
+          // Layer label
+          var txt = document.createElementNS(NS, 'text');
+          txt.setAttribute('x', layer.x); txt.setAttribute('y', 272);
+          txt.setAttribute('class', 'nn-label'); txt.textContent = layer.label;
+          labelG.appendChild(txt);
+        });
+      }
+
+      function spawnPulse() {
+        if (pulses.length >= MAX_PULSES) return;
+        var conn = connections[Math.floor(Math.random() * connections.length)];
+        var p = document.createElementNS(NS, 'circle');
+        p.setAttribute('r', 3); p.setAttribute('fill', conn.color);
+        p.setAttribute('opacity', '0'); p.setAttribute('filter', 'url(#nnPulseGlow)');
+        document.getElementById('nnPulses').appendChild(p);
+        pulses.push({
+          x1: conn.x1, y1: conn.y1, x2: conn.x2, y2: conn.y2,
+          progress: 0, speed: 0.006 + Math.random() * 0.014,
+          color: conn.color, el: p, connEl: conn.el
+        });
+        pulseCount++;
+        conn.el.setAttribute('class', 'nn-connection lit');
+        conn.el.style.stroke = conn.color.replace(')', ',0.15)').replace('rgb', 'rgba').replace('#', '');
+        // Fallback: just set a brighter white stroke for hex colors
+        conn.el.style.stroke = 'rgba(255,255,255,0.12)';
+      }
+
+      var lastSpawn = 0;
+      function animate(ts) {
+        // Spawn pulses at variable rate
+        if (ts - lastSpawn > 250 + Math.random() * 500) {
+          spawnPulse();
+          if (Math.random() > 0.4) spawnPulse(); // Burst
+          lastSpawn = ts;
+        }
+        // Update pulses
+        for (var i = pulses.length - 1; i >= 0; i--) {
+          var p = pulses[i];
+          p.progress += p.speed;
+          if (p.progress >= 1) {
+            p.el.remove();
+            p.connEl.setAttribute('class', 'nn-connection');
+            p.connEl.style.stroke = '';
+            pulses.splice(i, 1);
+            continue;
+          }
+          var x = p.x1 + (p.x2 - p.x1) * p.progress;
+          var y = p.y1 + (p.y2 - p.y1) * p.progress;
+          p.el.setAttribute('cx', x); p.el.setAttribute('cy', y);
+          // Smooth fade in/out
+          var op = p.progress < 0.12 ? p.progress / 0.12
+                 : p.progress > 0.82 ? (1 - p.progress) / 0.18
+                 : 1;
+          p.el.setAttribute('opacity', (op * 0.85).toFixed(2));
+        }
+        // Update signal rate (every 8s)
+        var now = Date.now();
+        if (now - lastCountReset > 8000) {
+          var rate = Math.round(pulseCount * (60000 / (now - lastCountReset)));
+          var el = document.getElementById('nnSignalRate');
+          if (el) el.textContent = rate;
+          // Complexity = based on active connections + pulse density
+          var cx = Math.min(100, Math.round((connections.length / 120) * 40 + (rate / 200) * 60));
+          var cxEl = document.getElementById('nnComplexity');
+          if (cxEl) cxEl.textContent = cx;
+          pulseCount = 0;
+          lastCountReset = now;
+        }
+        requestAnimationFrame(animate);
+      }
+
+      // Simulate node flicker for visual life
+      function flickerNode() {
+        var idx = Math.floor(Math.random() * nnNodes.length);
+        var n = nnNodes[idx];
+        if (n.active) return;
+        n.el.setAttribute('opacity', '0.75');
+        n.el.setAttribute('r', '6.5');
+        n.ring.setAttribute('class', 'nn-node-ring glow');
+        setTimeout(function() {
+          if (!n.active) {
+            n.el.setAttribute('opacity', '0.35');
+            n.el.setAttribute('r', '5');
+            n.ring.setAttribute('class', 'nn-node-ring');
+          }
+        }, 1800 + Math.random() * 1200);
+      }
+
+      // Update nodes from real module statuses
+      window.updateNNFromStatus = function(moduleStatuses) {
+        if (!moduleStatuses || !moduleStatuses.length) return;
+        var activeCount = 0;
+        nnNodes.forEach(function(node, i) {
+          var status = moduleStatuses[i] || 'idle';
+          var isActive = status === 'active' || status === 'pending';
+          if (isActive) {
+            node.el.setAttribute('opacity', '0.95');
+            node.el.setAttribute('r', '7');
+            node.ring.setAttribute('class', 'nn-node-ring glow');
+            node.active = true;
+            activeCount++;
+          } else if (node.active) {
+            node.el.setAttribute('opacity', '0.35');
+            node.el.setAttribute('r', '5');
+            node.ring.setAttribute('class', 'nn-node-ring');
+            node.active = false;
+          }
+        });
+        var el = document.getElementById('nnActiveNodes');
+        if (el) el.textContent = activeCount;
+      };
+
+      // Build + start
+      buildNetwork();
+      requestAnimationFrame(animate);
+      setInterval(flickerNode, 1200);
+    })();
 
     // Genre filter
     function filterGenre(genre, el) {

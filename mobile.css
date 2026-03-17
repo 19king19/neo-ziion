@@ -752,6 +752,10 @@ body.light-mode .mobile-menu-divider {
   }
   .cos-hero-btn { width: 100% !important; text-align: center !important; }
   /* Heartbeat responsive */
+  .cos-neural-net { padding: 14px !important; margin: 16px 0 12px !important; }
+  .cos-nn-header { flex-direction: column !important; gap: 6px !important; align-items: flex-start !important; }
+  .cos-nn-stats { gap: 10px !important; font-size: 10px !important; }
+  #nnCanvas { min-height: 140px; }
   .cos-heartbeat { padding: 12px 14px !important; }
   .cos-heartbeat-grid { gap: 8px !important; }
   .cos-hb-service { min-width: 120px !important; padding: 10px 12px !important; }
@@ -786,4 +790,5 @@ body.light-mode .mobile-menu-divider {
   .cos-module-thumb { height: 80px !important; }
   .cos-heartbeat-grid { flex-direction: column !important; }
   .cos-hb-service { min-width: 100% !important; }
+  .cos-nn-stats { flex-wrap: wrap !important; }
 }

@@ -786,6 +786,36 @@
       0%, 100% { transform: scale(1); opacity: 0.7; }
       50% { transform: scale(1.2); opacity: 1; }
     }
+
+    /* ── Particle Heart Canvas ── */
+    .cos-heart-canvas-wrap {
+      position: relative;
+      width: 100%;
+      height: 260px;
+      margin: 12px 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #hbHeartCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .cos-heart-bpm {
+      position: absolute;
+      bottom: 8px;
+      right: 12px;
+      font-size: 11px;
+      color: rgba(213,255,90,0.5);
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      letter-spacing: 0.5px;
+    }
+    .cos-heart-bpm span {
+      color: #D5FF5A;
+      font-weight: 700;
+      font-size: 14px;
+    }
     .cos-heartbeat-time {
       font-size: 11px;
       color: rgba(255,255,255,0.3);
@@ -1827,6 +1857,11 @@
               </div>
               <div class="cos-heartbeat-time" id="hbLastCheck">Last check: —</div>
             </div>
+            <!-- Particle Heart Visualization -->
+            <div class="cos-heart-canvas-wrap">
+              <canvas id="hbHeartCanvas"></canvas>
+              <div class="cos-heart-bpm"><span id="hbBpm">72</span> BPM</div>
+            </div>
             <div class="cos-heartbeat-grid">
               <div class="cos-hb-service unknown" id="hbOrchestrator">
                 <div class="cos-hb-name">Orchestrator</div>
@@ -2360,6 +2395,157 @@
     renderUptimeBar();
     refreshHeartbeat();
     setInterval(refreshHeartbeat, 30000);
+
+    // ── Particle Heart Visualization ──
+    (function() {
+      var canvas = document.getElementById('hbHeartCanvas');
+      if (!canvas) return;
+      var ctx = canvas.getContext('2d');
+      var W, H, cx, cy, scale;
+      var particles = [];
+      var PARTICLE_COUNT = 2200;
+      var beatPhase = 0;
+      var beatSpeed = 0.035; // ~72 BPM feel
+      var isHealthy = false;
+
+      function resize() {
+        var wrap = canvas.parentElement;
+        var dpr = window.devicePixelRatio || 1;
+        W = wrap.clientWidth;
+        H = wrap.clientHeight;
+        canvas.width = W * dpr;
+        canvas.height = H * dpr;
+        canvas.style.width = W + 'px';
+        canvas.style.height = H + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        cx = W / 2;
+        cy = H / 2 - 8;
+        scale = Math.min(W, H) * 0.065;
+      }
+
+      // Parametric heart: x = 16sin^3(t), y = 13cos(t) - 5cos(2t) - 2cos(3t) - cos(4t)
+      function heartX(t) { return 16 * Math.pow(Math.sin(t), 3); }
+      function heartY(t) { return -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t)); }
+
+      function initParticles() {
+        particles = [];
+        for (var i = 0; i < PARTICLE_COUNT; i++) {
+          var t = Math.random() * Math.PI * 2;
+          var hx = heartX(t);
+          var hy = heartY(t);
+          // Fill interior: scale from 0 to 1 randomly (cube root for density towards edge)
+          var fill = Math.cbrt(Math.random());
+          var tx = hx * fill;
+          var ty = hy * fill;
+          // Slight scatter for organic feel
+          var scatter = 0.4 + Math.random() * 0.6;
+          tx += (Math.random() - 0.5) * scatter;
+          ty += (Math.random() - 0.5) * scatter;
+          particles.push({
+            tx: tx, ty: ty,       // target pos (heart coords)
+            x: tx, y: ty,         // current pos
+            ox: (Math.random()-0.5)*0.15, oy: (Math.random()-0.5)*0.15, // drift offset
+            driftPhase: Math.random() * Math.PI * 2,
+            driftSpeed: 0.005 + Math.random() * 0.015,
+            size: 0.5 + Math.random() * 1.2,
+            alpha: 0.15 + Math.random() * 0.55,
+            dist: fill // distance from center (0-1)
+          });
+        }
+      }
+
+      function drawHeart(ts) {
+        ctx.clearRect(0, 0, W, H);
+
+        // Heartbeat rhythm: double-bump (lub-dub)
+        beatPhase += beatSpeed;
+        if (beatPhase > Math.PI * 2) beatPhase -= Math.PI * 2;
+        // Create a lub-dub pattern
+        var lub = Math.max(0, Math.sin(beatPhase * 2) * 0.8);
+        var dub = Math.max(0, Math.sin(beatPhase * 2 - 1.2) * 0.5);
+        var beat = lub + dub; // 0 to ~1.3
+        var pulse = 1 + beat * 0.12; // scale: 1.0 to ~1.15
+
+        // Color based on health
+        var r, g, b;
+        if (isHealthy) {
+          r = 213; g = 255; b = 90; // #D5FF5A green
+        } else {
+          r = 180; g = 190; b = 170; // muted gray-green when offline
+        }
+
+        for (var i = 0; i < particles.length; i++) {
+          var p = particles[i];
+
+          // Organic drift
+          p.driftPhase += p.driftSpeed;
+          var dx = Math.sin(p.driftPhase) * 0.3;
+          var dy = Math.cos(p.driftPhase * 0.7 + i) * 0.25;
+
+          // Pulse pushes particles outward from center proportionally
+          var px = p.tx * pulse + dx;
+          var py = p.ty * pulse + dy;
+
+          // Smooth interpolation for organic movement
+          p.x += (px - p.x) * 0.15;
+          p.y += (py - p.y) * 0.15;
+
+          // Screen position
+          var sx = cx + p.x * scale;
+          var sy = cy + p.y * scale;
+
+          // Alpha varies with beat — particles near edge glow more on beat
+          var beatGlow = beat * p.dist * 0.4;
+          var a = Math.min(1, p.alpha + beatGlow);
+
+          // Slight size increase on beat
+          var sz = p.size + beat * p.dist * 0.5;
+
+          ctx.beginPath();
+          ctx.arc(sx, sy, sz, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + a.toFixed(2) + ')';
+          ctx.fill();
+        }
+
+        // Outer glow on beat
+        if (beat > 0.1) {
+          var grad = ctx.createRadialGradient(cx, cy, scale * 4, cx, cy, scale * 10);
+          grad.addColorStop(0, 'rgba(' + r + ',' + g + ',' + b + ',' + (beat * 0.04).toFixed(3) + ')');
+          grad.addColorStop(1, 'rgba(' + r + ',' + g + ',' + b + ',0)');
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, 0, W, H);
+        }
+
+        requestAnimationFrame(drawHeart);
+      }
+
+      // BPM display update
+      function updateBPM() {
+        var bpm = isHealthy ? 72 : 40;
+        beatSpeed = isHealthy ? 0.035 : 0.018;
+        var el = document.getElementById('hbBpm');
+        if (el) el.textContent = bpm;
+      }
+
+      // Hook into heartbeat status
+      var origHBRefresh = window.refreshHeartbeat;
+      window.refreshHeartbeat = function() {
+        if (origHBRefresh) origHBRefresh();
+        // Check if any service is healthy
+        setTimeout(function() {
+          var healthyServices = document.querySelectorAll('.cos-hb-service.healthy');
+          var wasHealthy = isHealthy;
+          isHealthy = healthyServices.length > 0;
+          if (isHealthy !== wasHealthy) updateBPM();
+        }, 500);
+      };
+
+      resize();
+      window.addEventListener('resize', resize);
+      initParticles();
+      updateBPM();
+      requestAnimationFrame(drawHeart);
+    })();
 
     // ── Neural Network Visualization Engine ──
     (function() {

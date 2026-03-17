@@ -2583,6 +2583,11 @@ body.light-mode .cos-hb-bar-tick.ok { background: rgba(61,140,64,0.35) !importan
 body.light-mode .cos-hb-micro-stat { color: #bbb !important; }
 body.light-mode .cos-hb-micro-stat span { color: #3d8c40 !important; }
 
+/* ── Particle Heart ── */
+body.light-mode .cos-heart-canvas-wrap { background: rgba(0,0,0,0.02) !important; border-radius: 8px; }
+body.light-mode .cos-heart-bpm { color: rgba(61,140,64,0.5) !important; }
+body.light-mode .cos-heart-bpm span { color: #3d8c40 !important; }
+
 /* ── Neural Network ── */
 body.light-mode .cos-neural-net {
   background: rgba(255,255,255,0.8) !important;

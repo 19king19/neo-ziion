@@ -756,6 +756,8 @@ body.light-mode .mobile-menu-divider {
   .cos-nn-header { flex-direction: column !important; gap: 6px !important; align-items: flex-start !important; }
   .cos-nn-stats { gap: 10px !important; font-size: 10px !important; }
   #nnCanvas { min-height: 140px; }
+  .cos-heart-canvas-wrap { height: 180px !important; margin: 8px 0 12px !important; }
+  .cos-heart-bpm { font-size: 10px !important; }
   .cos-heartbeat { padding: 12px 14px !important; }
   .cos-heartbeat-grid { gap: 8px !important; }
   .cos-hb-service { min-width: 120px !important; padding: 10px 12px !important; }

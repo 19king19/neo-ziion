@@ -1,0 +1,40 @@
+{
+  "_comment": "MCP Server Configuration for OpenClaw → Obsidian Bridge",
+  "_deploy_to": "~/.openclaw/mcp-servers.json OR claude_desktop_config.json",
+  "_instructions": "Install the MCP servers below, then add this config to your MCP client",
+
+  "mcpServers": {
+    "obsidian-vault": {
+      "_comment": "Direct Obsidian vault access via REST API",
+      "command": "npx",
+      "args": [
+        "-y",
+        "obsidian-mcp-server"
+      ],
+      "env": {
+        "OBSIDIAN_VAULT_PATH": "/Users/keyskeys/sovereign-content-os/obsidian_vault"
+      }
+    },
+    "smart-connections": {
+      "_comment": "Semantic search across vault notes — finds related concepts",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@anthropic/smart-connections-mcp"
+      ],
+      "env": {
+        "VAULT_PATH": "/Users/keyskeys/sovereign-content-os/obsidian_vault",
+        "EMBEDDING_MODEL": "text-embedding-3-small"
+      }
+    },
+    "filesystem-vault": {
+      "_comment": "Fallback: direct filesystem access to vault",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/Users/keyskeys/sovereign-content-os/obsidian_vault"
+      ]
+    }
+  }
+}

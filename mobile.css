@@ -751,6 +751,12 @@ body.light-mode .mobile-menu-divider {
     gap: 8px !important;
   }
   .cos-hero-btn { width: 100% !important; text-align: center !important; }
+  /* Heartbeat responsive */
+  .cos-heartbeat { padding: 12px 14px !important; }
+  .cos-heartbeat-grid { gap: 8px !important; }
+  .cos-hb-service { min-width: 120px !important; padding: 10px 12px !important; }
+  .cos-hb-name { font-size: 10px !important; }
+  .cos-hb-status { font-size: 12px !important; }
   .cos-layer-row .row-header {
     padding: 16px 16px 8px !important;
     gap: 12px !important;
@@ -778,4 +784,6 @@ body.light-mode .mobile-menu-divider {
   .cos-stat-value { font-size: 16px !important; }
   .cos-module-card { min-width: 140px !important; width: 140px !important; }
   .cos-module-thumb { height: 80px !important; }
+  .cos-heartbeat-grid { flex-direction: column !important; }
+  .cos-hb-service { min-width: 100% !important; }
 }

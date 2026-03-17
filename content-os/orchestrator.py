@@ -316,7 +316,7 @@ def run_daemon():
     schedule.every(4).hours.do(job_twitter)  # 3x/day max, every 4 hours
 
     # Schedule jobs — Autonomous Layer
-    schedule.every(1).minutes.do(job_heartbeat)  # Every minute
+    schedule.every(5).minutes.do(job_heartbeat)  # Every 5 minutes
     schedule.every(60).minutes.do(job_search_index)  # Rebuild index hourly
     schedule.every(5).minutes.do(job_delegation_check)  # Check for completed Codex tasks
     schedule.every().day.at('02:00').do(job_nightly_consolidation)  # 2 AM daily
@@ -329,7 +329,7 @@ def run_daemon():
     logger.info(f'  Vault publish:   every {INTELLIGENCE_INTERVAL} min')
     logger.info(f'  Brain ingest:    every {INTELLIGENCE_INTERVAL} min')
     logger.info(f'  Twitter/X:       every 4 hours')
-    logger.info(f'  Heartbeat:       every 1 min')
+    logger.info(f'  Heartbeat:       every 5 min')
     logger.info(f'  Search index:    every 60 min')
     logger.info(f'  Codex check:     every 5 min')
     logger.info(f'  Consolidation:   daily at 2:00 AM')

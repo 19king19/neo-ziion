@@ -753,6 +753,136 @@
     .cos-status-dot.online { background: #4ADE80; box-shadow: 0 0 8px rgba(74,222,128,0.5); }
     .cos-status-dot.offline { background: #666; }
 
+    /* ── Heartbeat Monitor Widget ── */
+    .cos-heartbeat {
+      margin: 20px 0 0;
+      padding: 16px 20px;
+      background: rgba(15,14,18,0.6);
+      border: 1px solid rgba(213,255,90,0.08);
+      border-radius: 12px;
+    }
+    .cos-heartbeat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .cos-heartbeat-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .cos-heartbeat-title .hb-icon {
+      width: 16px;
+      height: 16px;
+      animation: hbPulse 1.5s ease-in-out infinite;
+    }
+    @keyframes hbPulse {
+      0%, 100% { transform: scale(1); opacity: 0.7; }
+      50% { transform: scale(1.2); opacity: 1; }
+    }
+    .cos-heartbeat-time {
+      font-size: 11px;
+      color: rgba(255,255,255,0.3);
+    }
+    .cos-heartbeat-grid {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .cos-hb-service {
+      flex: 1;
+      min-width: 140px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.05);
+      transition: all 0.3s;
+    }
+    .cos-hb-service.healthy {
+      border-color: rgba(74,222,128,0.2);
+      background: rgba(74,222,128,0.04);
+    }
+    .cos-hb-service.unhealthy {
+      border-color: rgba(239,68,68,0.3);
+      background: rgba(239,68,68,0.06);
+    }
+    .cos-hb-service.unknown {
+      border-color: rgba(255,255,255,0.06);
+    }
+    .cos-hb-name {
+      font-size: 11px;
+      color: rgba(255,255,255,0.4);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+    .cos-hb-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .cos-hb-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .cos-hb-service.healthy .cos-hb-dot {
+      background: #4ADE80;
+      box-shadow: 0 0 6px rgba(74,222,128,0.5);
+    }
+    .cos-hb-service.healthy .cos-hb-status { color: #4ADE80; }
+    .cos-hb-service.unhealthy .cos-hb-dot {
+      background: #EF4444;
+      box-shadow: 0 0 6px rgba(239,68,68,0.5);
+      animation: hbPulse 1s ease-in-out infinite;
+    }
+    .cos-hb-service.unhealthy .cos-hb-status { color: #EF4444; }
+    .cos-hb-service.unknown .cos-hb-dot { background: #555; }
+    .cos-hb-service.unknown .cos-hb-status { color: rgba(255,255,255,0.3); }
+    .cos-hb-detail {
+      font-size: 10px;
+      color: rgba(255,255,255,0.25);
+      margin-top: 4px;
+    }
+    .cos-hb-bar {
+      display: flex;
+      gap: 2px;
+      margin-top: 10px;
+      height: 20px;
+      align-items: flex-end;
+    }
+    .cos-hb-bar-tick {
+      flex: 1;
+      min-width: 3px;
+      border-radius: 1px;
+      background: rgba(255,255,255,0.06);
+      transition: all 0.3s;
+    }
+    .cos-hb-bar-tick.ok { background: rgba(74,222,128,0.4); }
+    .cos-hb-bar-tick.warn { background: rgba(251,191,36,0.5); }
+    .cos-hb-bar-tick.fail { background: rgba(239,68,68,0.5); }
+    .cos-hb-bar-tick:last-child.ok { background: #4ADE80; box-shadow: 0 0 4px rgba(74,222,128,0.3); }
+    .cos-hb-bar-tick:last-child.fail { background: #EF4444; box-shadow: 0 0 4px rgba(239,68,68,0.3); }
+    .cos-hb-stats-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+    }
+    .cos-hb-micro-stat {
+      font-size: 10px;
+      color: rgba(255,255,255,0.3);
+    }
+    .cos-hb-micro-stat span { color: rgba(213,255,90,0.7); font-weight: 600; }
+
     /* ── Layer Row ── */
     .cos-layer-row .row-header {
       display: flex;
@@ -1602,6 +1732,54 @@
               <div class="cos-stat-label">Mac Mini</div>
             </div>
           </div>
+
+          <!-- ── Heartbeat Monitor ── -->
+          <div class="cos-heartbeat" id="cosHeartbeat">
+            <div class="cos-heartbeat-header">
+              <div class="cos-heartbeat-title">
+                <svg class="hb-icon" viewBox="0 0 24 24" fill="none" stroke="#D5FF5A" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                System Heartbeat
+              </div>
+              <div class="cos-heartbeat-time" id="hbLastCheck">Last check: —</div>
+            </div>
+            <div class="cos-heartbeat-grid">
+              <div class="cos-hb-service unknown" id="hbOrchestrator">
+                <div class="cos-hb-name">Orchestrator</div>
+                <div class="cos-hb-status"><div class="cos-hb-dot"></div><span>Waiting</span></div>
+                <div class="cos-hb-detail">Pipeline daemon</div>
+              </div>
+              <div class="cos-hb-service unknown" id="hbStatusServer">
+                <div class="cos-hb-name">Status API</div>
+                <div class="cos-hb-status"><div class="cos-hb-dot"></div><span>Waiting</span></div>
+                <div class="cos-hb-detail">Port 8819</div>
+              </div>
+              <div class="cos-hb-service unknown" id="hbOpenClaw">
+                <div class="cos-hb-name">OpenClaw</div>
+                <div class="cos-hb-status"><div class="cos-hb-dot"></div><span>Waiting</span></div>
+                <div class="cos-hb-detail">Gateway 18789</div>
+              </div>
+              <div class="cos-hb-service unknown" id="hbPipeline">
+                <div class="cos-hb-name">Pipeline</div>
+                <div class="cos-hb-status"><div class="cos-hb-dot"></div><span>Waiting</span></div>
+                <div class="cos-hb-detail">Last run freshness</div>
+              </div>
+              <div class="cos-hb-service unknown" id="hbDisk">
+                <div class="cos-hb-name">Disk</div>
+                <div class="cos-hb-status"><div class="cos-hb-dot"></div><span>Waiting</span></div>
+                <div class="cos-hb-detail">Storage health</div>
+              </div>
+            </div>
+            <!-- Uptime bar — last 30 checks visualized -->
+            <div class="cos-hb-bar" id="hbUptimeBar">
+              <!-- 30 ticks generated by JS -->
+            </div>
+            <div class="cos-hb-stats-row">
+              <div class="cos-hb-micro-stat">Checks: <span id="hbTotalChecks">0</span></div>
+              <div class="cos-hb-micro-stat">Restarts: <span id="hbTotalRestarts">0</span></div>
+              <div class="cos-hb-micro-stat">Uptime: <span id="hbUptime">—</span></div>
+            </div>
+          </div>
+
           <div class="cos-hero-actions">
             <button class="cos-hero-btn primary" onclick="refreshCosStatus()">↻ Refresh Status</button>
             <button class="cos-hero-btn secondary">⚡ Chairman View</button>
@@ -1966,6 +2144,107 @@
           if (statusText) statusText.textContent = 'Offline';
         });
     }
+
+    // ── Heartbeat Monitor ──
+    let hbHistory = [];
+
+    function refreshHeartbeat() {
+      fetch('http://localhost:8819/api/heartbeat', { signal: AbortSignal.timeout(3000) })
+        .then(r => r.json())
+        .then(data => {
+          const lastCheck = data.last_check || {};
+          const services = lastCheck.services || {};
+          const systemChecks = lastCheck.system_checks || {};
+
+          // Update last check time
+          const timeEl = document.getElementById('hbLastCheck');
+          if (lastCheck.timestamp) {
+            const t = new Date(lastCheck.timestamp);
+            timeEl.textContent = 'Last check: ' + t.toLocaleTimeString();
+          }
+
+          // Update service cards
+          updateHbService('hbOrchestrator', services.orchestrator);
+          updateHbService('hbStatusServer', services.status_server);
+          updateHbService('hbOpenClaw', services.openclaw_gateway);
+
+          // Pipeline freshness
+          const pipeline = systemChecks.pipeline_freshness || {};
+          const pipeEl = document.getElementById('hbPipeline');
+          if (pipeEl) {
+            const isOk = pipeline.status === 'healthy' || pipeline.status === 'fresh';
+            pipeEl.className = 'cos-hb-service ' + (isOk ? 'healthy' : pipeline.status === 'stale' ? 'unhealthy' : 'unknown');
+            pipeEl.querySelector('.cos-hb-status span').textContent = isOk ? 'Fresh' : (pipeline.status || 'Waiting');
+            if (pipeline.detail) pipeEl.querySelector('.cos-hb-detail').textContent = pipeline.detail;
+          }
+
+          // Disk
+          const disk = systemChecks.disk_space || {};
+          const diskEl = document.getElementById('hbDisk');
+          if (diskEl) {
+            const isOk = disk.status === 'healthy';
+            diskEl.className = 'cos-hb-service ' + (isOk ? 'healthy' : disk.status === 'warning' ? 'unhealthy' : 'unknown');
+            diskEl.querySelector('.cos-hb-status span').textContent = disk.percent_used ? disk.percent_used + '% used' : (disk.status || 'Waiting');
+            if (disk.detail) diskEl.querySelector('.cos-hb-detail').textContent = disk.detail;
+          }
+
+          // Stats
+          document.getElementById('hbTotalChecks').textContent = data.total_checks || 0;
+          document.getElementById('hbTotalRestarts').textContent = data.total_restarts || 0;
+
+          // Uptime calculation
+          if (data.total_checks > 0) {
+            const hrs = Math.floor((data.total_checks * 5) / 60);
+            document.getElementById('hbUptime').textContent = hrs > 0 ? hrs + 'h tracked' : '<1h';
+          }
+
+          // Push to history for uptime bar
+          const allHealthy = Object.values(services).every(s => s && s.status === 'healthy');
+          hbHistory.push(allHealthy ? 'ok' : 'fail');
+          if (hbHistory.length > 30) hbHistory.shift();
+          renderUptimeBar();
+        })
+        .catch(() => {
+          // Offline — push fail to bar
+          hbHistory.push('fail');
+          if (hbHistory.length > 30) hbHistory.shift();
+          renderUptimeBar();
+          document.getElementById('hbLastCheck').textContent = 'Last check: unreachable';
+          ['hbOrchestrator','hbStatusServer','hbOpenClaw','hbPipeline','hbDisk'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) { el.className = 'cos-hb-service unknown'; el.querySelector('.cos-hb-status span').textContent = 'Offline'; }
+          });
+        });
+    }
+
+    function updateHbService(elementId, svc) {
+      const el = document.getElementById(elementId);
+      if (!el || !svc) return;
+      const isHealthy = svc.status === 'healthy';
+      el.className = 'cos-hb-service ' + (isHealthy ? 'healthy' : 'unhealthy');
+      el.querySelector('.cos-hb-status span').textContent = isHealthy ? 'Healthy' : (svc.status || 'Down');
+      if (svc.detail) el.querySelector('.cos-hb-detail').textContent = svc.detail;
+    }
+
+    function renderUptimeBar() {
+      const bar = document.getElementById('hbUptimeBar');
+      if (!bar) return;
+      bar.innerHTML = '';
+      const ticks = hbHistory.length > 0 ? hbHistory : new Array(30).fill('');
+      // Pad to 30
+      while (ticks.length < 30) ticks.unshift('');
+      ticks.forEach(status => {
+        const tick = document.createElement('div');
+        tick.className = 'cos-hb-bar-tick' + (status ? ' ' + status : '');
+        tick.style.height = status === 'ok' ? '100%' : status === 'fail' ? '60%' : '30%';
+        bar.appendChild(tick);
+      });
+    }
+
+    // Initialize uptime bar + auto-refresh heartbeat every 30s
+    renderUptimeBar();
+    refreshHeartbeat();
+    setInterval(refreshHeartbeat, 30000);
 
     // Genre filter
     function filterGenre(genre, el) {

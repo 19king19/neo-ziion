@@ -2554,6 +2554,35 @@ body.light-mode .cos-hero-btn.secondary {
   border-color: rgba(0,0,0,0.08) !important;
 }
 
+/* ── Heartbeat Monitor (light mode) ── */
+body.light-mode .cos-heartbeat {
+  background: rgba(0,0,0,0.02) !important;
+  border-color: rgba(0,0,0,0.06) !important;
+}
+body.light-mode .cos-heartbeat-title { color: #888 !important; }
+body.light-mode .cos-heartbeat-title .hb-icon { stroke: #3d8c40 !important; }
+body.light-mode .cos-heartbeat-time { color: #bbb !important; }
+body.light-mode .cos-hb-service {
+  background: #fff !important;
+  border-color: rgba(0,0,0,0.06) !important;
+}
+body.light-mode .cos-hb-service.healthy {
+  border-color: rgba(61,140,64,0.2) !important;
+  background: rgba(61,140,64,0.03) !important;
+}
+body.light-mode .cos-hb-service.healthy .cos-hb-status { color: #3d8c40 !important; }
+body.light-mode .cos-hb-service.healthy .cos-hb-dot { background: #3d8c40 !important; box-shadow: 0 0 6px rgba(61,140,64,0.4) !important; }
+body.light-mode .cos-hb-service.unhealthy {
+  border-color: rgba(220,38,38,0.2) !important;
+  background: rgba(220,38,38,0.03) !important;
+}
+body.light-mode .cos-hb-name { color: #aaa !important; }
+body.light-mode .cos-hb-detail { color: #ccc !important; }
+body.light-mode .cos-hb-bar-tick { background: rgba(0,0,0,0.04) !important; }
+body.light-mode .cos-hb-bar-tick.ok { background: rgba(61,140,64,0.35) !important; }
+body.light-mode .cos-hb-micro-stat { color: #bbb !important; }
+body.light-mode .cos-hb-micro-stat span { color: #3d8c40 !important; }
+
 /* ── Layer Rows ── */
 body.light-mode .cos-layer-num {
   background: rgba(61,140,64,0.08) !important;

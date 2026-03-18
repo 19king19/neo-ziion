@@ -1,0 +1,35 @@
+---
+type: tweet
+tags:
+  - "#content-creation"
+  - "#media"
+  - "#twitter-archive"
+date: "2025-03-21"
+tweet_id: "1903148524382064808"
+source: "Twitter for iPhone"
+engagement_tier: "standard"
+favorites: 1
+retweets: 0
+---
+
+# Theres no large Black Owned Media companies at scale
+
+> There’s no large Black Owned Media companies at scale. 
+
+Control &amp; Fund our stories , narratives , ideas, news, movies , podcasts etc. 
+
+Particularly with meaningful content rather than meaningless death content. Can’t shift a culture out of survival mode to evolve unless we…
+
+---
+
+| Metric | Value |
+|--------|-------|
+| Date | March 21, 2025 at 06:15 PM |
+| Likes | 1 |
+| Retweets | 0 |
+| Source | Twitter for iPhone |
+| Hashtags | none |
+| Mentions | none |
+
+---
+_Part of [[Twitter Archive — 2025-03]] · [[Twitter Archive MOC]]_

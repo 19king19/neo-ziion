@@ -1,0 +1,88 @@
+---
+type: index
+tags:
+  - "#twitter-archive"
+date: "2023-02-01"
+---
+
+# Twitter Archive — 2023-02
+
+> 72 tweets from 2023-02
+
+---
+
+- [[2023-02-02 — Be yourself never compromise your integrity your character]]
+- [[2023-02-02 — Black Future Month]]
+- [[2023-02-02 — Fake smiles is worst than mean mugs]]
+- [[2023-02-02 — High lvl Conversations Kama Kamene 19keys this Saturday 444]]
+- [[2023-02-02 — High lvl Conversations is my gift to the world]]
+- [[2023-02-02 — I defied everyone expectations but God]]
+- [[2023-02-02 — I learned early to follow your own path (1)]]
+- [[2023-02-02 — I learned early to follow your own path]]
+- [[2023-02-02 — Im ready to make a movie]]
+- [[2023-02-02 — The Markets are moving]]
+- [[2023-02-03 — BWO got a 13 person tech team]]
+- [[2023-02-03 — High lvl Documentaries next]]
+- [[2023-02-03 — The power of being yourself]]
+- [[2023-02-04 — Today 19keys x Kaba Kamene]]
+- [[2023-02-04 — Today at 444 est we make the ancestor proud with another]]
+- [[2023-02-04 — Tommrow with the Gods]]
+- [[2023-02-05 — Now premiering live]]
+- [[2023-02-06 — Another one hits Platinum 1000000 minds 19keys w CoachCarson]]
+- [[2023-02-06 — Enjoying Fort Lauderdale w the Gods (1)]]
+- [[2023-02-06 — Enjoying Fort Lauderdale w the Gods]]
+- [[2023-02-06 — I skipped the Grammys to build with the Gods its a Higher]]
+- [[2023-02-06 — tweet]]
+- [[2023-02-07 — Another one about to hit platinum]]
+- [[2023-02-07 — Super Mind code w Billy Carson special]]
+- [[2023-02-09 — 1 Million Views with Dame Dash High level Conversations]]
+- [[2023-02-09 — 1 Million Views with Dame Dash Hugh level Conversations]]
+- [[2023-02-09 — Most of whats populate isnt important]]
+- [[2023-02-10 — DineshDSouza This a puppet is begging for white acceptance]]
+- [[2023-02-10 — If anyone works for any black publications like the]]
+- [[2023-02-10 — Keep the family with me]]
+- [[2023-02-10 — Originality is uncommon response]]
+- [[2023-02-10 — Please stop comparing me to Malcom Martin or any other past]]
+- [[2023-02-10 — _masterinvestor HBO Ep 3 was BS]]
+- [[2023-02-11 — The First thousand people only that text me will get you]]
+- [[2023-02-11 — Tommrow In Sacramento]]
+- [[2023-02-13 — Do you think you can the greatest 19keys]]
+- [[2023-02-14 — If you have no one to text on this feaux day of love]]
+- [[2023-02-14 — The last decade we have seen the greats technological]]
+- [[2023-02-14 — The new ai tools means you can increase efficiency instantly]]
+- [[2023-02-15 — You have the power to create the life you want Dont just]]
+- [[2023-02-17 — Im only at 19 of my potential]]
+- [[2023-02-17 — Salute to NBA Young Boy for beginning to change histhe]]
+- [[2023-02-17 — The Highest Lvl art by Marcia Divinity]]
+- [[2023-02-17 — Tommrow at 444 pst High Lvl Conversations returns]]
+- [[2023-02-17 — Working on being a better person than I was yesterday]]
+- [[2023-02-18 — AI Future proof workshop]]
+- [[2023-02-18 — In game avatar playing your favorite game or watching your]]
+- [[2023-02-18 — Premiering soon]]
+- [[2023-02-18 — Ready player one is here fully ready]]
+- [[2023-02-18 — Scrolling on social media Destroys your attention span]]
+- [[2023-02-18 — Shout out Wallstreet504 hes literally one of only peers who]]
+- [[2023-02-19 — The printing press was weaponized]]
+- [[2023-02-20 — Black_Out_ABE I did a whole show about it]]
+- [[2023-02-20 — Dragon Ball Z is the greatest anime of all time]]
+- [[2023-02-20 — Speaking Truth amp making money isnt easy]]
+- [[2023-02-21 — JayshawnBrown15 Whos else is the blame]]
+- [[2023-02-21 — Thank you Cointelegraph for including me in your top 100]]
+- [[2023-02-23 — KEEP GOD FIRST]]
+- [[2023-02-23 — STAY FOCUSED AND BUILD]]
+- [[2023-02-24 — I call black people Gods when I want to connect]]
+- [[2023-02-24 — Yall speak Gossip we speak Gospel thats why we High level]]
+- [[2023-02-25 — Where my connections in Jamaica]]
+- [[2023-02-27 — Everyone wont be remembered because most are too cowardly]]
+- [[2023-02-27 — HeathLeitner Have you bought anything]]
+- [[2023-02-27 — I find great joy in teaching people how to use their minds (1)]]
+- [[2023-02-27 — I find great joy in teaching people how to use their minds]]
+- [[2023-02-27 — I set trends I dont follow them]]
+- [[2023-02-27 — Is the NAACP a valid black organization]]
+- [[2023-02-27 — Oakland Bay Area its official]]
+- [[2023-02-27 — SmoPraise Kanye]]
+- [[2023-02-27 — So far what Ive done in the podcast space hasnt been done]]
+- [[2023-02-28 — Sometimes you to rare to be understood]]
+
+---
+_Part of [[Twitter Archive MOC]]_

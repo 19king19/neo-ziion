@@ -1,0 +1,88 @@
+---
+type: index
+tags:
+  - "#twitter-archive"
+date: "2011-10-01"
+---
+
+# Twitter Archive — 2011-10
+
+> 72 tweets from 2011-10
+
+---
+
+- [[2011-10-01 — A Chess Game I must learn to play better]]
+- [[2011-10-01 — All complaints are screams for Attention]]
+- [[2011-10-01 — Jobs degrade yo worth]]
+- [[2011-10-01 — Life is full of Highs and Lows its best to find middle]]
+- [[2011-10-01 — My potential is potent it can take me high places]]
+- [[2011-10-01 — That lady that keep smiling at me I wonder what she thinking]]
+- [[2011-10-01 — The more ignorant you are the more popular you become]]
+- [[2011-10-01 — Those who work hard get good sleep those who dont get too]]
+- [[2011-10-01 — When ppl stop doing for each other in relationships then]]
+- [[2011-10-08 — A thought unspoken can become a regret speak yo mind for]]
+- [[2011-10-09 — Just Business]]
+- [[2011-10-11 — BilanMcSwagger youLOVEseggy LmaoBig girls get love from]]
+- [[2011-10-11 — BilanMcSwagger youLOVEseggy glad I could helplol]]
+- [[2011-10-11 — Humble Pie and Pride are hard to swallow]]
+- [[2011-10-11 — I took a picture with a white chick and posted it on]]
+- [[2011-10-11 — Im in a INTERNATIONAL THINKER]]
+- [[2011-10-11 — She reminds me I have A Heart]]
+- [[2011-10-11 — Small minded hood niggas dont make A mark on the World cus]]
+- [[2011-10-11 — Started my day off with a Good deed]]
+- [[2011-10-11 — Time to do what I got to do never an easy way family]]
+- [[2011-10-11 — You can live many lives in one]]
+- [[2011-10-11 — youLOVEseggy Different strokes for different folks -stole]]
+- [[2011-10-12 — Focus on thinking youll get more thinking Focus on doing]]
+- [[2011-10-12 — Gotta Test the limits of Life]]
+- [[2011-10-13 — They all love me]]
+- [[2011-10-14 — Peace to the UNFRESH]]
+- [[2011-10-14 — Stand up or Sit down]]
+- [[2011-10-14 — Those guys Looking]]
+- [[2011-10-20 — Im from the show me state gotta prove yoself]]
+- [[2011-10-20 — Life gets better in the morning Newdays]]
+- [[2011-10-22 — JACKHELLA24 It was good bad parts of the nights and]]
+- [[2011-10-22 — Last night was left and right Silence is golden]]
+- [[2011-10-22 — MrBeyWeather ask yo boy he keep hopping off the leash]]
+- [[2011-10-22 — MrBeyWeather last snitch I hit I caught a case wiser]]
+- [[2011-10-23 — If you the smartest person in the room you in the wrong room]]
+- [[2011-10-23 — MrBeyWeather I speak outta confidence not Fear]]
+- [[2011-10-23 — MrBeyWeather The Officer spoke first CERTIFIED OPD Id fight]]
+- [[2011-10-23 — See me as I am take a picture if you need must dont degrade]]
+- [[2011-10-23 — Somebody tell these FAKE GOONS IT AINT HOLLOWEEN YET]]
+- [[2011-10-23 — Take it how you wanna Im just telling you how it is]]
+- [[2011-10-25 — ANYONE CAN NOTICE A WOMANS OUTER BEAUTY BUT ONLY REAL MEN]]
+- [[2011-10-25 — Everybody knows me from work Stalkers]]
+- [[2011-10-25 — HAD A STL FLASHBACK JUST THEN]]
+- [[2011-10-25 — LETS MOB ON THESE BITCH ASS NIGGAS]]
+- [[2011-10-25 — Once you go White you aint right ladies]]
+- [[2011-10-25 — Shave ya legs ladies]]
+- [[2011-10-25 — Shave yo mustache lady]]
+- [[2011-10-25 — Somebody tell lesbians they aint tough]]
+- [[2011-10-25 — TMZ109 NAHHH I LOVE BLACK LADIES OF COLOR DONT NEED SNOW]]
+- [[2011-10-25 — TMZ109 yea but they wont be SATISFIED]]
+- [[2011-10-25 — That was for Black Ladies]]
+- [[2011-10-25 — Workout Ladies like Rolls with my dinner not wit my women]]
+- [[2011-10-25 — You not Ugly believe in yoself jeez]]
+- [[2011-10-26 — Assassinate excuses and Bring life to good reasons]]
+- [[2011-10-26 — Going to work out the Body gotta ready]]
+- [[2011-10-26 — I CANT DO WHAAATT THATS CRAAAZZZYYY TALK]]
+- [[2011-10-26 — I wanted shit to change I voted for Obama and all he]]
+- [[2011-10-26 — NO EXCUSE JUST AMBITIONS]]
+- [[2011-10-26 — New York my next home]]
+- [[2011-10-26 — The game of chess is loss when you get yo King cornered but]]
+- [[2011-10-26 — The world is vicious]]
+- [[2011-10-26 — They occupying Cities cus when Politicians be Politikan]]
+- [[2011-10-26 — What other ppl do with they life and time doesnt effect you]]
+- [[2011-10-28 — Gotta make it home for the Holiday]]
+- [[2011-10-28 — Lets play Words With Friends My username is]]
+- [[2011-10-28 — The News a bunch bull shit]]
+- [[2011-10-29 — A Hood lady will hold you down those the prissy want to be]]
+- [[2011-10-29 — Art and Creative thinking are some off my best Gifts]]
+- [[2011-10-29 — Hesitation can cause a Winner to Lose]]
+- [[2011-10-29 — Omw downtown SF unfortunately]]
+- [[2011-10-29 — You might be Alive but you aint living til you got that]]
+- [[2011-10-30 — BanaMomma go to sleep]]
+
+---
+_Part of [[Twitter Archive MOC]]_

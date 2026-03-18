@@ -22,6 +22,7 @@ from config.settings import (
     GDRIVE_SYNC_INTERVAL,
     YT_ANALYTICS_INTERVAL,
     INTELLIGENCE_INTERVAL,
+    INTENTION_PIPELINE_INTERVAL,
     STATUS_FILE,
     STATUS_PORT,
     STATUS_HOST,
@@ -38,11 +39,13 @@ from layer_02_intelligence.quote_extractor import extract_quotes
 from layer_02_intelligence.theme_clusterer import cluster_themes
 from layer_03_vault.vault_publisher import VaultPublisher
 from layer_04_ingestion.brain_ingest import run_ingestion
+from layer_04_ingestion.twitter_archive_ingest import run_twitter_archive_ingest
 from layer_05_distribution.twitter_agent import run_twitter_schedule
 from layer_06_autonomous.nightly_consolidation import run_consolidation
 from layer_06_autonomous.heartbeat_monitor import run_heartbeat
 from layer_06_autonomous.semantic_search import build_search_index, search_vault
 from layer_06_autonomous.codex_delegator import run_delegation_check
+from layer_07_intentions.pipeline import run_intention_pipeline
 
 # ── Logging Setup ──
 logging.basicConfig(
@@ -201,6 +204,21 @@ def job_brain_ingest():
         logger.error(f'Brain ingest job failed: {e}')
 
 
+def job_twitter_archive_ingest():
+    """On-demand: Ingest Twitter/X data archive into Obsidian vault."""
+    update_status('twitter_archive', 'active', 'Ingesting Twitter archive...')
+    try:
+        stats = run_twitter_archive_ingest()
+        total = stats.get('notes_created', 0)
+        tweets = stats.get('tweets_ingested', 0)
+        likes = stats.get('likes_ingested', 0)
+        update_status('twitter_archive', 'idle',
+                       f'{total} notes created ({tweets} tweets, {likes} likes)')
+    except Exception as e:
+        update_status('twitter_archive', 'error', str(e))
+        logger.error(f'Twitter archive ingest failed: {e}')
+
+
 def job_twitter():
     """Scheduled: Autonomous Twitter/X posting."""
     update_status('twitter', 'active', 'Posting to X...')
@@ -265,6 +283,20 @@ def job_delegation_check():
         logger.error(f'Delegation check failed: {e}')
 
 
+def job_intention_pipeline():
+    """Scheduled: Process community intentions through AI pipeline."""
+    update_status('intentions', 'active', 'Processing intentions...')
+    try:
+        result = run_intention_pipeline()
+        processed = result.get('fetched', 0)
+        new_clusters = result.get('new_clusters', 0)
+        detail = f'{processed} processed, {new_clusters} new clusters'
+        update_status('intentions', 'idle', detail)
+    except Exception as e:
+        update_status('intentions', 'error', str(e))
+        logger.error(f'Intention pipeline failed: {e}')
+
+
 def run_all_once():
     """Run all pipeline layers once (useful for testing)."""
     logger.info('═══ Running all layers once ═══')
@@ -274,9 +306,11 @@ def run_all_once():
     job_intelligence()
     job_vault_publish()
     job_brain_ingest()
+    job_twitter_archive_ingest()
     job_search_index()
     job_delegation_check()
     job_heartbeat()
+    job_intention_pipeline()
     logger.info('═══ All layers complete ═══')
 
 
@@ -321,6 +355,9 @@ def run_daemon():
     schedule.every(5).minutes.do(job_delegation_check)  # Check for completed Codex tasks
     schedule.every().day.at('02:00').do(job_nightly_consolidation)  # 2 AM daily
 
+    # Schedule jobs — Intention Market
+    schedule.every(INTENTION_PIPELINE_INTERVAL).minutes.do(job_intention_pipeline)
+
     logger.info(f'Schedules set:')
     logger.info(f'  GDrive sync:     every {GDRIVE_SYNC_INTERVAL} min')
     logger.info(f'  Whisper:         every {GDRIVE_SYNC_INTERVAL} min')
@@ -333,6 +370,7 @@ def run_daemon():
     logger.info(f'  Search index:    every 60 min')
     logger.info(f'  Codex check:     every 5 min')
     logger.info(f'  Consolidation:   daily at 2:00 AM')
+    logger.info(f'  Intentions:      every {INTENTION_PIPELINE_INTERVAL} min')
 
     # Run all immediately on startup
     run_all_once()

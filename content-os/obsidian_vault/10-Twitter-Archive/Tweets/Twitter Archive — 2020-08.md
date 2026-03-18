@@ -1,0 +1,86 @@
+---
+type: index
+tags:
+  - "#twitter-archive"
+date: "2020-08-01"
+---
+
+# Twitter Archive — 2020-08
+
+> 70 tweets from 2020-08
+
+---
+
+- [[2020-08-01 — Cold War with China amp Bill Gates continues to run hot as]]
+- [[2020-08-01 — Land Ownership anyone]]
+- [[2020-08-01 — SCCapitall Thank you]]
+- [[2020-08-01 — Step out the city Matrix avoid driving just travel]]
+- [[2020-08-01 — lucky13_and We have artist but you dont simply create]]
+- [[2020-08-02 — Sometimes I feel like I really know nothing at all I mean]]
+- [[2020-08-02 — Thought of the day Nothing is a good resource to have the]]
+- [[2020-08-04 — Who got a gym I can pull up to in LA Right now]]
+- [[2020-08-07 — Everything already yours]]
+- [[2020-08-07 — Just be you most powerful words of advice]]
+- [[2020-08-07 — Observe your energy and Improve]]
+- [[2020-08-07 — Stay godly]]
+- [[2020-08-08 — Bang yo name as you hit yo aims Otherwise they pretend you]]
+- [[2020-08-08 — Hip hop has a double standard for the sexualization of women]]
+- [[2020-08-08 — Ladies anyone can have a WAP just eat right hydrate amp]]
+- [[2020-08-08 — The silent reaction to Sex trafficking is because of the]]
+- [[2020-08-08 — Vote local everything else is hopeful]]
+- [[2020-08-10 — Conservative rules for Gold in your portfolio was 5]]
+- [[2020-08-10 — This generation dont need you to campaign for Joe Biden fck]]
+- [[2020-08-10 — This generation dont you to campaign for Joe Biden fck him]]
+- [[2020-08-10 — This world culture will celebrate a PIMP more they do a]]
+- [[2020-08-11 — Kamala Harris amp Joe Biden the same Hilary amp Donald Trump]]
+- [[2020-08-11 — Politics is for suckas for 2021 focus on]]
+- [[2020-08-14 — Rest in power to the Six Figure Chick she brung so much]]
+- [[2020-08-15 — A great leader understands men amp women never shape their]]
+- [[2020-08-15 — A knowledge of the masses must be studied in order to]]
+- [[2020-08-15 — An entire nation can become a crowd under certain]]
+- [[2020-08-15 — Do not measure your success by the validation of others]]
+- [[2020-08-15 — Knowledge vs Experience ____Learn the difference between]]
+- [[2020-08-15 — Learning to control your mood allows you to control your]]
+- [[2020-08-15 — Seeing things as they are is a gift seeing things as you]]
+- [[2020-08-15 — Social media helped us realize the average person walking]]
+- [[2020-08-15 — The great law of the universe is 1 or god and everything]]
+- [[2020-08-16 — Stock ownership]]
+- [[2020-08-16 — Wealth standard tour dates]]
+- [[2020-08-17 — Every black family should be backed by GOLD (1)]]
+- [[2020-08-17 — Every black family should be backed by GOLD]]
+- [[2020-08-18 — Poor people spend money wealthy people circulate and invest]]
+- [[2020-08-19 — A Servant is more productive when he or she imagines they]]
+- [[2020-08-19 — Ive won battles with logic but lost the war of the hearts]]
+- [[2020-08-19 — Middle class America is afraid to come outside]]
+- [[2020-08-19 — Nationalism is Stockholm syndrome for universal original]]
+- [[2020-08-19 — So instead suggesting abortions like Oprah we should]]
+- [[2020-08-21 — We be so busy exposing the devils or the things we dislike]]
+- [[2020-08-22 — Looking for a smart assistant in Atlanta and a 2 interns]]
+- [[2020-08-23 — How come the only time people care about what they]]
+- [[2020-08-23 — The only person I care about being better than is the]]
+- [[2020-08-25 — A Servant is more productive when he or she imagines they]]
+- [[2020-08-25 — Free range slaves not free just have more freedom and more]]
+- [[2020-08-25 — Why is Benjamin Crump the only lawyer for major cases]]
+- [[2020-08-26 — Doo WOP vs WAP Divine Feminine Female empowerment which]]
+- [[2020-08-26 — Good time to hear]]
+- [[2020-08-26 — Next action re-direct all funds to groups of ACTION]]
+- [[2020-08-26 — The NBA is economically boycotting police terrorism]]
+- [[2020-08-26 — We attack principles not people - wesleymuhammad So NEVER]]
+- [[2020-08-27 — Put the coward in front of me]]
+- [[2020-08-27 — White America treat terrorist as heros meanwhile we treat]]
+- [[2020-08-29 — He lives through the inspiration he gave us all Live]]
+- [[2020-08-29 — To day Fck Cancer then turn around and eat Cancer causing]]
+- [[2020-08-30 — Dear Celebrities and public figures who follow Real Thought]]
+- [[2020-08-31 — Always give credit where credit is due]]
+- [[2020-08-31 — Cultivate a good mood daily its the mood that controls the]]
+- [[2020-08-31 — Growth isnt easy because most times it forces you to]]
+- [[2020-08-31 — Never stop education learn forever if you value knowledge]]
+- [[2020-08-31 — OutsideLikeTree Lol]]
+- [[2020-08-31 — Poor Health is Poverty]]
+- [[2020-08-31 — Procrastination is the abortion clinic of ideas giving]]
+- [[2020-08-31 — Selling options amp calls today - take your profits dont]]
+- [[2020-08-31 — Stay updated to current time Reality technology and society]]
+- [[2020-08-31 — Your work should match your Dreams never have goals that]]
+
+---
+_Part of [[Twitter Archive MOC]]_

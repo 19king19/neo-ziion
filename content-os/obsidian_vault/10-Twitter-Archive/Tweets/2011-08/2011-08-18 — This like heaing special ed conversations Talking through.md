@@ -1,0 +1,30 @@
+---
+type: tweet
+tags:
+  - "#artificial-intelligence"
+  - "#twitter-archive"
+date: "2011-08-18"
+tweet_id: "104083609652183040"
+source: "Twitter Web Client"
+engagement_tier: "standard"
+favorites: 0
+retweets: 0
+---
+
+# This like heaing special ed conversations Talking through
+
+> This like heaing special ed conversations... Talking through helmets slobberrin...
+
+---
+
+| Metric | Value |
+|--------|-------|
+| Date | August 18, 2011 at 06:54 AM |
+| Likes | 0 |
+| Retweets | 0 |
+| Source | Twitter Web Client |
+| Hashtags | none |
+| Mentions | none |
+
+---
+_Part of [[Twitter Archive — 2011-08]] · [[Twitter Archive MOC]]_

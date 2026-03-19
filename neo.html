@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>ZIION — Neo Command Center</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -129,6 +129,25 @@
     .stat-value.red { color: #ff5050; }
     .stat-sub { font-size: 10px; color: rgba(255,255,255,0.2); font-weight: 400; }
 
+    /* ── Content Tabs ── */
+    .content-tabs {
+      display: flex; gap: 4px; background: rgba(255,255,255,0.04); border-radius: 10px; padding: 4px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .content-tab {
+      flex: 1; padding: 10px 20px; border-radius: 8px; border: none;
+      background: transparent; color: rgba(255,255,255,0.35);
+      font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+      cursor: pointer; font-family: inherit; transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      min-height: 44px;
+    }
+    .content-tab:hover { color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.04); }
+    .content-tab.active { background: rgba(255,255,255,0.08); color: #fff; }
+    .content-tab svg { width: 14px; height: 14px; }
+    .tab-content { display: none; flex-direction: column; gap: 16px; flex: 1; min-height: 0; }
+    .tab-content.active { display: flex; }
+
     /* ── Main Grid ── */
     .main-grid { display: grid; grid-template-columns: 3fr 2fr; gap: 16px; flex: 1; min-height: 0; }
 
@@ -183,12 +202,118 @@
       color: rgba(255,255,255,0.5); font-size: 12px; font-weight: 600;
       cursor: pointer; font-family: inherit; transition: all 0.15s;
       display: flex; align-items: center; gap: 10px; letter-spacing: 0.02em;
+      min-height: 44px;
     }
     .action-btn:hover { border-color: rgba(213,255,90,0.2); color: #D5FF5A; background: rgba(213,255,90,0.04); }
     .action-btn svg { width: 14px; height: 14px; opacity: 0.5; }
     .action-btn:hover svg { opacity: 1; }
     .action-btn.primary { border-color: rgba(213,255,90,0.15); color: #D5FF5A; background: rgba(213,255,90,0.06); }
     .action-btn.primary:hover { background: rgba(213,255,90,0.1); border-color: rgba(213,255,90,0.3); }
+
+    /* ── Wiki / Knowledge Tab ── */
+    .wiki-layout {
+      display: flex; flex: 1; min-height: 0; gap: 16px;
+    }
+    .wiki-sidebar {
+      width: 30%; min-width: 240px; display: flex; flex-direction: column;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px; overflow: hidden;
+    }
+    .wiki-search {
+      padding: 14px; border-bottom: 1px solid rgba(255,255,255,0.06); flex-shrink: 0;
+    }
+    .wiki-search input {
+      width: 100%; padding: 10px 14px; border-radius: 10px;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.6); font-size: 13px; font-family: inherit;
+      outline: none; transition: border-color 0.2s;
+      min-height: 44px;
+    }
+    .wiki-search input::placeholder { color: rgba(255,255,255,0.2); }
+    .wiki-search input:focus { border-color: rgba(255,255,255,0.15); }
+    .wiki-list {
+      flex: 1; overflow-y: auto; padding: 8px;
+    }
+    .wiki-list::-webkit-scrollbar { width: 4px; }
+    .wiki-list::-webkit-scrollbar-track { background: transparent; }
+    .wiki-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 2px; }
+    .wiki-folder-label {
+      font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.2); padding: 12px 10px 6px; margin-top: 4px;
+    }
+    .wiki-note-item {
+      padding: 10px 12px; border-radius: 10px; cursor: pointer;
+      transition: background 0.15s; margin-bottom: 2px;
+      min-height: 44px; display: flex; flex-direction: column; justify-content: center;
+    }
+    .wiki-note-item:hover { background: rgba(255,255,255,0.06); }
+    .wiki-note-item.active { background: rgba(213,255,90,0.08); border: 1px solid rgba(213,255,90,0.12); }
+    .wiki-note-title {
+      font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.7);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .wiki-note-item.active .wiki-note-title { color: #D5FF5A; }
+    .wiki-note-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px; }
+    .wiki-tag {
+      font-size: 9px; font-weight: 600; padding: 2px 8px; border-radius: 10px;
+      background: rgba(213,255,90,0.1); color: rgba(213,255,90,0.7);
+      text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .wiki-content-pane {
+      flex: 1; display: flex; flex-direction: column;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px; overflow: hidden;
+    }
+    .wiki-content-header {
+      padding: 18px 24px; border-bottom: 1px solid rgba(255,255,255,0.06); flex-shrink: 0;
+    }
+    .wiki-content-title { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+    .wiki-content-meta { font-size: 10px; color: rgba(255,255,255,0.2); }
+    .wiki-content-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 8px; }
+    .wiki-content-body {
+      flex: 1; overflow-y: auto; padding: 24px;
+      font-size: 14px; line-height: 1.8; color: rgba(255,255,255,0.6);
+    }
+    .wiki-content-body::-webkit-scrollbar { width: 4px; }
+    .wiki-content-body::-webkit-scrollbar-track { background: transparent; }
+    .wiki-content-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 2px; }
+    .wiki-content-body h1 { font-size: 22px; font-weight: 700; color: #fff; margin: 0 0 12px; }
+    .wiki-content-body h2 { font-size: 18px; font-weight: 700; color: rgba(255,255,255,0.85); margin: 20px 0 10px; }
+    .wiki-content-body h3 { font-size: 15px; font-weight: 700; color: rgba(255,255,255,0.75); margin: 16px 0 8px; }
+    .wiki-content-body p { margin: 0 0 12px; }
+    .wiki-content-body strong { color: rgba(255,255,255,0.8); }
+    .wiki-content-body em { font-style: italic; }
+    .wiki-content-body a { color: #D5FF5A; text-decoration: none; }
+    .wiki-content-body a:hover { text-decoration: underline; }
+    .wiki-content-body ul, .wiki-content-body ol { margin: 0 0 12px 20px; }
+    .wiki-content-body li { margin-bottom: 4px; }
+    .wiki-content-body code {
+      font-family: 'JetBrains Mono', monospace; font-size: 12px;
+      background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px;
+      color: #D5FF5A;
+    }
+    .wiki-content-body pre {
+      background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px; padding: 16px; margin: 0 0 12px; overflow-x: auto;
+    }
+    .wiki-content-body pre code { background: none; padding: 0; }
+    .wiki-empty {
+      display: flex; align-items: center; justify-content: center;
+      flex: 1; color: rgba(255,255,255,0.1); font-size: 13px;
+    }
+
+    /* ── Wiki mobile sub-tabs ── */
+    .wiki-mobile-tabs {
+      display: none; gap: 4px; padding: 0 0 12px;
+    }
+    .wiki-mobile-tab {
+      flex: 1; padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08);
+      background: transparent; color: rgba(255,255,255,0.35);
+      font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+      cursor: pointer; font-family: inherit; text-align: center;
+      min-height: 44px;
+    }
+    .wiki-mobile-tab.active { background: rgba(255,255,255,0.08); color: #fff; border-color: rgba(255,255,255,0.12); }
 
     /* ── Bottom Bar ── */
     .bottom-bar {
@@ -207,11 +332,36 @@
     @media (max-width: 1100px) {
       .main-grid { grid-template-columns: 1fr; }
       .stats-row { grid-template-columns: repeat(2, 1fr); }
+      .wiki-layout { flex-direction: column; }
+      .wiki-sidebar { width: 100%; min-width: unset; max-height: 300px; }
     }
     @media (max-width: 768px) {
       .sidebar { display: none; }
-      .content { padding: 20px 16px; }
-      .stats-row { grid-template-columns: 1fr 1fr; }
+      .header { padding: 0 16px; height: 56px; }
+      .header .search-bar { display: none; }
+      .content { padding: 16px 14px; gap: 14px; }
+      .stats-row { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .stat-card { padding: 14px 16px; }
+      .stat-value { font-size: 16px; }
+      .neo-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+      .neo-title { font-size: 18px; }
+      .main-grid { grid-template-columns: 1fr; gap: 12px; }
+      .bottom-bar { padding: 10px 16px; font-size: 10px; flex-wrap: wrap; gap: 6px; }
+      .content-tabs { flex-direction: row; }
+      .content-tab { padding: 10px 12px; font-size: 10px; }
+      /* Wiki mobile */
+      .wiki-layout { flex-direction: column; }
+      .wiki-sidebar { width: 100%; min-width: unset; max-height: none; }
+      .wiki-content-pane { min-height: 300px; }
+      .wiki-mobile-tabs { display: flex; }
+      .wiki-sidebar.mobile-hidden { display: none; }
+      .wiki-content-pane.mobile-hidden { display: none; }
+      .wiki-content-body { padding: 16px; font-size: 13px; }
+      .wiki-content-header { padding: 14px 16px; }
+      .wiki-content-title { font-size: 16px; }
+      .panel-header { padding: 12px 14px; }
+      .feed { padding: 12px 14px; }
+      .actions-grid { padding: 12px 14px; }
     }
   </style>
 </head>
@@ -314,57 +464,97 @@
         </div>
       </div>
 
-      <!-- Main Grid -->
-      <div class="main-grid">
+      <!-- Content Tabs -->
+      <div class="content-tabs">
+        <button class="content-tab active" onclick="switchTab('livefeed')" id="tabLivefeed">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          LIVE FEED
+        </button>
+        <button class="content-tab" onclick="switchTab('wiki')" id="tabWiki">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          KNOWLEDGE WIKI
+        </button>
+      </div>
 
-        <!-- Left: Conversation Feed -->
-        <div class="panel" style="max-height: 520px;">
-          <div class="panel-header">
-            <div class="panel-title">Live Conversation Feed</div>
-            <div class="panel-badge" id="msgCount">0 messages</div>
-          </div>
-          <div class="feed" id="convoFeed">
-            <div class="feed-empty">Waiting for conversation data...</div>
-          </div>
-        </div>
-
-        <!-- Right Column -->
-        <div class="right-col">
-
-          <!-- System Logs -->
-          <div class="panel" style="flex: 1; max-height: 340px;">
+      <!-- Tab: Live Feed -->
+      <div class="tab-content active" id="contentLivefeed">
+        <div class="main-grid">
+          <!-- Left: Conversation Feed -->
+          <div class="panel" style="max-height: 520px;">
             <div class="panel-header">
-              <div class="panel-title">System Logs</div>
-              <div class="panel-badge" id="logCount">0 entries</div>
+              <div class="panel-title">Live Conversation Feed</div>
+              <div class="panel-badge" id="msgCount">0 messages</div>
             </div>
-            <div class="feed" id="logFeed">
-              <div class="feed-empty">Waiting for log data...</div>
-            </div>
-          </div>
-
-          <!-- Quick Actions -->
-          <div class="panel">
-            <div class="panel-header">
-              <div class="panel-title">Quick Actions</div>
-            </div>
-            <div class="actions-grid">
-              <button class="action-btn primary" onclick="refreshAll()">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-                Refresh All Data
-              </button>
-              <button class="action-btn" onclick="clearSession()">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
-                Clear Session
-              </button>
-              <button class="action-btn" onclick="healthCheck()">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                Health Check
-              </button>
+            <div class="feed" id="convoFeed">
+              <div class="feed-empty">Waiting for conversation data...</div>
             </div>
           </div>
 
+          <!-- Right Column -->
+          <div class="right-col">
+            <!-- System Logs -->
+            <div class="panel" style="flex: 1; max-height: 340px;">
+              <div class="panel-header">
+                <div class="panel-title">System Logs</div>
+                <div class="panel-badge" id="logCount">0 entries</div>
+              </div>
+              <div class="feed" id="logFeed">
+                <div class="feed-empty">Waiting for log data...</div>
+              </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title">Quick Actions</div>
+              </div>
+              <div class="actions-grid">
+                <button class="action-btn primary" onclick="refreshAll()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                  Refresh All Data
+                </button>
+                <button class="action-btn" onclick="clearSession()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+                  Clear Session
+                </button>
+                <button class="action-btn" onclick="healthCheck()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                  Health Check
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+
+      <!-- Tab: Knowledge Wiki -->
+      <div class="tab-content" id="contentWiki">
+        <!-- Mobile sub-tabs for wiki -->
+        <div class="wiki-mobile-tabs" id="wikiMobileTabs">
+          <button class="wiki-mobile-tab active" onclick="switchWikiMobile('list')">Notes</button>
+          <button class="wiki-mobile-tab" onclick="switchWikiMobile('reader')">Reader</button>
+        </div>
+        <div class="wiki-layout">
+          <div class="wiki-sidebar" id="wikiSidebar">
+            <div class="wiki-search">
+              <input type="text" placeholder="Search notes..." id="wikiSearchInput" oninput="filterWikiNotes()">
+            </div>
+            <div class="wiki-list" id="wikiList">
+              <div class="wiki-empty" style="padding:40px 0;">Loading vault...</div>
+            </div>
+          </div>
+          <div class="wiki-content-pane" id="wikiContentPane">
+            <div class="wiki-empty" id="wikiPlaceholder">Select a note to view</div>
+            <div class="wiki-content-header" id="wikiHeader" style="display:none;">
+              <div class="wiki-content-title" id="wikiTitle"></div>
+              <div class="wiki-content-tags" id="wikiTags"></div>
+              <div class="wiki-content-meta" id="wikiMeta"></div>
+            </div>
+            <div class="wiki-content-body" id="wikiBody" style="display:none;"></div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -372,16 +562,23 @@
   <div class="bottom-bar">
     <div class="conn-label">
       <div class="conn-dot" id="bottomDot"></div>
-      <span id="bottomConn">Connected to Mac Mini @ 192.168.1.198:8819</span>
+      <span id="bottomConn">Connecting...</span>
     </div>
     <div id="lastRefresh">Last refresh: --</div>
   </div>
 
   <script>
-    const BASE = 'http://192.168.1.198:8819';
+    // ── Config ──
+    const SUPABASE_URL = 'https://mkbnyejnzstqgyvqoqau.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1rYm55ZWpuenN0cWd5dnFvcWF1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3OTM3MDcsImV4cCI6MjA4OTM2OTcwN30.Nryzv9eJntGKWfBwN8Y7EwR-pHV7EFWTmAxdBF96_Es';
+    const LOCAL_BASE = 'http://192.168.1.198:8819';
+
     let isOnline = false;
     let startTime = null;
     let uptimeInterval = null;
+    let connectionSource = 'none'; // 'cloud', 'local', 'none'
+    let vaultNotes = [];
+    let selectedNoteId = null;
 
     // ── Helpers ──
     function ts() {
@@ -398,8 +595,9 @@
       document.getElementById('lastRefresh').textContent = 'Last refresh: ' + ts();
     }
 
-    function setOnline(online) {
+    function setOnline(online, source) {
       isOnline = online;
+      if (source) connectionSource = source;
       const badge = document.getElementById('connBadge');
       const label = document.getElementById('connLabel');
       const dot = document.getElementById('bottomDot');
@@ -408,19 +606,27 @@
 
       if (online) {
         badge.classList.remove('offline');
-        label.textContent = 'Online';
         dot.classList.remove('offline');
-        statusVal.textContent = 'Online';
         statusVal.className = 'stat-value green';
-        bottomConn.textContent = 'Connected to Mac Mini @ 192.168.1.198:8819';
         if (!startTime) startTime = Date.now();
+
+        if (connectionSource === 'cloud') {
+          label.textContent = 'Online (Cloud)';
+          statusVal.textContent = 'Online';
+          bottomConn.textContent = 'Connected to Supabase (Cloud)';
+        } else {
+          label.textContent = 'Online (Local)';
+          statusVal.textContent = 'Online';
+          bottomConn.textContent = 'Connected to Mac Mini (Local)';
+        }
       } else {
         badge.classList.add('offline');
         label.textContent = 'Offline';
         dot.classList.add('offline');
         statusVal.textContent = 'Offline';
         statusVal.className = 'stat-value red';
-        bottomConn.textContent = 'Disconnected from Mac Mini @ 192.168.1.198:8819';
+        bottomConn.textContent = 'Disconnected';
+        connectionSource = 'none';
       }
     }
 
@@ -440,9 +646,53 @@
       }
     }
 
-    // ── Auto-scroll helper ──
     function scrollToBottom(el) {
       el.scrollTop = el.scrollHeight;
+    }
+
+    // ── Supabase fetch helper ──
+    async function supabaseFetch(path) {
+      const resp = await fetch(SUPABASE_URL + path, {
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+          'Content-Type': 'application/json'
+        },
+        signal: AbortSignal.timeout(8000)
+      });
+      if (!resp.ok) throw new Error('Supabase HTTP ' + resp.status);
+      return resp.json();
+    }
+
+    // ── Local fetch helper ──
+    async function localFetch(path) {
+      const resp = await fetch(LOCAL_BASE + path, { mode: 'cors', signal: AbortSignal.timeout(8000) });
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      const text = await resp.text();
+      if (text.trim().startsWith('{') && text.includes('\n')) {
+        try { return text.trim().split('\n').map(function(l) { return JSON.parse(l); }); } catch(e) {}
+      }
+      try { return JSON.parse(text); } catch(e) { return text; }
+    }
+
+    // ── Tab Switching ──
+    function switchTab(tab) {
+      document.getElementById('tabLivefeed').classList.toggle('active', tab === 'livefeed');
+      document.getElementById('tabWiki').classList.toggle('active', tab === 'wiki');
+      document.getElementById('contentLivefeed').classList.toggle('active', tab === 'livefeed');
+      document.getElementById('contentWiki').classList.toggle('active', tab === 'wiki');
+      if (tab === 'wiki' && vaultNotes.length === 0) {
+        fetchVaultNotes();
+      }
+    }
+
+    // ── Wiki Mobile Sub-tabs ──
+    function switchWikiMobile(view) {
+      const tabs = document.querySelectorAll('.wiki-mobile-tab');
+      tabs[0].classList.toggle('active', view === 'list');
+      tabs[1].classList.toggle('active', view === 'reader');
+      document.getElementById('wikiSidebar').classList.toggle('mobile-hidden', view === 'reader');
+      document.getElementById('wikiContentPane').classList.toggle('mobile-hidden', view === 'list');
     }
 
     // ── Render conversation ──
@@ -462,9 +712,10 @@
       messages.forEach(function(m) {
         const role = (m.role || 'system').toLowerCase();
         const roleClass = role === 'assistant' ? 'assistant' : 'user';
-        const time = m.timestamp ? new Date(m.timestamp).toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' }) : '';
+        const time = m.timestamp || m.created_at
+          ? new Date(m.timestamp || m.created_at).toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' })
+          : '';
         const content = m.content || '';
-        // Truncate very long messages for display
         const display = content.length > 600 ? content.substring(0, 600) + '...' : content;
 
         html += '<div class="msg">';
@@ -505,7 +756,9 @@
         } else if (typeof entry === 'object') {
           level = (entry.level || 'info').toLowerCase();
           if (level === 'warning') level = 'warn';
-          const t = entry.timestamp ? new Date(entry.timestamp).toLocaleTimeString('en-US', { hour12: false }) : '';
+          const t = entry.timestamp || entry.created_at
+            ? new Date(entry.timestamp || entry.created_at).toLocaleTimeString('en-US', { hour12: false })
+            : '';
           line = (t ? '[' + t + '] ' : '') + (entry.message || JSON.stringify(entry));
         }
 
@@ -526,25 +779,22 @@
       scrollToBottom(feed);
     }
 
-    // ── Fetch helpers ──
-    async function fetchJSON(path) {
-      const resp = await fetch(BASE + path, { mode: 'cors', signal: AbortSignal.timeout(8000) });
-      if (!resp.ok) throw new Error('HTTP ' + resp.status);
-      const ct = resp.headers.get('content-type') || '';
-      const text = await resp.text();
-      // Handle JSONL
-      if (text.trim().startsWith('{') && text.includes('\n')) {
-        try {
-          return text.trim().split('\n').map(function(l) { return JSON.parse(l); });
-        } catch(e) {}
-      }
-      try { return JSON.parse(text); } catch(e) { return text; }
-    }
-
+    // ── Fetch with Supabase-first fallback ──
     async function fetchConversation() {
+      // Try Supabase first
       try {
-        const data = await fetchJSON('/neo/conversation');
-        setOnline(true);
+        const data = await supabaseFetch('/rest/v1/neo_messages?order=created_at.desc&limit=50');
+        setOnline(true, 'cloud');
+        renderConversation(data.reverse());
+        updateRefreshTime();
+        return;
+      } catch(e) {
+        // Supabase failed, try local
+      }
+      // Fallback to local Mac Mini
+      try {
+        const data = await localFetch('/neo/conversation');
+        setOnline(true, 'local');
         renderConversation(data);
       } catch(e) {
         setOnline(false);
@@ -553,35 +803,51 @@
     }
 
     async function fetchLogs() {
+      // Try Supabase first
       try {
-        const data = await fetchJSON('/neo/logs');
-        setOnline(true);
+        const data = await supabaseFetch('/rest/v1/neo_status?id=eq.current');
+        if (data && data.length > 0 && data[0].logs) {
+          renderLogs(Array.isArray(data[0].logs) ? data[0].logs : [data[0].logs]);
+          updateRefreshTime();
+          return;
+        }
+      } catch(e) {
+        // fallback
+      }
+      // Fallback to local
+      try {
+        const data = await localFetch('/neo/logs');
         renderLogs(data);
       } catch(e) {
-        // status already set by conversation fetch
+        // status already set
       }
       updateRefreshTime();
     }
 
     async function fetchSessions() {
+      // Try Supabase status first
       try {
-        const data = await fetchJSON('/neo/sessions');
-        setOnline(true);
+        const data = await supabaseFetch('/rest/v1/neo_status?id=eq.current');
+        if (data && data.length > 0) {
+          const status = data[0];
+          if (status.sessions !== undefined) document.getElementById('statSessions').textContent = status.sessions;
+          if (status.model) document.getElementById('statModel').textContent = status.model;
+          if (status.uptime) startTime = Date.now() - (status.uptime * 1000);
+          return;
+        }
+      } catch(e) {}
+      // Fallback to local
+      try {
+        const data = await localFetch('/neo/sessions');
         if (data && typeof data === 'object') {
           const count = data.count || data.active || (Array.isArray(data.sessions) ? data.sessions.length : (Array.isArray(data) ? data.length : 0));
           document.getElementById('statSessions').textContent = count;
-          if (data.model) {
-            document.getElementById('statModel').textContent = data.model;
-          }
-          if (data.uptime) {
-            startTime = Date.now() - (data.uptime * 1000);
-          }
+          if (data.model) document.getElementById('statModel').textContent = data.model;
+          if (data.uptime) startTime = Date.now() - (data.uptime * 1000);
         } else if (typeof data === 'number') {
           document.getElementById('statSessions').textContent = data;
         }
-      } catch(e) {
-        // handled
-      }
+      } catch(e) {}
     }
 
     async function healthCheck() {
@@ -589,8 +855,17 @@
       statusVal.textContent = 'Checking...';
       statusVal.className = 'stat-value';
       try {
-        const data = await fetchJSON('/neo/sessions');
-        setOnline(true);
+        const data = await supabaseFetch('/rest/v1/neo_status?id=eq.current');
+        setOnline(true, 'cloud');
+        statusVal.textContent = 'Healthy';
+        statusVal.className = 'stat-value green';
+        if (data && data.length > 0 && data[0].model) document.getElementById('statModel').textContent = data[0].model;
+        updateRefreshTime();
+        return;
+      } catch(e) {}
+      try {
+        const data = await localFetch('/neo/sessions');
+        setOnline(true, 'local');
         statusVal.textContent = 'Healthy';
         statusVal.className = 'stat-value green';
         if (data && data.model) document.getElementById('statModel').textContent = data.model;
@@ -603,7 +878,6 @@
     }
 
     function clearSession() {
-      // Placeholder
       const feed = document.getElementById('convoFeed');
       feed.innerHTML = '<div class="feed-empty">Session cleared (placeholder)</div>';
       document.getElementById('msgCount').textContent = '0 messages';
@@ -613,12 +887,158 @@
       await Promise.all([fetchConversation(), fetchLogs(), fetchSessions()]);
     }
 
+    // ── Markdown Parser ──
+    function parseMarkdown(md) {
+      if (!md) return '';
+      let html = escHtml(md);
+
+      // Code blocks (``` ... ```)
+      html = html.replace(/```(\w*)\n([\s\S]*?)```/g, function(match, lang, code) {
+        return '<pre><code>' + code.trim() + '</code></pre>';
+      });
+
+      // Inline code
+      html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+      // Headers
+      html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+      html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+      html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+
+      // Bold and italic
+      html = html.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
+      html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+
+      // Links
+      html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+
+      // Unordered lists
+      html = html.replace(/^[\-\*] (.+)$/gm, '<li>$1</li>');
+      html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+
+      // Ordered lists
+      html = html.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
+
+      // Paragraphs (double newline)
+      html = html.replace(/\n\n/g, '</p><p>');
+      html = '<p>' + html + '</p>';
+
+      // Clean up empty paragraphs
+      html = html.replace(/<p>\s*<\/p>/g, '');
+      html = html.replace(/<p>(<h[123]>)/g, '$1');
+      html = html.replace(/(<\/h[123]>)<\/p>/g, '$1');
+      html = html.replace(/<p>(<pre>)/g, '$1');
+      html = html.replace(/(<\/pre>)<\/p>/g, '$1');
+      html = html.replace(/<p>(<ul>)/g, '$1');
+      html = html.replace(/(<\/ul>)<\/p>/g, '$1');
+
+      // Single newlines to <br> within paragraphs
+      html = html.replace(/\n/g, '<br>');
+
+      return html;
+    }
+
+    // ── Wiki / Vault ──
+    async function fetchVaultNotes() {
+      try {
+        const data = await supabaseFetch('/rest/v1/neo_vault?order=updated_at.desc&limit=100');
+        vaultNotes = Array.isArray(data) ? data : [];
+        renderWikiList(vaultNotes);
+      } catch(e) {
+        document.getElementById('wikiList').innerHTML = '<div class="wiki-empty" style="padding:40px 0;">Could not load vault notes</div>';
+      }
+    }
+
+    function renderWikiList(notes) {
+      const list = document.getElementById('wikiList');
+      if (notes.length === 0) {
+        list.innerHTML = '<div class="wiki-empty" style="padding:40px 0;">No notes found</div>';
+        return;
+      }
+
+      // Group by folder
+      const grouped = {};
+      notes.forEach(function(n) {
+        const folder = n.folder || 'Uncategorized';
+        if (!grouped[folder]) grouped[folder] = [];
+        grouped[folder].push(n);
+      });
+
+      let html = '';
+      Object.keys(grouped).sort().forEach(function(folder) {
+        html += '<div class="wiki-folder-label">' + escHtml(folder) + '</div>';
+        grouped[folder].forEach(function(note) {
+          const noteId = note.id || note.title;
+          const isActive = selectedNoteId === noteId;
+          html += '<div class="wiki-note-item' + (isActive ? ' active' : '') + '" onclick="selectNote(\'' + escHtml(String(noteId).replace(/'/g, "\\'")) + '\')">';
+          html += '<div class="wiki-note-title">' + escHtml(note.title || 'Untitled') + '</div>';
+          if (note.tags && Array.isArray(note.tags) && note.tags.length > 0) {
+            html += '<div class="wiki-note-tags">';
+            note.tags.slice(0, 3).forEach(function(tag) {
+              html += '<span class="wiki-tag">' + escHtml(tag) + '</span>';
+            });
+            html += '</div>';
+          }
+          html += '</div>';
+        });
+      });
+
+      list.innerHTML = html;
+    }
+
+    function selectNote(noteId) {
+      selectedNoteId = noteId;
+      const note = vaultNotes.find(function(n) { return String(n.id) === String(noteId) || n.title === noteId; });
+      if (!note) return;
+
+      // Update sidebar active state
+      renderWikiList(filterNotesForDisplay());
+
+      // Show content
+      document.getElementById('wikiPlaceholder').style.display = 'none';
+      document.getElementById('wikiHeader').style.display = 'block';
+      document.getElementById('wikiBody').style.display = 'block';
+
+      document.getElementById('wikiTitle').textContent = note.title || 'Untitled';
+
+      // Tags
+      let tagsHtml = '';
+      if (note.tags && Array.isArray(note.tags)) {
+        note.tags.forEach(function(tag) {
+          tagsHtml += '<span class="wiki-tag">' + escHtml(tag) + '</span>';
+        });
+      }
+      document.getElementById('wikiTags').innerHTML = tagsHtml;
+
+      // Meta
+      const updated = note.updated_at ? new Date(note.updated_at).toLocaleString() : 'Unknown';
+      document.getElementById('wikiMeta').textContent = 'Last updated: ' + updated;
+
+      // Content
+      document.getElementById('wikiBody').innerHTML = parseMarkdown(note.content || note.body || '');
+
+      // On mobile, switch to reader view
+      if (window.innerWidth < 768) {
+        switchWikiMobile('reader');
+      }
+    }
+
+    function filterNotesForDisplay() {
+      const query = (document.getElementById('wikiSearchInput').value || '').toLowerCase().trim();
+      if (!query) return vaultNotes;
+      return vaultNotes.filter(function(n) {
+        return (n.title || '').toLowerCase().includes(query);
+      });
+    }
+
+    function filterWikiNotes() {
+      renderWikiList(filterNotesForDisplay());
+    }
+
     // ── Init ──
     (function init() {
-      // Set initial model placeholder
       document.getElementById('statModel').textContent = 'Claude';
-
-      // Kick off first fetch
       refreshAll();
 
       // Poll conversation + logs every 5s

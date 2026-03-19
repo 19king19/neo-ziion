@@ -403,8 +403,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Ar
       duration: duration || null,
       preferred_date: date,
       preferred_time: time || null,
-      platform: platform || null,
-      offer: offer || null,
+      location: platform || null,
+      offer_amount: offer || null,
       details: details || null,
       status: 'pending'
     };
@@ -422,6 +422,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Ar
       });
 
       if(!res.ok) throw new Error('Request failed');
+
+      // Also trigger the email edge function (fire and forget)
+      fetch('https://mkbnyejnzstqgyvqoqau.supabase.co/functions/v1/booking-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }).catch(function(){});
 
       const ref = 'BK-' + Date.now().toString(36).toUpperCase();
       confirmRef.textContent = 'Reference: ' + ref;

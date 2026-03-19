@@ -328,6 +328,57 @@
     .bottom-bar .conn-dot { width: 5px; height: 5px; border-radius: 50%; background: #D5FF5A; }
     .bottom-bar .conn-dot.offline { background: #ff5050; }
 
+    /* ── Bookings Tab ── */
+    .tab-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 18px; height: 18px; padding: 0 5px;
+      border-radius: 9px; background: #D5FF5A; color: #0F0E12;
+      font-size: 10px; font-weight: 800; line-height: 1;
+      margin-left: 6px;
+    }
+    .tab-badge.zero { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.3); }
+
+    .bookings-list { display: flex; flex-direction: column; gap: 12px; padding: 16px; overflow-y: auto; flex: 1; }
+    .booking-card {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px; padding: 18px 20px; display: flex; flex-direction: column; gap: 10px;
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .booking-card:hover { border-color: rgba(255,255,255,0.12); }
+    .booking-card.new-booking {
+      animation: bookingFlash 1.5s ease-out;
+    }
+    @keyframes bookingFlash {
+      0% { background: rgba(213,255,90,0.15); border-color: rgba(213,255,90,0.4); }
+      100% { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.06); }
+    }
+    .booking-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+    .booking-name { font-size: 15px; font-weight: 700; color: #fff; }
+    .booking-status {
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+      padding: 4px 10px; border-radius: 12px; flex-shrink: 0;
+    }
+    .booking-status.pending { background: rgba(245,158,11,0.15); color: #F59E0B; border: 1px solid rgba(245,158,11,0.25); }
+    .booking-status.accepted { background: rgba(213,255,90,0.1); color: #D5FF5A; border: 1px solid rgba(213,255,90,0.2); }
+    .booking-status.declined { background: rgba(239,68,68,0.1); color: #EF4444; border: 1px solid rgba(239,68,68,0.2); }
+    .booking-details { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 20px; }
+    .booking-detail { display: flex; flex-direction: column; gap: 2px; }
+    .booking-detail-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: rgba(255,255,255,0.25); }
+    .booking-detail-value { font-size: 13px; color: rgba(255,255,255,0.65); font-weight: 500; }
+    .booking-actions { display: flex; gap: 8px; margin-top: 4px; }
+    .booking-action-btn {
+      flex: 1; padding: 9px 16px; border-radius: 10px; border: none;
+      font-size: 12px; font-weight: 700; font-family: inherit;
+      cursor: pointer; transition: all 0.15s; letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .booking-action-btn.accept { background: rgba(213,255,90,0.15); color: #D5FF5A; border: 1px solid rgba(213,255,90,0.25); }
+    .booking-action-btn.accept:hover { background: rgba(213,255,90,0.25); }
+    .booking-action-btn.decline { background: rgba(239,68,68,0.08); color: rgba(239,68,68,0.7); border: 1px solid rgba(239,68,68,0.15); }
+    .booking-action-btn.decline:hover { background: rgba(239,68,68,0.15); }
+    .booking-action-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .bookings-empty { color: rgba(255,255,255,0.1); font-size: 12px; text-align: center; padding: 60px 0; font-family: 'Inter', sans-serif; }
+
     /* ── Responsive ── */
     @media (max-width: 1100px) {
       .main-grid { grid-template-columns: 1fr; }
@@ -474,6 +525,11 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
           KNOWLEDGE WIKI
         </button>
+        <button class="content-tab" onclick="switchTab('bookings')" id="tabBookings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          BOOKINGS
+          <span class="tab-badge zero" id="bookingBadge">0</span>
+        </button>
       </div>
 
       <!-- Tab: Live Feed -->
@@ -523,6 +579,19 @@
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Bookings -->
+      <div class="tab-content" id="contentBookings">
+        <div class="panel" style="flex: 1;">
+          <div class="panel-header">
+            <div class="panel-title">Booking Requests</div>
+            <div class="panel-badge" id="bookingCount">0 bookings</div>
+          </div>
+          <div class="bookings-list" id="bookingsList">
+            <div class="bookings-empty">Loading bookings...</div>
           </div>
         </div>
       </div>
@@ -579,6 +648,8 @@
     let connectionSource = 'none'; // 'cloud', 'local', 'none'
     let vaultNotes = [];
     let selectedNoteId = null;
+    let bookings = [];
+    let knownBookingIds = new Set();
 
     // ── Helpers ──
     function ts() {
@@ -679,10 +750,15 @@
     function switchTab(tab) {
       document.getElementById('tabLivefeed').classList.toggle('active', tab === 'livefeed');
       document.getElementById('tabWiki').classList.toggle('active', tab === 'wiki');
+      document.getElementById('tabBookings').classList.toggle('active', tab === 'bookings');
       document.getElementById('contentLivefeed').classList.toggle('active', tab === 'livefeed');
       document.getElementById('contentWiki').classList.toggle('active', tab === 'wiki');
+      document.getElementById('contentBookings').classList.toggle('active', tab === 'bookings');
       if (tab === 'wiki' && vaultNotes.length === 0) {
         fetchVaultNotes();
+      }
+      if (tab === 'bookings' && bookings.length === 0) {
+        fetchBookings();
       }
     }
 
@@ -1036,6 +1112,133 @@
       renderWikiList(filterNotesForDisplay());
     }
 
+    // ── Bookings ──
+    async function fetchBookings() {
+      try {
+        const data = await supabaseFetch('/rest/v1/bookings?order=created_at.desc&limit=20');
+        if (!Array.isArray(data)) return;
+
+        // Detect new bookings for flash animation
+        const newIds = new Set();
+        data.forEach(function(b) {
+          if (!knownBookingIds.has(String(b.id))) {
+            newIds.add(String(b.id));
+          }
+        });
+
+        bookings = data;
+
+        // Update known IDs
+        bookings.forEach(function(b) { knownBookingIds.add(String(b.id)); });
+
+        renderBookings(bookings, newIds);
+        updateBookingBadge();
+      } catch(e) {
+        // silently retry next cycle
+      }
+    }
+
+    function renderBookings(list, newIds) {
+      const container = document.getElementById('bookingsList');
+      if (!list || list.length === 0) {
+        container.innerHTML = '<div class="bookings-empty">No bookings yet</div>';
+        document.getElementById('bookingCount').textContent = '0 bookings';
+        return;
+      }
+
+      document.getElementById('bookingCount').textContent = list.length + ' booking' + (list.length !== 1 ? 's' : '');
+
+      let html = '';
+      list.forEach(function(b) {
+        const status = (b.status || 'pending').toLowerCase();
+        const isNew = newIds && newIds.has(String(b.id));
+        const date = b.preferred_date
+          ? new Date(b.preferred_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+          : 'TBD';
+        const created = b.created_at
+          ? new Date(b.created_at).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+          : '';
+
+        html += '<div class="booking-card' + (isNew ? ' new-booking' : '') + '">';
+        html += '<div class="booking-card-top">';
+        html += '<div class="booking-name">' + escHtml(b.name || 'Unknown') + '</div>';
+        html += '<div class="booking-status ' + status + '">' + escHtml(status) + '</div>';
+        html += '</div>';
+
+        html += '<div class="booking-details">';
+        html += '<div class="booking-detail"><div class="booking-detail-label">Service</div><div class="booking-detail-value">' + escHtml(b.service || 'N/A') + '</div></div>';
+        html += '<div class="booking-detail"><div class="booking-detail-label">Offer</div><div class="booking-detail-value">' + escHtml(String(b.offer_amount || 'N/A')) + '</div></div>';
+        html += '<div class="booking-detail"><div class="booking-detail-label">Date</div><div class="booking-detail-value">' + escHtml(date) + '</div></div>';
+        html += '<div class="booking-detail"><div class="booking-detail-label">Submitted</div><div class="booking-detail-value">' + escHtml(created) + '</div></div>';
+        if (b.email) {
+          html += '<div class="booking-detail"><div class="booking-detail-label">Email</div><div class="booking-detail-value">' + escHtml(b.email) + '</div></div>';
+        }
+        if (b.details) {
+          html += '<div class="booking-detail"><div class="booking-detail-label">Details</div><div class="booking-detail-value">' + escHtml(b.details) + '</div></div>';
+        }
+        html += '</div>';
+
+        if (status === 'pending') {
+          html += '<div class="booking-actions">';
+          html += '<button class="booking-action-btn accept" onclick="updateBookingStatus(\'' + b.id + '\', \'accepted\', this)">Accept</button>';
+          html += '<button class="booking-action-btn decline" onclick="updateBookingStatus(\'' + b.id + '\', \'declined\', this)">Decline</button>';
+          html += '</div>';
+        }
+
+        html += '</div>';
+      });
+
+      container.innerHTML = html;
+    }
+
+    function updateBookingBadge() {
+      const pendingCount = bookings.filter(function(b) { return (b.status || '').toLowerCase() === 'pending'; }).length;
+      const badge = document.getElementById('bookingBadge');
+      badge.textContent = pendingCount;
+      badge.classList.toggle('zero', pendingCount === 0);
+    }
+
+    async function updateBookingStatus(bookingId, newStatus, btnEl) {
+      // Disable buttons in the card
+      const card = btnEl.closest('.booking-card');
+      const btns = card.querySelectorAll('.booking-action-btn');
+      btns.forEach(function(b) { b.disabled = true; });
+      btnEl.textContent = newStatus === 'accepted' ? 'Accepting...' : 'Declining...';
+
+      try {
+        const resp = await fetch(SUPABASE_URL + '/rest/v1/bookings?id=eq.' + bookingId, {
+          method: 'PATCH',
+          headers: {
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({ status: newStatus, updated_at: new Date().toISOString() })
+        });
+
+        if (resp.ok) {
+          // Update local state
+          bookings = bookings.map(function(b) {
+            if (String(b.id) === String(bookingId)) {
+              b.status = newStatus;
+            }
+            return b;
+          });
+          renderBookings(bookings, null);
+          updateBookingBadge();
+        } else {
+          alert('Failed to update booking: HTTP ' + resp.status);
+          btns.forEach(function(b) { b.disabled = false; });
+          btnEl.textContent = newStatus === 'accepted' ? 'Accept' : 'Decline';
+        }
+      } catch(e) {
+        alert('Error updating booking: ' + e.message);
+        btns.forEach(function(b) { b.disabled = false; });
+        btnEl.textContent = newStatus === 'accepted' ? 'Accept' : 'Decline';
+      }
+    }
+
     // ── Init ──
     (function init() {
       document.getElementById('statModel').textContent = 'Claude';
@@ -1047,6 +1250,10 @@
 
       // Poll sessions every 10s
       setInterval(fetchSessions, 10000);
+
+      // Poll bookings every 10s
+      fetchBookings();
+      setInterval(fetchBookings, 10000);
 
       // Tick uptime every second
       uptimeInterval = setInterval(tickUptime, 1000);

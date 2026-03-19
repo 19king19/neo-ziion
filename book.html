@@ -6,19 +6,70 @@
 <title>Book 19Keys</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700&family=Audiowide&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
   font-family:'DM Sans',sans-serif;
-  background:#141414;
+  background:#0a0a0a;
   color:#fff;
   line-height:1.6;
   min-height:100vh;
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
   overflow-x:hidden;
+  position:relative;
+}
+
+/* ── Blurry gradient background ── */
+.bg-gradient{
+  position:fixed;
+  top:0;left:0;
+  width:100%;height:100%;
+  z-index:0;
+  pointer-events:none;
+  overflow:hidden;
+}
+.bg-gradient img{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:140%;
+  height:140%;
+  object-fit:cover;
+  opacity:0.12;
+  filter:blur(40px) saturate(1.5);
+}
+/* Additional ambient glow orbs */
+.bg-orb{
+  position:fixed;
+  border-radius:50%;
+  filter:blur(120px);
+  pointer-events:none;
+  z-index:0;
+}
+.bg-orb-1{
+  width:600px;height:600px;
+  top:-150px;right:-200px;
+  background:radial-gradient(circle,rgba(213,120,80,0.15),transparent 70%);
+}
+.bg-orb-2{
+  width:500px;height:500px;
+  bottom:-100px;left:-150px;
+  background:radial-gradient(circle,rgba(180,140,100,0.1),transparent 70%);
+}
+.bg-orb-3{
+  width:400px;height:400px;
+  top:40%;left:50%;
+  transform:translateX(-50%);
+  background:radial-gradient(circle,rgba(255,200,150,0.06),transparent 70%);
+}
+
+/* ── Content wrapper ── */
+.page-content{
+  position:relative;
+  z-index:1;
 }
 
 /* ── Floating Nav ── */
@@ -28,44 +79,54 @@ body{
   display:flex;align-items:center;justify-content:space-between;
   width:min(92%,680px);
   padding:14px 28px;
-  background:rgba(20,20,20,0.55);
-  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
-  border:1px solid rgba(255,255,255,0.08);
+  background:rgba(10,10,10,0.45);
+  backdrop-filter:blur(32px) saturate(1.4);-webkit-backdrop-filter:blur(32px) saturate(1.4);
+  border:1px solid rgba(255,255,255,0.06);
   border-radius:999px;
 }
 .nav-brand{
-  font-size:14px;font-weight:500;letter-spacing:5px;
+  font-family:'Audiowide',sans-serif;
+  font-size:13px;font-weight:400;letter-spacing:3px;
   text-transform:uppercase;color:#fff;
 }
 .nav-cta{
   display:inline-flex;align-items:center;gap:6px;
   padding:10px 24px;
-  background:#fff;color:#141414;
+  background:rgba(255,255,255,0.1);
+  border:1px solid rgba(255,255,255,0.15);
+  color:#fff;
   font-family:'DM Sans',sans-serif;
-  font-size:13px;font-weight:600;
-  border:none;border-radius:999px;
+  font-size:12px;font-weight:500;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  border-radius:999px;
   cursor:pointer;text-decoration:none;
-  transition:opacity .2s;
+  transition:all .3s ease;
+  backdrop-filter:blur(12px);
 }
-.nav-cta:hover{opacity:.88}
+.nav-cta:hover{
+  background:rgba(255,255,255,0.18);
+  border-color:rgba(255,255,255,0.25);
+}
 
 /* ── Marquee ── */
 .marquee-wrap{
   margin-top:90px;
   overflow:hidden;
   white-space:nowrap;
-  padding:24px 0 20px;
+  padding:28px 0 20px;
 }
 .marquee-track{
   display:inline-block;
-  animation:marqueeScroll 30s linear infinite;
+  animation:marqueeScroll 35s linear infinite;
 }
 .marquee-track span{
-  font-size:clamp(56px,10vw,100px);
-  font-weight:300;
+  font-family:'Audiowide',sans-serif;
+  font-size:clamp(48px,9vw,88px);
+  font-weight:400;
   text-transform:uppercase;
-  color:rgba(255,255,255,0.06);
-  letter-spacing:4px;
+  color:rgba(255,255,255,0.04);
+  letter-spacing:6px;
   padding-right:80px;
 }
 @keyframes marqueeScroll{
@@ -78,20 +139,29 @@ body{
   text-align:center;
   font-size:11px;
   font-weight:500;
-  letter-spacing:4px;
+  letter-spacing:5px;
   text-transform:uppercase;
-  color:rgba(255,255,255,0.45);
-  padding:32px 20px 16px;
+  color:rgba(255,255,255,0.35);
+  padding:40px 20px 16px;
 }
 
 /* ── Hero heading ── */
 .hero-heading{
   text-align:center;
-  font-size:clamp(32px,5.5vw,56px);
+  font-size:clamp(28px,5vw,52px);
   font-weight:300;
   color:#fff;
-  padding:0 20px 48px;
+  padding:0 20px 12px;
   line-height:1.15;
+}
+.hero-sub{
+  text-align:center;
+  font-size:15px;
+  font-weight:300;
+  color:rgba(255,255,255,0.4);
+  padding:0 20px 56px;
+  max-width:480px;
+  margin:0 auto;
 }
 
 /* ── Container ── */
@@ -110,39 +180,43 @@ body{
 .service-pill{
   display:inline-flex;align-items:center;gap:8px;
   padding:14px 28px;
-  background:rgba(255,255,255,0.06);
-  border:1px solid rgba(255,255,255,0.08);
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.06);
   border-radius:999px;
-  color:rgba(255,255,255,0.72);
+  color:rgba(255,255,255,0.6);
   font-family:'DM Sans',sans-serif;
   font-size:15px;font-weight:400;
   cursor:pointer;
-  transition:all .25s ease;
+  transition:all .3s cubic-bezier(.4,0,.2,1);
   min-height:48px;
   user-select:none;
+  backdrop-filter:blur(16px);
 }
 .service-pill:hover{
-  background:rgba(255,255,255,0.12);
-  color:#fff;
+  background:rgba(255,255,255,0.08);
+  border-color:rgba(255,255,255,0.12);
+  color:rgba(255,255,255,0.9);
+  transform:translateY(-1px);
 }
 .service-pill.selected{
-  background:#fff;
-  color:#141414;
-  border-color:#fff;
+  background:rgba(213,180,140,0.15);
+  color:#fff;
+  border-color:rgba(213,180,140,0.35);
   font-weight:500;
+  box-shadow:0 0 30px rgba(213,160,120,0.08);
 }
 .service-pill .pill-emoji{font-size:18px;line-height:1}
 
-/* ── Atmospheric glow ── */
+/* ── Glass form container ── */
 .form-glow{
   position:relative;
 }
 .form-glow::before{
   content:'';
   position:absolute;
-  top:-120px;left:50%;transform:translateX(-50%);
-  width:600px;height:400px;
-  background:radial-gradient(ellipse at center,rgba(40,180,160,0.08) 0%,rgba(40,180,160,0.02) 40%,transparent 70%);
+  top:-80px;left:50%;transform:translateX(-50%);
+  width:500px;height:350px;
+  background:radial-gradient(ellipse at center,rgba(213,160,120,0.06) 0%,transparent 70%);
   pointer-events:none;
   z-index:0;
 }
@@ -163,12 +237,23 @@ body{
   opacity:1;
 }
 
+/* Glass card wrapper for form */
+.form-glass{
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:28px;
+  padding:40px 32px;
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
+}
+
 .form-label{
-  font-size:11px;font-weight:500;
-  letter-spacing:3.5px;
+  font-family:'Audiowide',sans-serif;
+  font-size:11px;font-weight:400;
+  letter-spacing:4px;
   text-transform:uppercase;
-  color:rgba(255,255,255,0.4);
-  margin-bottom:28px;
+  color:rgba(255,255,255,0.35);
+  margin-bottom:32px;
   text-align:center;
 }
 
@@ -184,52 +269,54 @@ body{
 
 .field{display:flex;flex-direction:column;gap:7px}
 .field label{
-  font-size:12px;font-weight:500;
-  letter-spacing:1px;
+  font-size:11px;font-weight:500;
+  letter-spacing:1.5px;
   text-transform:uppercase;
-  color:rgba(255,255,255,0.5);
+  color:rgba(255,255,255,0.4);
   padding-left:18px;
 }
-.field label .req{color:rgba(255,255,255,0.3)}
+.field label .req{color:rgba(213,160,120,0.5)}
 
 .field input,.field select{
-  background:#1a1a1a;
-  border:1px solid rgba(255,255,255,0.1);
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
   border-radius:999px;
   padding:14px 22px;
   font-size:15px;font-weight:400;
   color:#fff;
   font-family:'DM Sans',sans-serif;
   outline:none;
-  transition:border-color .25s ease, box-shadow .25s ease;
+  transition:all .3s ease;
   appearance:none;-webkit-appearance:none;
   min-height:48px;
 }
 .field select{
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
   background-repeat:no-repeat;
   background-position:right 20px center;
+  background-color:rgba(255,255,255,0.04);
   padding-right:44px;
 }
 .field textarea{
-  background:#1a1a1a;
-  border:1px solid rgba(255,255,255,0.1);
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
   border-radius:20px;
   padding:16px 22px;
   font-size:15px;font-weight:400;
   color:#fff;
   font-family:'DM Sans',sans-serif;
   outline:none;
-  transition:border-color .25s ease, box-shadow .25s ease;
+  transition:all .3s ease;
   resize:vertical;
   min-height:110px;
 }
 .field input:focus,.field select:focus,.field textarea:focus{
-  border-color:rgba(255,255,255,0.3);
-  box-shadow:0 0 0 3px rgba(255,255,255,0.04);
+  border-color:rgba(213,160,120,0.35);
+  box-shadow:0 0 0 3px rgba(213,160,120,0.06);
+  background:rgba(255,255,255,0.06);
 }
 .field input::placeholder,.field textarea::placeholder{
-  color:rgba(255,255,255,0.22);
+  color:rgba(255,255,255,0.18);
   font-weight:300;
 }
 
@@ -243,31 +330,35 @@ body{
   padding:16px;
   border:none;
   border-radius:999px;
-  background:#fff;
-  color:#141414;
+  background:linear-gradient(135deg,rgba(213,160,120,0.2),rgba(255,255,255,0.08));
+  border:1px solid rgba(213,160,120,0.25);
+  color:#fff;
   font-family:'DM Sans',sans-serif;
-  font-size:14px;
-  font-weight:700;
-  letter-spacing:2.5px;
+  font-size:13px;
+  font-weight:600;
+  letter-spacing:3px;
   text-transform:uppercase;
   cursor:pointer;
-  margin-top:12px;
-  transition:all .2s ease;
+  margin-top:20px;
+  transition:all .3s ease;
   position:relative;
   overflow:hidden;
   min-height:52px;
+  backdrop-filter:blur(12px);
 }
 .submit-btn:hover{
-  box-shadow:0 6px 32px rgba(255,255,255,0.12);
+  background:linear-gradient(135deg,rgba(213,160,120,0.3),rgba(255,255,255,0.12));
+  box-shadow:0 8px 40px rgba(213,160,120,0.12);
   transform:translateY(-1px);
+  border-color:rgba(213,160,120,0.4);
 }
 .submit-btn:active{transform:translateY(0)}
-.submit-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+.submit-btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
 .submit-btn .spinner{
   display:none;
   width:18px;height:18px;
   border:2.5px solid transparent;
-  border-top-color:#141414;
+  border-top-color:#fff;
   border-radius:50%;
   animation:spin .7s linear infinite;
   margin:0 auto;
@@ -278,11 +369,11 @@ body{
 
 /* ── Validation ── */
 .field.error input,.field.error select,.field.error textarea{
-  border-color:rgba(255,90,90,0.6);
+  border-color:rgba(255,100,100,0.5);
 }
 .error-msg{
   font-size:11px;
-  color:rgba(255,90,90,0.8);
+  color:rgba(255,100,100,0.7);
   display:none;
   padding-left:18px;
 }
@@ -296,104 +387,138 @@ body{
   margin:0 auto;
 }
 .confirm-icon{
-  width:72px;height:72px;
+  width:80px;height:80px;
   border-radius:50%;
-  background:#fff;
+  background:rgba(213,160,120,0.15);
+  border:1px solid rgba(213,160,120,0.3);
   display:flex;align-items:center;justify-content:center;
-  margin:0 auto 28px;
-  font-size:30px;
-  color:#141414;
+  margin:0 auto 32px;
+  font-size:32px;
+  color:#fff;
   animation:popIn .4s ease;
+  backdrop-filter:blur(12px);
 }
 @keyframes popIn{0%{transform:scale(0)}60%{transform:scale(1.15)}100%{transform:scale(1)}}
 .confirm-title{
-  font-size:28px;font-weight:300;
-  margin-bottom:12px;
+  font-family:'Audiowide',sans-serif;
+  font-size:24px;font-weight:400;
+  letter-spacing:2px;
+  margin-bottom:16px;
 }
 .confirm-text{
   font-size:15px;
-  color:rgba(255,255,255,0.55);
+  color:rgba(255,255,255,0.45);
   font-weight:300;
-  line-height:1.7;
-  margin-bottom:32px;
+  line-height:1.8;
+  margin-bottom:36px;
 }
 .confirm-ref{
-  font-size:12px;
-  color:rgba(255,255,255,0.4);
+  font-size:11px;
+  color:rgba(255,255,255,0.35);
   padding:10px 24px;
-  background:rgba(255,255,255,0.06);
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.06);
   border-radius:999px;
   display:inline-block;
-  letter-spacing:1px;
+  letter-spacing:2px;
+  font-family:'DM Sans',sans-serif;
 }
 .book-another{
   display:inline-flex;align-items:center;gap:6px;
   margin-top:28px;
   padding:12px 32px;
-  background:rgba(255,255,255,0.08);
-  border:1px solid rgba(255,255,255,0.1);
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.08);
   border-radius:999px;
-  color:#fff;
+  color:rgba(255,255,255,0.6);
   font-family:'DM Sans',sans-serif;
-  font-size:13px;font-weight:500;
-  letter-spacing:1.5px;
+  font-size:12px;font-weight:500;
+  letter-spacing:2px;
   text-transform:uppercase;
   cursor:pointer;
-  transition:all .2s;
+  transition:all .3s;
 }
-.book-another:hover{background:rgba(255,255,255,0.14)}
+.book-another:hover{
+  background:rgba(255,255,255,0.1);
+  color:#fff;
+}
+
+/* ── Divider line ── */
+.divider{
+  width:60px;
+  height:1px;
+  background:rgba(255,255,255,0.08);
+  margin:0 auto 48px;
+}
 
 /* ── Footer ── */
 .footer{
   text-align:center;
-  padding:40px 20px 32px;
-  border-top:1px solid rgba(255,255,255,0.06);
+  padding:48px 20px 36px;
+  border-top:1px solid rgba(255,255,255,0.04);
 }
 .footer p{
-  font-size:12px;
-  color:rgba(255,255,255,0.25);
+  font-size:11px;
+  color:rgba(255,255,255,0.2);
   font-weight:300;
-  letter-spacing:.5px;
+  letter-spacing:1px;
 }
 
 /* ── Mobile ── */
 @media(max-width:600px){
   .nav{width:94%;padding:12px 20px}
-  .nav-brand{font-size:12px;letter-spacing:4px}
-  .nav-cta{padding:8px 18px;font-size:12px}
+  .nav-brand{font-size:11px;letter-spacing:2px}
+  .nav-cta{padding:8px 18px;font-size:11px}
   .services-grid{flex-direction:column;align-items:stretch}
   .service-pill{justify-content:center}
-  .hero-heading{padding-bottom:36px}
+  .hero-heading{padding-bottom:8px}
+  .hero-sub{padding-bottom:40px}
   .marquee-wrap{margin-top:80px;padding:16px 0 12px}
+  .form-glass{padding:28px 20px;border-radius:22px}
+  .bg-orb-1{width:350px;height:350px;top:-100px;right:-120px}
+  .bg-orb-2{width:300px;height:300px;bottom:-60px;left:-100px}
 }
 </style>
 </head>
 <body>
 
+<!-- Blurry gradient background -->
+<div class="bg-gradient">
+  <img src="images/booking-gradient-bg.png" alt="">
+</div>
+<div class="bg-orb bg-orb-1"></div>
+<div class="bg-orb bg-orb-2"></div>
+<div class="bg-orb bg-orb-3"></div>
+
+<div class="page-content">
+
 <!-- Floating Nav -->
 <nav class="nav">
-  <div class="nav-brand">19KEYS</div>
+  <div class="nav-brand">19Keys</div>
   <a href="#servicesAnchor" class="nav-cta">Book Now &#8599;</a>
 </nav>
 
 <!-- Marquee -->
 <div class="marquee-wrap">
   <div class="marquee-track" id="marqueeTrack">
-    <span>Book 19Keys &mdash; Podcast &middot; Product Review &middot; Consultation &middot; Speaking &middot; Appearance &mdash; Book 19Keys &mdash;&nbsp;</span>
-    <span>Book 19Keys &mdash; Podcast &middot; Product Review &middot; Consultation &middot; Speaking &middot; Appearance &mdash; Book 19Keys &mdash;&nbsp;</span>
+    <span>Book 19Keys &mdash; Podcast &middot; Product Review &middot; Consultation &middot; Speaking &middot; Appearance &mdash;&nbsp;</span>
+    <span>Book 19Keys &mdash; Podcast &middot; Product Review &middot; Consultation &middot; Speaking &middot; Appearance &mdash;&nbsp;</span>
   </div>
 </div>
 
 <!-- Subtitle -->
-<div class="subtitle">High Level Conversations, Built for Impact</div>
+<div class="subtitle">High Level Conversations</div>
 
 <!-- Hero Heading -->
 <div class="hero-heading" id="servicesAnchor">Select Your Service</div>
+<div class="hero-sub">Curated opportunities for collaboration, media, and impact-driven conversations.</div>
 
 <div class="container">
 
   <!-- Services View -->
   <div id="servicesView">
+
+    <div class="divider"></div>
 
     <!-- Service Pills -->
     <div class="services-grid" id="servicesList">
@@ -420,92 +545,94 @@ body{
     <!-- Booking Form -->
     <div class="form-glow">
       <div class="booking-section" id="bookingSection">
-        <div class="form-label" id="formLabel">Your Details</div>
+        <div class="form-glass">
+          <div class="form-label" id="formLabel">Your Details</div>
 
-        <form id="bookingForm" novalidate>
-          <input type="hidden" id="selectedService" name="service" value="">
+          <form id="bookingForm" novalidate>
+            <input type="hidden" id="selectedService" name="service" value="">
 
-          <div class="form-row two">
-            <div class="field" id="nameField">
-              <label>Name <span class="req">*</span></label>
-              <input type="text" id="nameInput" placeholder="Full name" autocomplete="name">
-              <span class="error-msg">Please enter your name</span>
+            <div class="form-row two">
+              <div class="field" id="nameField">
+                <label>Name <span class="req">*</span></label>
+                <input type="text" id="nameInput" placeholder="Full name" autocomplete="name">
+                <span class="error-msg">Please enter your name</span>
+              </div>
+              <div class="field" id="emailField">
+                <label>Email <span class="req">*</span></label>
+                <input type="email" id="emailInput" placeholder="you@email.com" autocomplete="email">
+                <span class="error-msg">Valid email required</span>
+              </div>
             </div>
-            <div class="field" id="emailField">
-              <label>Email <span class="req">*</span></label>
-              <input type="email" id="emailInput" placeholder="you@email.com" autocomplete="email">
-              <span class="error-msg">Valid email required</span>
-            </div>
-          </div>
 
-          <div class="form-row two">
-            <div class="field">
-              <label>Phone</label>
-              <input type="tel" id="phoneInput" placeholder="(optional)" autocomplete="tel">
+            <div class="form-row two">
+              <div class="field">
+                <label>Phone</label>
+                <input type="tel" id="phoneInput" placeholder="(optional)" autocomplete="tel">
+              </div>
+              <div class="field" id="durationField">
+                <label>Duration</label>
+                <select id="durationSelect">
+                  <option value="">Select duration</option>
+                </select>
+              </div>
             </div>
-            <div class="field" id="durationField">
-              <label>Duration</label>
-              <select id="durationSelect">
-                <option value="">Select duration</option>
-              </select>
-            </div>
-          </div>
 
-          <div class="form-row two">
-            <div class="field" id="dateField">
-              <label>Preferred Date <span class="req">*</span></label>
-              <input type="date" id="dateInput">
-              <span class="error-msg">Please select a date</span>
+            <div class="form-row two">
+              <div class="field" id="dateField">
+                <label>Preferred Date <span class="req">*</span></label>
+                <input type="date" id="dateInput">
+                <span class="error-msg">Please select a date</span>
+              </div>
+              <div class="field">
+                <label>Preferred Time</label>
+                <select id="timeSelect">
+                  <option value="">Select time</option>
+                  <option value="9:00 AM">9:00 AM</option>
+                  <option value="10:00 AM">10:00 AM</option>
+                  <option value="11:00 AM">11:00 AM</option>
+                  <option value="12:00 PM">12:00 PM</option>
+                  <option value="1:00 PM">1:00 PM</option>
+                  <option value="2:00 PM">2:00 PM</option>
+                  <option value="3:00 PM">3:00 PM</option>
+                  <option value="4:00 PM">4:00 PM</option>
+                  <option value="5:00 PM">5:00 PM</option>
+                  <option value="6:00 PM">6:00 PM</option>
+                  <option value="7:00 PM">7:00 PM</option>
+                  <option value="8:00 PM">8:00 PM</option>
+                </select>
+              </div>
             </div>
-            <div class="field">
-              <label>Preferred Time</label>
-              <select id="timeSelect">
-                <option value="">Select time</option>
-                <option value="9:00 AM">9:00 AM</option>
-                <option value="10:00 AM">10:00 AM</option>
-                <option value="11:00 AM">11:00 AM</option>
-                <option value="12:00 PM">12:00 PM</option>
-                <option value="1:00 PM">1:00 PM</option>
-                <option value="2:00 PM">2:00 PM</option>
-                <option value="3:00 PM">3:00 PM</option>
-                <option value="4:00 PM">4:00 PM</option>
-                <option value="5:00 PM">5:00 PM</option>
-                <option value="6:00 PM">6:00 PM</option>
-                <option value="7:00 PM">7:00 PM</option>
-                <option value="8:00 PM">8:00 PM</option>
-              </select>
-            </div>
-          </div>
 
-          <div class="form-row two">
-            <div class="field">
-              <label>Platform / Location</label>
-              <select id="platformSelect">
-                <option value="">Select</option>
-                <option value="Zoom">Zoom</option>
-                <option value="In-Person">In-Person</option>
-                <option value="Phone">Phone</option>
-                <option value="Other">Other</option>
-              </select>
+            <div class="form-row two">
+              <div class="field">
+                <label>Platform / Location</label>
+                <select id="platformSelect">
+                  <option value="">Select</option>
+                  <option value="Zoom">Zoom</option>
+                  <option value="In-Person">In-Person</option>
+                  <option value="Phone">Phone</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div class="field" id="offerField">
+                <label>Your Offer ($)</label>
+                <input type="text" id="offerInput" placeholder="Amount">
+              </div>
             </div>
-            <div class="field" id="offerField">
-              <label>Your Offer ($)</label>
-              <input type="text" id="offerInput" placeholder="Amount">
-            </div>
-          </div>
 
-          <div class="form-row">
-            <div class="field">
-              <label>Details</label>
-              <textarea id="detailsInput" placeholder="What would you like to discuss? Include any relevant context."></textarea>
+            <div class="form-row">
+              <div class="field">
+                <label>Details</label>
+                <textarea id="detailsInput" placeholder="What would you like to discuss? Include any relevant context."></textarea>
+              </div>
             </div>
-          </div>
 
-          <button type="submit" class="submit-btn" id="submitBtn">
-            <span class="btn-text">SEND OFFER &rarr;</span>
-            <div class="spinner"></div>
-          </button>
-        </form>
+            <button type="submit" class="submit-btn" id="submitBtn">
+              <span class="btn-text">SEND OFFER &rarr;</span>
+              <div class="spinner"></div>
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   </div>
@@ -514,7 +641,7 @@ body{
   <div id="confirmationView" style="display:none">
     <div class="confirmation">
       <div class="confirm-icon">&#10003;</div>
-      <div class="confirm-title">Offer Sent</div>
+      <div class="confirm-title">OFFER SENT</div>
       <div class="confirm-text">Your booking request has been received. You'll hear back from 19Keys within 48 hours.</div>
       <div class="confirm-ref" id="confirmRef"></div>
       <br>
@@ -527,6 +654,8 @@ body{
 <div class="footer">
   <p>&copy; 2026 19Keys. All rights reserved.</p>
 </div>
+
+</div><!-- .page-content -->
 
 <script>
 (function(){
